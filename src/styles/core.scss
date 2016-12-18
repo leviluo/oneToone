@@ -1,0 +1,54 @@
+:global {
+    @import 'base';
+    @import '~normalize.css/normalize';
+    // Some best-practice CSS that's useful for most apps
+    // Just remove them if they're not what you want
+    html {
+        box-sizing: border-box;
+    }
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #EFEFEF;
+        font-size: 14px;
+        font-family: 'Microsoft YaHei', tahoma, arial, 'Hiragino Sans GB', '\\5b8b体', sans-serif;
+        a {
+            text-decoration: none;
+            &:hover {
+                cursor: pointer
+            }
+        }
+        .btn-primary {
+            padding: 0 5px;
+            height: 40px;
+            line-height: 40px;
+            background: #6495ED;
+            border: 1px solid #5CACEE;
+            color: white
+        }
+        .btn-primary:hover {
+            background: #3A5FCD;
+            cursor: pointer
+        }
+        input {
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            margin: 5px 0;
+            width: 100%;
+            height: 40px;
+            background: #efefef;
+            -webkit-tap-highlight-color: none;
+            border: none;
+            text-indent: 5px
+        }
+        li {
+            list-style: none;
+        }
+    }
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+}

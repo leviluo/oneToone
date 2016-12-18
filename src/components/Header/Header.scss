@@ -1,0 +1,47 @@
+.menu {
+    height: 45px;
+    line-height: 45px;
+    background: white;
+    border-bottom: 1px solid #ccc;
+    nav {
+        margin: 0 auto;
+        max-width:1200px;
+        h1 {
+            padding-left:10px;
+            margin: 0;
+            color: #1C86EE;
+            display: inline-block
+        }
+        h4 {
+            margin: 0 10px;
+            display: inline-block;
+            color: #1C86EE;
+        }
+        a {
+            color: #000
+        }
+        a:hover {
+            color: #1C86EE
+        }
+        .brand {
+            color: #1C86EE
+        }
+        .headerLeft {
+            float: right;
+            a {
+                margin: 0;
+                padding: 10px;
+                color: #1C86EE !important;
+            }
+            a:hover {
+                cursor: pointer;
+                background: #efefef;
+            }
+        }
+    }
+}
+
+.activeRoute {
+    font-weight: bold;
+    text-decoration: none;
+}

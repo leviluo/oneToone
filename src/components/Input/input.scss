@@ -1,0 +1,19 @@
+.input-group{
+	margin:10px;
+	background:#1C86EE;
+	height:35px;
+	line-height:35px;
+	label{
+		width:20%;
+		display:inline-block;
+		text-align:center;
+		color:white;
+		margin:0
+	}
+	input{
+		width:80%;
+		height:35px;
+		border:1px solid #1C86EE;
+		box-shadow:none;
+	}
+}
