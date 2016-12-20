@@ -76,3 +76,15 @@ exports.insert = function(tablename,items){
         })
     });
 }
+//自定义sql
+exports.sqlStr = function(sqlText){
+    return new Promise(function(resolve, reject){
+        execQuery(sqlText,[],function(err, rows){
+            if(err){
+                reject(err);
+            }else{
+                resolve(rows);
+            }
+        })
+    });
+}

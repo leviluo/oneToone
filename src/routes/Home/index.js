@@ -1,6 +1,19 @@
-import HomeView from './components/HomeView'
+// import HomeView from './components/HomeView'
 
-// Sync route definition
-export default {
-  component: HomeView
-}
+// // Sync route definition
+// export default {
+//   component: HomeView
+// }
+
+import { injectReducer } from '../../store/reducers'
+
+export default (store) => ({
+  getComponent (nextState, cb) {
+    require.ensure([], (require) => {
+      const HomeView = require('./components/HomeView').default
+      const reducer = require('./modules').default
+      injectReducer(store, { key: 'categories', reducer })
+      cb(null, HomeView)
+    })
+  }
+})

@@ -13,7 +13,7 @@ import Login from './Login'
 export const createRoutes = (store) => ({
   path: '/',
   component: MyCoreLayout(store),
-  indexRoute: Home,
+  indexRoute: Home(store),
   childRoutes: [
     CounterRoute(store),
     Zen(store),
