@@ -148,6 +148,7 @@
     "react-router-redux": "^4.0.5",
     "react-styling": "^1.5.0",
     "redux": "^3.5.2",
+    "redux-async-connect": "^1.0.0-rc4",
     "redux-thunk": "^2.1.0",
     "rimraf": "^2.5.1",
     "sass-loader": "^4.0.0",

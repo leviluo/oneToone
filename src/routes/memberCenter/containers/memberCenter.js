@@ -6,6 +6,7 @@ import {Link} from 'react-router'
 import { findDOMNode } from 'react-dom'
 import Modal from '../../../components/Modal'
 import Select from '../../../components/Select'
+import Textarea from '../../../components/Textarea'
 import {modal} from '../../../components/Modal/modules/modal'
 
 @connect(
@@ -45,10 +46,24 @@ export default class memberCenter extends Component {
 
   }
 
+  briefChange = ()=>{
+
+  }
+
+  experienceChange = ()=>{
+
+  }
   showAddSpciality=()=>{
     const items = [{key:1,value:"健身教练"},{key:2,value:"数学家教"}]
     this.setState({
-      content:<div><Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} /></div>
+      content:<div>
+      <Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} />
+      <br />
+      <br />
+      <Textarea header="简介" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+      <br />
+      <Textarea header="经验" handleTextarea={this.experienceChange} />
+      </div>
     })
     this.props.modal(true);
   }

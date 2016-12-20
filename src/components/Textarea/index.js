@@ -1,24 +1,19 @@
 import React, { Component, PropTypes } from 'react'
-import './Input.scss'
+import './index.scss'
 
-export default class Input extends Component{
-
+export default class Textarea extends Component{
         render() {
-            console.log(this.props)
-                const{defaultValue,header,handleChange,indeed,palceholder,type} = this.props;
+                const{defaultValue,header,handleTextarea} = this.props;
                 return ( < div className = "textarea-group">
-                    < label > { header }{indeed && <span>*</span>}:< /label>
-                    < input palceholder={palceholder} type={type} onChange = { handleChange } defaultValue = {defaultValue} />
+                    < label > { header }:< /label>
+                        <textarea defaultValue={this.props.defaultValue} onChange={this.props.handleTextarea} cols="30" rows="10"></textarea>
                     < /div >
                 )
             }
 }
 
-Input.PropTypes = {
+Textarea.PropTypes = {
     header:React.PropTypes.string.isRequired,
-    handleChange:React.PropTypes.func.isRequired,
-    defaultValue:React.PropTypes.string,
-    indeed:React.PropTypes.bool,
-    palceholder:React.PropTypes.string,
-    type:React.PropTypes.string,
+    handleTextarea:React.PropTypes.func.isRequired,
+    defaultValue:React.PropTypes.string
 }

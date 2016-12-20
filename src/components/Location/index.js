@@ -1,12 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 import { fetchLocation } from './modules/location'
 import { connect } from 'react-redux';
+
 @connect(
   state => ({
     mylocation: state.mylocation.text
     }),
   {fetchLocation}
 )
+
 export default class Location extends Component{
 
   componentWillMount =()=>{
