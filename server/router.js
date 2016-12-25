@@ -9,7 +9,7 @@ export default async function (ctx) {
         resolve({zen: { text: [{text: data}]} })
       })
     } 
-    else if(ctx.req.url == '/' || ctx.req.url == '/memberCenter' ){
+    else if(ctx.req.url == '/' || ctx.req.url == '/memberCenter/speciality' ){
       axios.get('http://localhost:3000/public/catelogues').then(({data}) => {
         resolve({catelogues:{text:data.data}})
       })

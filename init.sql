@@ -6,6 +6,7 @@ CREATE TABLE `member` (
   `password` char(40) DEFAULT '',
   `phone` varchar(40) DEFAULT '',   
   `location` varchar(15) default '',
+  `head` varchar(30) default '',
   `createAt` datetime default now(),
   `updateAt` datetime default now(),
   PRIMARY KEY  (`id`)
@@ -29,7 +30,7 @@ CREATE TABLE `memberSpeciality` (
   `memberId` mediumint(8) unsigned,
   `specialitiesId` mediumint(8) unsigned,
   `brief` varchar(300) DEFAULT '',
-  `experience` text DEFAULT '',
+  `experience` text ,
   PRIMARY KEY  (`id`)
 );
 //用户服务关系表

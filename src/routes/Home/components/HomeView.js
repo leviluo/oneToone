@@ -3,7 +3,7 @@ import Helmet from 'react-helmet'
 import Banner from '../../../components/Banner'
 import {Link} from 'react-router'
 import {connect} from 'react-redux'
-import {fetchCatelogue} from '../modules'
+// import {fetchCatelogue} from '../modules'
 // import {asyncConnect} from 'redux-async-connect'
 
 const imgItems = ["banner1.jpg","banner2.jpg","banner3.jpg","banner4.jpg","banner5.jpg"]
@@ -22,12 +22,12 @@ import './HomeView.scss'
 // }])
 @connect(state=>({
     catelogues:state.catelogues
-}),{fetchCatelogue})
+}),{})
 export default class HomeView extends React.Component{
 
     componentWillMount=()=>{
         // console.log(this.props.catelogues)
-        if (this.props.catelogues.text.length < 1) this.props.fetchCatelogue()
+        // if (this.props.catelogues.text.length < 1) this.props.fetchCatelogue()
     }
 
     render(){   

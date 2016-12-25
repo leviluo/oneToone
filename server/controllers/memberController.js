@@ -21,7 +21,7 @@ const memberController = {
             this.body = { status: "err", msg: "未登录" }
             return
         }
-        var result = await sqlStr(`select m.brief,m.experience,s.name from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId`)
+        var result = await sqlStr(`select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId`)
         this.body = {status:'success',data:result}
     }
 }

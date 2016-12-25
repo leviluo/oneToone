@@ -39,7 +39,11 @@ export function isAuth(history) {
         // localStorage.setItem("nickname",data.nickname)
         dispatch(authIn(data.nickname));
       } else{
-        history.push('/login')
+        // localStorage.setItem("nickname",data.nickname)
+        console.log(history)
+        if (history) {
+           history.push('/login')
+        }
       }
     })
   }

@@ -3,7 +3,7 @@ const dbOptions = {
     db_port:"3306",
     db_name:"onetoone",
     db_user:"root",
-    db_passwd:"19891201luo"
+    db_passwd:"19891201Luowen..."
 }
 
 export default dbOptions

@@ -16,6 +16,7 @@ export const receiveCatelogue = (value) => ({
 export function fetchCatelogue () {
   return (dispatch, getState) => {
     axios.get('/public/catelogues').then(({data}) => {
+      // console.log(data.data)
       dispatch(receiveCatelogue(data.data))
     })
   }
@@ -26,7 +27,7 @@ export function fetchCatelogue () {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [RECEIVE_CATEGOIES]: (state, action) => {
-    return ({...state, text: action.value})
+    return ({...state, isloaded:true,text: action.value})
   }
 }
 
@@ -34,7 +35,8 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 export const initialState = {
-  text: []
+  text: [],
+  isloaded:false
 }
 
 export default function (state = initialState, action) {
