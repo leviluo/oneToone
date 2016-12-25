@@ -32,12 +32,14 @@ function authOut () {
   }
 }
 
-export function isAuth() {
+export function isAuth(history) {
   return (dispatch, getState) => {
     axios.get('/auth').then(({data}) => {
       if (data.status == "success") {
         // localStorage.setItem("nickname",data.nickname)
         dispatch(authIn(data.nickname));
+      } else{
+        history.push('/login')
       }
     })
   }
@@ -62,7 +64,7 @@ export function login(items,history) {
 export function loginOut (history) {
   return (dispatch, getState) => {
     axios.get('/loginOut').then(({data}) => {
-      if (data == "success") {
+      if (data.status == "success") {
       // localStorage.removeItem("nickname")
       dispatch(authOut())
       history.push('/')

@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-starter-kit",
+  "name": "onetoone",
   "version": "3.0.0-alpha.2",
   "description": "Get started with React, Redux, and React-Router!",
   "main": "index.js",
@@ -90,7 +90,7 @@
     "type": "git",
     "url": "git+https://github.com/janoist1/universal-react-redux-starter-kit.git"
   },
-  "author": "Istvan Jano <janoist1@gmail.com> *universal feature",
+  "author": "Istvan Jano <janoist1@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.2",
@@ -188,5 +188,15 @@
     "sinon-chai": "^2.8.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/janoist1/universal-react-redux-starter-kit/issues"
+  },
+  "homepage": "https://github.com/janoist1/universal-react-redux-starter-kit#readme",
+  "bin": {
+    "onetoone": "compile.js"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

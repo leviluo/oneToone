@@ -25,19 +25,22 @@ export default class Modal extends Component{
   }
 
   componentWillReceiveProps =(nextProps)=>{
-
+    console.log(nextProps.modalStatus)
+    // if(nextProps.modalStatus.isShow)
+    // this.props.modal(false)
   }
 
   shouldComponentUpdate =(nextProps,nextState)=>{
-    if (!nextProps.modalStatus.isShow) {
-      return false
-    }else{
+    if (nextProps.modalStatus.isShow) {
       this.showModal();
-      return true
+    }else{
+      this.hideModal();
     }
+      return true
   }
 
   componentDidUpdate =()=>{
+    console.log(this.props.modalStatus)
     if (this.props.modalStatus.isShow) {
       var ele = findDOMNode(this)
       var element = ele.getElementsByClassName("content")[0];
@@ -46,6 +49,8 @@ export default class Modal extends Component{
       ele.style.height = document.body.clientHeight + document.body.scrollTop + 'px';
       element.style.top = (document.body.scrollTop + (document.body.clientHeight - height)/2)+'px'
       element.style.left = (document.body.clientWidth - width)/2 + 'px'
+    }else{
+      this.hideModal()
     }
   }
 
@@ -55,7 +60,6 @@ export default class Modal extends Component{
 
   hideModal =()=>{
     findDOMNode(this).style.display = "none"
-    this.props.modal(false)
   }
 
   static propTypes = {
@@ -65,6 +69,7 @@ export default class Modal extends Component{
   }
 
   render(){
+    console.log(this.props)
     const{header,content,submit} = this.props;
     return(
         <div className='modal'>

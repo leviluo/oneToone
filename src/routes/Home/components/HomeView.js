@@ -1,26 +1,41 @@
 import React from 'react'
 import Helmet from 'react-helmet'
-import './HomeView.scss'
 import Banner from '../../../components/Banner'
 import {Link} from 'react-router'
 import {connect} from 'react-redux'
-const imgItems = ["banner1.jpg","banner2.jpg","banner3.jpg","banner4.jpg","banner5.jpg"]
+import {fetchCatelogue} from '../modules'
+// import {asyncConnect} from 'redux-async-connect'
 
+const imgItems = ["banner1.jpg","banner2.jpg","banner3.jpg","banner4.jpg","banner5.jpg"]
+import './HomeView.scss'
+
+// @asyncConnect([{
+//   promise: ({store: {dispatch, getState}}) => {
+//     const promises = [];
+
+//     if (!getState().catelogues.text.length < 1) {
+//       // promises.push(dispatch(fetchCatelogue()));
+//     }
+
+//     return Promise.all(promises);
+//   }
+// }])
 @connect(state=>({
-    categories:state.categories
-}),{})
+    catelogues:state.catelogues
+}),{fetchCatelogue})
 export default class HomeView extends React.Component{
 
-    comonentWillMount=()=>{
-        // if (!this.props.categories.text) {return}
+    componentWillMount=()=>{
+        // console.log(this.props.catelogues)
+        if (this.props.catelogues.text.length < 1) this.props.fetchCatelogue()
     }
 
     render(){   
         let _object = {};
         let cateItems = [];
-        this.props.categories.text.map(function(item,index){
-            if (!_object[item.parentName]) {_object[item.parentName]=[]}
-             _object[item.parentName].push(<li key={index}><Link>{item.childName}</Link></li>)
+        this.props.catelogues.text.map(function(item,index){
+            if (!_object[item.parentCatelogue]) {_object[item.parentCatelogue]=[]}
+             _object[item.parentCatelogue].push(<li key={index}><Link>{item.childCatelogue}</Link></li>)
         })
         for(var key in _object){
             cateItems.push(<li key={key}><Link>{key}</Link><span>&gt;</span><div className="categoryDetails"><ul>{_object[key]}</ul></div></li>)

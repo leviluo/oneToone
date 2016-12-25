@@ -27,6 +27,7 @@ CREATE TABLE `specialities` (
 CREATE TABLE `memberSpeciality` (  
   `id` mediumint(8) unsigned auto_increment,
   `memberId` mediumint(8) unsigned,
+  `specialitiesId` mediumint(8) unsigned,
   `brief` varchar(300) DEFAULT '',
   `experience` text DEFAULT '',
   PRIMARY KEY  (`id`)

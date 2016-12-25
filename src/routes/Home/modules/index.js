@@ -8,15 +8,15 @@ const RECEIVE_CATEGOIES = 'RECEIVE_CATEGOIES'
 // Actions
 // ------------------------------------
 
-export const receiveCategoy = (value) => ({
+export const receiveCatelogue = (value) => ({
   type: RECEIVE_CATEGOIES,
   value: value,
 })
 
-export function fetchCategoies () {
+export function fetchCatelogue () {
   return (dispatch, getState) => {
-    axios.get('/public/categoies').then(({data}) => {
-      dispatch(receiveCategoy(data))
+    axios.get('/public/catelogues').then(({data}) => {
+      dispatch(receiveCatelogue(data.data))
     })
   }
 }

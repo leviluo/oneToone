@@ -62,9 +62,15 @@ export default class Login extends Component{
     this.setState({
       content:
         <div>
-        <input type="text" onClick={this.phoneChange} placeholder="手机号"/>
-        <input type="text" onClick={this.codeChange} placeholder="验证码（6位）" style={{width:"80%"}}/><button className="btn-primary" style={{width:"20%"}}>发送验证码</button>
-        <input type="password" onClick={this.passChange} placeholder="新密码（6-20位字母数字_,无空格）"/>
+        <div>
+          <input type="text" onClick={this.phoneChange} placeholder="手机号"/>
+        </div>
+        <div>
+          <input type="text" onClick={this.codeChange} placeholder="验证码（6位）" style={{width:"80%"}}/><button className="btn-primary" style={{width:"20%"}}>发送验证码</button>
+        </div>
+        <div>
+          <input type="password" onClick={this.passChange} placeholder="新密码（6-20位字母数字_,无空格）"/>
+        </div>
         </div>
     })
     this.props.modal(true)

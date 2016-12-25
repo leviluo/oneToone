@@ -10,7 +10,8 @@ const initialReducers = {
   modal: (state = require('../components/Modal/modules/modal').initialState) => state,
   mylocation: (state = require('../components/Location/modules/location').initialState) => state,
   auth: (state = require('../components/Header/modules/auth').initialState) => state,
-  categories:(state = {text:[]}) => state
+  catelogues:(state = {text:[]}) => state,
+  myspecialities:(state = {text:[],isloaded:false}) => state
 }
 
 

@@ -2,24 +2,36 @@ import React, {Component} from 'react'
 import Helmet from 'react-helmet'
 import './membercenter.scss'
 import { connect } from 'react-redux'
-import {Link} from 'react-router'
 import { findDOMNode } from 'react-dom'
-import Modal from '../../../components/Modal'
-import Select from '../../../components/Select'
-import Textarea from '../../../components/Textarea'
-import {modal} from '../../../components/Modal/modules/modal'
+import SpecialityComponent from '../components/speciality.js'
+import {isAuth} from '../../../components/Header/modules/auth'
 
 @connect(
   state => ({
-    auth:state.auth
+    auth:state.auth,
     }),
-  {modal}
+  {isAuth}
 )
 export default class memberCenter extends Component {
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   state ={
     view:"basic",
-    content:<div></div>,
+  }
+
+  componentWillMount =()=>{
+    if(!this.props.auth.isAuth)this.props.isAuth(this.context.router)
+  }
+
+  shouldComponentUpdate =(nextProps)=>{
+    // if(nextProps.myspecialities === this.props.myspecialities)return false
+    // if(nextProps === this.props) return false
+    // console.log("1111")
+      // console.log("0000")
+    return true
   }
 
   componentDidMount = ()=>{
@@ -38,38 +50,8 @@ export default class memberCenter extends Component {
     })
   }
 
-  addSpeciatity=()=>{
-
-  }
-
-  specialityChange =()=>{
-
-  }
-
-  briefChange = ()=>{
-
-  }
-
-  experienceChange = ()=>{
-
-  }
-  showAddSpciality=()=>{
-    const items = [{key:1,value:"健身教练"},{key:2,value:"数学家教"}]
-    this.setState({
-      content:<div>
-      <Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} />
-      <br />
-      <br />
-      <Textarea header="简介" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
-      <br />
-      <Textarea header="经验" handleTextarea={this.experienceChange} />
-      </div>
-    })
-    this.props.modal(true);
-  }
-
-
   render () {
+    // console.log(this.props.auth)
     let nickname = this.props.auth.nickname
     return (
       <div className="memberCentercontent">
@@ -93,38 +75,13 @@ export default class memberCenter extends Component {
           <tbody>
           <tr><td>头像</td><td><img src="/favicon.ico" /><br /><a>修改</a></td></tr>
           <tr><td>昵称</td><td>{nickname}</td></tr>
-          <tr><td colSpan="2"><button>修改密码</button></td></tr>
+          <tr><td colSpan="2"><button className="btn-primary">修改密码</button></td></tr>
           </tbody>
           </table>
           </div>}
-          {this.state.view == "speciality" && <div className="speciality">
-
-          <div className="specialities">
-            <table>
-            <tbody>
-            <tr><td><h3>健身教练</h3></td><td><button className="btn-primary">修改</button></td></tr>
-            <tr><td>介绍</td><td>我的名字叫李奇</td></tr>
-            <tr><td>经验</td><td>经验撒地方撒分身乏术</td></tr>
-            <tr><td>我的小主</td><td>家里看监控计划</td></tr>
-            </tbody>
-            </table>
-          </div>
-
-          <div className="specialities">
-            <table>
-            <tbody>
-            <tr><td><h3>心理咨询</h3></td><td><button className="btn-primary">修改</button></td></tr>
-            <tr><td>介绍</td><td>我的名字叫李奇</td></tr>
-            <tr><td>经验</td><td>经验撒地方撒分身乏术</td></tr>
-            <tr><td>我的小主</td><td>人特委托人委托</td></tr>
-            </tbody>
-            </table>
-          </div>
-          <div className="addSpeciaity">
-          <button onClick={this.showAddSpciality} className="btn-primary">+</button>
-          </div>
-          <Modal header="添加专业" content={this.state.content} submit={this.addSpeciatity} />
-          </div>}
+          {this.state.view == "speciality" && 
+          <SpecialityComponent />
+          }
           {this.state.view == "team" && <div>tab3tab3tab3tab3</div>}
           {this.state.view == "noRead" && <div>tab4tab4tab4tab4tab4</div>}
           {this.state.view == "Read" && <div>tab5tab5tab5tab5tab5tab5</div>}

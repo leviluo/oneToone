@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { IndexLink, Link } from 'react-router'
-import {loginOut,isAuth} from './modules/auth'
+import {loginOut} from './modules/auth'
 import Location from '../Location'
 import {connect} from 'react-redux'
 import './Header.scss'
@@ -8,12 +8,12 @@ import 'font-awesome/scss/font-awesome.scss'
 
 @connect(
   state=>({auth:state.auth}),
-{isAuth,loginOut})
+{loginOut})
 
 export default class Header extends Component{
 
   componentWillMount =()=>{
-    if(!this.props.auth.isAuth)this.props.isAuth()
+
   }
 
   static contextTypes = {

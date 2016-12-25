@@ -5,8 +5,8 @@ export default class Select extends Component{
         render() {
                 const{defaultValue,header,handleChange,optionsItems} = this.props;
                 return ( < select onChange = { handleChange } defaultValue = {defaultValue} ><option>--{header}--</option>
-                            {optionsItems.map((item)=>
-                                <option key={item.key} value={item.key}>{item.value}</option>
+                            {optionsItems.map((item,index)=>
+                                <option key={index} value={item.key}>{item.value}</option>
                             )}
                     </select>
                 )

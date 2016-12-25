@@ -4,7 +4,7 @@ var crypto = require('crypto'); //加载crypto库
 const authController = {
     register: async function(next) {
         if (!this.request.body.phone || !this.request.body.password || !this.request.body.code || !this.request.body.nickname) {
-            this.body = "缺少参数"
+            this.body = { status: "err", msg: "缺少参数" }
             return
         };
         delete this.request.body.code;
@@ -15,12 +15,12 @@ const authController = {
         var result = await getByItems("member", { phone: this.request.body.phone })
 
         if (result.length > 0) {
-            this.body = "此用户已注册"
+            this.body = { status: "err", msg: "此用户已注册"}
             return
         }
         var resultt = await insert("member", this.request.body)
         if (resultt.affectedRows == 1) {
-            this.body = "success"
+            this.body = { status: "success" }
             return
         };
     },
@@ -60,7 +60,7 @@ const authController = {
     },
     loginOut:async function(next){
         this.session = null;
-        this.body = "success"
+        this.body = {status:"success"}
     }
 }
 export default authController;

@@ -12,7 +12,7 @@ export default (store) => ({
     require.ensure([], (require) => {
       const HomeView = require('./components/HomeView').default
       const reducer = require('./modules').default
-      injectReducer(store, { key: 'categories', reducer })
+      injectReducer(store, { key: 'catelogues', reducer })
       cb(null, HomeView)
     })
   }
