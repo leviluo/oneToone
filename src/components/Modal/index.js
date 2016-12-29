@@ -14,20 +14,11 @@ export default class Modal extends Component{
   }
 
   componentDidMount =(e)=>{
-    // var ele = findDOMNode(this)
-    // var element = ele.getElementsByClassName("content")[0];
-    // setTimeout(()=>{
-    //   var height = window.getComputedStyle(element,null).height.slice(0,-2)
-    //   var width = window.getComputedStyle(element,null).width.slice(0,-2)
-    //   element.style.top = (document.body.clientHeight - height)/2+'px'
-    //   element.style.left = (document.body.clientWidth - width)/2 + 'px'
-    // },10)
+
   }
 
   componentWillReceiveProps =(nextProps)=>{
-    console.log(nextProps.modalStatus)
-    // if(nextProps.modalStatus.isShow)
-    // this.props.modal(false)
+    // console.log(nextProps.modalStatus)
   }
 
   shouldComponentUpdate =(nextProps,nextState)=>{
@@ -70,7 +61,8 @@ export default class Modal extends Component{
 
   render(){
     console.log(this.props)
-    const{header,content,submit} = this.props;
+    const{header,content,submit,type} = this.props;
+    var ok = type ? type : '确定'
     return(
         <div className='modal'>
           <div className="content">
@@ -82,7 +74,7 @@ export default class Modal extends Component{
                   {content}
             </div>
             <div className="content-footer">
-              <button className="btn-primary" onClick={submit}>确定</button>
+              <button className="btn-primary" onClick={submit}>{ok}</button>
             </div>
           </div>
         </div>

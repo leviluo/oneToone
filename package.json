@@ -141,6 +141,7 @@
     "postcss-loader": "^0.9.1",
     "pretty-error": "^2.0.0",
     "react": "^15.0.0",
+    "react-cropper": "^0.10.0",
     "react-dom": "^15.0.0",
     "react-helmet": "^3.1.0",
     "react-redux": "^4.4.5",
