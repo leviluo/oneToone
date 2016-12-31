@@ -6,27 +6,3 @@
 		}
 	}
 }
-
-#headEdit{
-	width:300px;
-	height:200px;
-	cursor:move;
-	position:absolute;
-	z-index:1;
-	    border-spacing:0;
-	td{
-		background-color:rgba(0,0,0,0.3);
-		border:none;
-		width:100px;
-		height:50px;
-	}
-	tr,td{
-		
-	}
-}
-
-#imgEdit{
-	position:absolute;
-	left:0;
-	top:0
-}
