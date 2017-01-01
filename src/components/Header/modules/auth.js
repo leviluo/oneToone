@@ -40,7 +40,6 @@ export function isAuth(history) {
         dispatch(authIn(data.nickname));
       } else{
         // localStorage.setItem("nickname",data.nickname)
-        console.log(history)
         if (history) {
            history.push('/login')
         }

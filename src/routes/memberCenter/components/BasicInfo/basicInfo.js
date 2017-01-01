@@ -3,12 +3,14 @@ import './basicInfo.scss'
 import { connect } from 'react-redux'
 import Modal from '../../../../components/Modal'
 import {modal} from '../../../../components/Modal/modules/modal'
+import { tipShow } from '../../../../components/Tips/modules/tips'
+import {commitHeadImg} from './modules/basicInfo'
 
 @connect(
   state => ({
     auth:state.auth,
     }),
-  {modal}
+  {modal,tipShow,commitHeadImg}
 )
 
 export default class BasicInfo extends Component {
@@ -17,59 +19,96 @@ export default class BasicInfo extends Component {
     content: <div></div>
   }
 
-  inputImage = ()=>{
-    // console.log("000")
-  }
 
-  componentWillMount =()=>{
-    // console.log('000')
-    // this.setState({
-    //   content: <div id="headerEdit" style={{width:"100%",height:'200px',background:'url(/banner1.jpg)'}}>
-    //             <div></div>
-    //             <div></div>
-    //             <div><div></div></div>
-    //             <div></div>
-    //             <div></div>
-    //           </div>
-    // })
-    // this.props.modal(true)
-    
-  }
+   modifyHead =(e)=>{
+    //判断文件类型
+    var value = e.target.value
+    var filextension=value.substring(value.lastIndexOf("."),value.length);
+    filextension = filextension.toLowerCase();
+    if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+    {
+    this.props.tipShow({type:'error',msg:'文件类型不正确'})
+    return;
+    }
 
-  modifyHead =()=>{
+    if (document.getElementById('editCanvas')) { //清空画布
+      document.getElementById('editCanvas').getContext("2d").clearRect(0,0,300,150);  
+    }
+
+    var imageUrl = window.URL.createObjectURL(e.target.files[0])
     this.setState({
       content: 
-      <div id="headerEdit" style={{width:"400px",height:'250px',margin:'0 auto',backgroundImage:'url(/banner1.jpg)',backgroundPosition:'center',backgroundSize:'cover'}}>
-                <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(255,255,255,0.4)'}}></div>
-                <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(255,255,255,0.4)'}}></div>
-                <div style={{width:'100px',height:'100px',float:'left',margin:'0',cursor:'move'}} onMouseDown={this.start} onMouseUp={this.end} onMouseOut={this.end} ><div onMouseDown={this.startDrag} onMouseUp={this.end} onMouseOut={this.end} style={{width:'10px',height:'10px',background:'green',margin:'90px 0 0 90px',cursor:'nw-resize'}}></div></div>
-                <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(255,255,255,0.4)'}}></div>
-                <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(255,255,255,0.4)'}}></div>
+      <div id="headerEdit" onWheel={this.imgZoom} style={{width:"400px",height:'250px',position:'relative',margin:'0 auto',backgroundImage:`url(${imageUrl})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'100%'}}>
+                <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
+                <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
+                <canvas id="editCanvas" style={{width:'100px',height:'100px',float:'left',margin:'0',cursor:'move',border:'1px solid white'}} onMouseDown={this.start} onMouseUp={this.end} onMouseOut={this.end} ></canvas>
+                <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
+                <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
+                <img id="editImg" src={imageUrl} alt="" style={{display:'none'}}/>
       </div>
     })
     this.props.modal(true)
   }
 
-  modifyHeadSubmit =()=>{
-    console.log("000")
+  imgZoom =(e)=>{ //放大缩小图片
+    var element = document.getElementById('headerEdit')
+    if(parseInt(element.style.backgroundSize.slice(0,-1))>400){
+      element.style.backgroundSize = "400%"
+      return
+    }
+    if(parseInt(element.style.backgroundSize.slice(0,-1))<25){
+      element.style.backgroundSize = "25%"
+      return
+    }
+    if(e.deltaY > 0){
+      element.style.backgroundSize = parseInt(element.style.backgroundSize.slice(0,-1))/1.1+'%'
+    }else{
+      element.style.backgroundSize = parseInt(element.style.backgroundSize.slice(0,-1))*1.1+'%'
+    }
+  }
+
+
+  modifyHeadSubmit =()=>{ //提交
+    this.editInit()
+    var element = document.getElementById('headerEdit')
+    var image = document.getElementById('editImg')
+    var ratio = image.width*100/(400*parseInt(element.style.backgroundSize.slice(0,-1)))
+    var ctx=this.divcenter.getContext("2d");
+    var X = (this.divcenter.offsetLeft - (400*(1-parseInt(element.style.backgroundSize.slice(0,-1))/100)/2)) * ratio;
+    var Y = (this.divcenter.offsetTop - (250*(1-parseInt(element.style.backgroundSize.slice(0,-1))/100)/2)) * ratio;
+    ctx.drawImage(image,X,Y,100*ratio,100*ratio,0,0,300,150)
+
+    var data=this.divcenter.toDataURL();
+    // console.log(data)
+    // dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
+    data=data.split(',')[1];
+    data=window.atob(data);
+    var ia = new Uint8Array(data.length);
+    for (var i = 0; i < data.length; i++) {
+        ia[i] = data.charCodeAt(i);
+    };
+    // canvas.toDataURL 返回的默认格式就是 image/png
+    var blob=new Blob([ia], {type:"image/png"});
+    // console.log(blob)
+    var fd=new FormData();
+    fd.append('file',blob);
+    // console.log(fd)
+    this.props.commitHeadImg(fd)
   }
 
   editInit=(e)=>{
-
     var headerEdit = document.getElementById('headerEdit')
-
     if(!this.divtop)this.divtop = headerEdit.getElementsByTagName('div')[0]
     if(!this.divcenterLeft)this.divcenterLeft = headerEdit.getElementsByTagName('div')[1]
-    if(!this.divcenter)this.divcenter = headerEdit.getElementsByTagName('div')[2]
-    if(!this.divcenterRight)this.divcenterRight = headerEdit.getElementsByTagName('div')[4]
-    if(!this.divottom)this.divottom = headerEdit.getElementsByTagName('div')[5]
+    if(!this.divcenter)this.divcenter = headerEdit.getElementsByTagName('canvas')[0]
+    if(!this.divcenterRight)this.divcenterRight = headerEdit.getElementsByTagName('div')[2]
+    if(!this.divottom)this.divottom = headerEdit.getElementsByTagName('div')[3]
   }
 
-  start =(e)=>{
+  start =(e)=>{ //可移动选区
     this.editInit()
     var startX = e.clientX;
     var startY = e.clientY; 
-
     document.onmousemove = (e)=>{
          var diffX = e.clientX - startX
          var diffY = e.clientY - startY
@@ -90,73 +129,6 @@ export default class BasicInfo extends Component {
     }
   }
 
-  move =(e)=>{
-    // console.log("00")
-    // console.log(this.isMove)
-    if (!this.isMove) return;
-    console.log("11")
-    var diffX = e.clientX - this.startX
-    var diffY = e.clientY - this.startY
-     var ob = document.getElementById("imgEdit")
-      console.log(e.target)
-      console.log(ob)
-    var currentStartX = window.getComputedStyle(ob).left.slice(0,-2);
-    var currentStartY = window.getComputedStyle(ob).top.slice(0,-2);
-      console.log(currentStartX)
-      console.log(currentStartY)
-    // if((e.clientX - e.offsetX) <= 200){
-    //     ob.style.left = 0;
-    //     return
-    // }
-    // if((e.clientY - e.offsetY) <= 50){
-    //     ob.style.top = 0;
-    //     return
-    // }
-
-    ob.style.left = parseInt(currentStartX) + diffX + 'px'
-    ob.style.top = parseInt(currentStartY) + diffY + 'px'
-
-    this.startX = e.clientX;
-    this.startY = e.clientY;
-  }
-
-  startDrag =(e)=>{
-    e.stopPropagation()
-    this.editInit()
-    var startX = e.clientX;
-    // var startY = e.clientY; 
-    var me = e.target;
-
-    document.onmousemove = (e)=>{
-         var diffX = e.clientX - startX
-      // console.log(diffX)
-      // console.log(this.divcenter.style.height)
-         // var diffY = e.clientY - startY
-        var newH = Math.min(parseInt(this.divcenter.style.height.slice(0,-2)) + diffX,250-e.offsetY)
-        var newW = Math.min(parseInt(this.divcenter.style.width.slice(0,-2)) + diffX,400-e.offsetX)
-        if (newH == (250-e.offsetY) || newW == (400-e.offsetX)) {
-          return
-        }
-        // console.log(diffX)
-
-        this.divcenterLeft.style.height = newH + 'px'
-
-        this.divcenter.style.width = newH + 'px'
-        this.divcenter.style.height = newH + 'px'
-
-        this.divcenterRight.style.height = newH + 'px'
-        this.divcenterRight.style.width =  parseInt(this.divcenterRight.style.width.slice(0,-2)) - diffX + 'px'
-
-        // console.log(me)
-
-        // me.style.marginTop = 90 + diffX + 'px'
-        // me.style.marginleft = 90 + diffX + 'px'
-
-         startX = e.clientX;
-         // startY = e.clientY;
-    }
-  }
-
   end =(e)=>{
     document.onmousemove = null;
   }
@@ -167,7 +139,7 @@ export default class BasicInfo extends Component {
     <div>
           <table className="basicInfo">
             <tbody>
-            <tr><td>头像</td><td><img src="/favicon.ico" /><a onClick={this.modifyHead}>修改</a></td></tr>
+            <tr><td>头像</td><td><img src="/favicon.ico" /><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
             <tr><td>昵称</td><td>{nickname}</td></tr>
             <tr><td colSpan="2"><button className="btn-primary">修改密码</button></td></tr>
             </tbody>
@@ -181,4 +153,3 @@ export default class BasicInfo extends Component {
 BasicInfo.propTypes = {
   auth: React.PropTypes.object
 }
-
