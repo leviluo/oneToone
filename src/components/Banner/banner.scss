@@ -14,12 +14,12 @@
         background-size:cover
     }
     .go {
-        animation: move 1s linear 5s;
-        -moz-animation: move 1s linear 5s;
+        animation: move 1.1s linear 5s;
+        -moz-animation: move 1.1s linear 5s;
         /* Firefox */
-        -webkit-animation: move 1s linear 5s;
+        -webkit-animation: move 1.1s linear 5s;
         /* Safari 和 Chrome */
-        -o-animation: move 1s linear 5s;
+        -o-animation: move 1.1s linear 5s;
         /* Opera */
     }
     .show {

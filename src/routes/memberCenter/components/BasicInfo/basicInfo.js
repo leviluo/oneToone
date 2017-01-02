@@ -41,7 +41,7 @@ export default class BasicInfo extends Component {
       <div id="headerEdit" onWheel={this.imgZoom} style={{width:"400px",height:'250px',position:'relative',margin:'0 auto',backgroundImage:`url(${imageUrl})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'100%'}}>
                 <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
-                <canvas id="editCanvas" style={{width:'100px',height:'100px',float:'left',margin:'0',cursor:'move',border:'1px solid white'}} onMouseDown={this.start} onMouseUp={this.end} onMouseOut={this.end} ></canvas>
+                <canvas id="editCanvas" width="100" height="100" style={{width:'100px',height:'100px',float:'left',margin:'0',cursor:'move',border:'1px solid white'}} onMouseDown={this.start} onMouseUp={this.end} onMouseOut={this.end} ></canvas>
                 <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <img id="editImg" src={imageUrl} alt="" style={{display:'none'}}/>
@@ -52,18 +52,18 @@ export default class BasicInfo extends Component {
 
   imgZoom =(e)=>{ //放大缩小图片
     var element = document.getElementById('headerEdit')
-    if(parseInt(element.style.backgroundSize.slice(0,-1))>400){
+    if(parseFloat(element.style.backgroundSize.slice(0,-1))>400){
       element.style.backgroundSize = "400%"
       return
     }
-    if(parseInt(element.style.backgroundSize.slice(0,-1))<25){
+    if(parseFloat(element.style.backgroundSize.slice(0,-1))<25){
       element.style.backgroundSize = "25%"
       return
     }
     if(e.deltaY > 0){
-      element.style.backgroundSize = parseInt(element.style.backgroundSize.slice(0,-1))/1.1+'%'
+      element.style.backgroundSize = parseFloat(element.style.backgroundSize.slice(0,-1))/1.1+'%'
     }else{
-      element.style.backgroundSize = parseInt(element.style.backgroundSize.slice(0,-1))*1.1+'%'
+      element.style.backgroundSize = parseFloat(element.style.backgroundSize.slice(0,-1))*1.1+'%'
     }
   }
 
@@ -72,11 +72,13 @@ export default class BasicInfo extends Component {
     this.editInit()
     var element = document.getElementById('headerEdit')
     var image = document.getElementById('editImg')
-    var ratio = image.width*100/(400*parseInt(element.style.backgroundSize.slice(0,-1)))
+    var ratio = image.width*100/(400*parseFloat(element.style.backgroundSize.slice(0,-1)))
     var ctx=this.divcenter.getContext("2d");
-    var X = (this.divcenter.offsetLeft - (400*(1-parseInt(element.style.backgroundSize.slice(0,-1))/100)/2)) * ratio;
-    var Y = (this.divcenter.offsetTop - (250*(1-parseInt(element.style.backgroundSize.slice(0,-1))/100)/2)) * ratio;
-    ctx.drawImage(image,X,Y,100*ratio,100*ratio,0,0,300,150)
+
+    var X = (this.divcenter.offsetLeft - (400-image.width/ratio)/2) * ratio;
+    var Y = (this.divcenter.offsetTop - (250-image.height/ratio)/2) * ratio;
+
+    ctx.drawImage(image,X,Y,100*ratio,100*ratio,0,0,100,100)
 
     var data=this.divcenter.toDataURL();
     // console.log(data)
@@ -112,8 +114,8 @@ export default class BasicInfo extends Component {
     document.onmousemove = (e)=>{
          var diffX = e.clientX - startX
          var diffY = e.clientY - startY
-         var divtopH = Math.min(150,parseInt(this.divtop.style.height.slice(0,-2))+ diffY)
-         var divleftW = Math.min(300,parseInt(this.divcenterLeft.style.width.slice(0,-2))+ diffX)
+         var divtopH = Math.min(150,parseFloat(this.divtop.style.height.slice(0,-2))+ diffY)
+         var divleftW = Math.min(300,parseFloat(this.divcenterLeft.style.width.slice(0,-2))+ diffX)
          divleftW = Math.max(0,divleftW)
          if (divleftW == 0) {
           this.divcenterLeft.style.height = 0;
