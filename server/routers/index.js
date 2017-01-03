@@ -12,6 +12,7 @@ export default function routers(router){
 	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
+	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
 	//文件下载
 	// router.get('/download',fileController.fileDownload,router.allowedMethods());
 	//图片请求
