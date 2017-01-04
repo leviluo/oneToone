@@ -9,13 +9,25 @@ import { tipShow } from '../../../../components/Tips/modules/tips'
 import {addSpeciatity,fetchSpeciality} from './modules'
 // import {fetchCatelogue} from '../../../Home/modules'
 import './speciality.scss'
+import {asyncConnect} from 'redux-async-connect'
+
+
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    const promises = [];
+    if (!getState().myspecialities.isloaded) {
+      promises.push(dispatch(fetchSpeciality()));
+    }
+    return Promise.all(promises);
+  }
+}])
 
 @connect(
   state => ({
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modal,tipShow,addSpeciatity,fetchSpeciality}
+  {modal,tipShow,addSpeciatity}
 )
 export default class SpecialityComponent extends Component {
 
@@ -24,9 +36,9 @@ export default class SpecialityComponent extends Component {
   }
 
   componentWillMount =()=>{
-    if (!this.props.myspecialities.isloaded){
-      this.props.fetchSpeciality()
-    } 
+    // if (!this.props.myspecialities.isloaded){
+    //   this.props.fetchSpeciality()
+    // } 
   }
 
   shouldComponentUpdate =()=>{

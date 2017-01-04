@@ -96,9 +96,7 @@ export default class BasicInfo extends Component {
     fd.append('file',blob);
     // console.log(fd)
     this.props.commitHeadImg(fd)
-    setTimeout(()=>{
-      document.getElementById('test').setAttribute('src','/member/Headload')
-    },1000)
+    this.props.modal(false)
   }
 
   editInit=(e)=>{
@@ -144,7 +142,7 @@ export default class BasicInfo extends Component {
     <div>
           <table className="basicInfo">
             <tbody>
-            <tr><td>头像</td><td><img id="test" src="/member/Headload" /><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
+            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload" /><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
             <tr><td>昵称</td><td>{nickname}</td></tr>
             <tr><td colSpan="2"><button className="btn-primary">修改密码</button></td></tr>
             </tbody>

@@ -1,6 +1,19 @@
 import React, { Component, PropTypes } from 'react'
 import { fetchLocation } from './modules/location'
 import { connect } from 'react-redux';
+// import {asyncConnect} from 'redux-async-connect'
+
+// @asyncConnect([{
+//   promise: ({store: {dispatch, getState}}) => {
+//     const promises = [];
+//     // console.log("0000")
+//     if (!getState().mylocation.content) {
+//       promises.push(dispatch(fetchLocation()));
+//     }
+
+//     return Promise.all(promises);
+//   }
+// }])
 
 @connect(
   state => ({

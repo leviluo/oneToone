@@ -18,11 +18,13 @@ const authController = {
             this.body = { status: "err", msg: "此用户已注册"}
             return
         }
+        this.request.body.head = `./server/upload/headImages/${this.request.body.phone}.jpg`
         var resultt = await insert("member", this.request.body)
         if (resultt.affectedRows == 1) {
             this.body = { status: "success" }
             return
         };
+        
     },
     login: async function(next) {
         var phone = this.request.body.phone

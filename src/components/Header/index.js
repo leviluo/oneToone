@@ -12,6 +12,10 @@ import 'font-awesome/scss/font-awesome.scss'
 
 export default class Header extends Component{
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   componentWillMount =()=>{
     if(!this.props.auth.isAuth)this.props.isAuth()
   }

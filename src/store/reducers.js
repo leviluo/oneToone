@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { routerReducer as router } from 'react-router-redux'
+import { ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from 'redux-async-connect'
 
 // Fix: "React-Redux: Combining reducers: Unexpected Keys"
 // http://stackoverflow.com/a/33678198/789076
@@ -18,6 +19,7 @@ const initialReducers = {
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
     // Add sync reducers here
+    reduxAsyncConnect,
     router,
     ...initialReducers,
     ...asyncReducers

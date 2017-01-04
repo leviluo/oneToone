@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import Helmet from 'react-helmet'
 import defaultLayout from '../../config/layout'
 import clone from 'clone'
-
+import { ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from 'redux-async-connect'
 
 class AppContainer extends React.Component {
   static propTypes = {
@@ -22,7 +22,7 @@ class AppContainer extends React.Component {
       <Provider store={store}>
         <div style={{ height: '100%'}}>
           <Helmet {...Object.assign(clone(defaultLayout), layout)} />
-          <Router history={history} children={routes} key={routerKey} />
+          <Router render={(props) => <ReduxAsyncConnect {...props}/>} history={history} children={routes} key={routerKey} />
         </div>
       </Provider>
     )

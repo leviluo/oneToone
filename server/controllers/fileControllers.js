@@ -4,14 +4,21 @@ import { sqlStr } from '../dbHelps/mysql'
 
 function getImage(url){
     return new Promise(function(reslove,reject){
-     fs.readFile(url, "binary", function(error, file) {
-            if (error) {
-                reject(error)
-            } else {
-                reslove(file)
-            }
-        });
-    })
+        fs.exists(url, function (exists) {
+                    if (exists) {
+                        var file = url
+                    }else{
+                        var file = './server/upload/headImages/demo.jpg'
+                    }
+         fs.readFile(file, "binary", function(error, file) {
+                if (error) {
+                    reject(error)
+                } else {
+                    reslove(file)
+                }
+            });
+        })
+   }) 
 }
 
 function form(ob,user){
@@ -38,8 +45,6 @@ function form(ob,user){
             })
     })
 }
-
-
 
 const fileController = {
     loadHeadImg:async function(next){

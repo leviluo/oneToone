@@ -58,6 +58,7 @@ export default getClientInfo => {
         )
         head = Helmet.rewind()
         ctx.status = 500
+        
         ctx.body = renderHtmlLayout(head, <div dangerouslySetInnerHTML={{__html: content}} />)
       }
 
