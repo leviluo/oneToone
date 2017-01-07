@@ -59,6 +59,19 @@ const fileController = {
         this.res.write(result, "binary");
         this.res.end();
     },
+    publicuploadHeadImg:async function(next){
+        // console.log(this.request.body)
+        // console.log(this.request.query)
+        if (!this.request.query.member) {
+            this.body = { status: "err", msg: "缺少参数" }
+            return
+        }
+        var url = './server/upload/headImages/' + this.request.query.member + '.jpg';
+        var result = await getImage(url);
+        this.res.writeHead(200, { "Content-Type": "image/png" });
+        this.res.write(result, "binary");
+        this.res.end();
+    },
     uploadHeadImg:async function(next){
         // console.log(this.request)
         var user = this.session.user
@@ -69,7 +82,7 @@ const fileController = {
         var result = await form(this.req,user)
         if (result == 'success') {
             // var resultt = await sqlStr(`update member set head = '${dstPath}' where phone = ${user}`)
-            this.body = {status:'success'}
+            this.body = {status:200}
         }
     }
 }

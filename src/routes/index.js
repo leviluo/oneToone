@@ -6,6 +6,7 @@ import Zen from './Zen'
 import Register from './Register'
 import memberCenter from './memberCenter'
 import Login from './Login'
+import Categories from './Categories'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -20,6 +21,7 @@ export const createRoutes = (store) => ({
     Register(store),
     memberCenter(store),
     Login(store),
+    Categories(store)
   ]
 })
 

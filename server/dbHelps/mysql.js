@@ -43,32 +43,13 @@ function release(connection) {
         });
     } catch (err) {console.log("数据库异常",err)}
 }
-//对外接口返回Promise函数形式
-exports.getByItems = function(tablename, values){
-    return new Promise(function(resolve, reject){
-        // var values = {phone:phone};
-        var condition = '';
-        for(var key in values){
-            condition += `${key} = "${values[key]}" and `
-        }
-        var sql = `select * from ${tablename} where ${condition.slice(0,-4)}`;
-        // console.log(sql)
-        execQuery(sql,[{}, {}], function(err, rows){
-            if(err){
-                reject(err);
-            }else{
-                resolve(rows);
-            }
-        })
-    });
-}
+
 //插入新数据
 exports.insert = function(tablename,items){
     return new Promise(function(resolve, reject){
         var sql = 'INSERT INTO ?? SET ?';
         execQuery(sql,[tablename, items], function(err, rows){
             if(err){
-
                 reject(err);
             }else{
                 resolve(rows);
@@ -77,9 +58,10 @@ exports.insert = function(tablename,items){
     });
 }
 //自定义sql
-exports.sqlStr = function(sqlText){
+exports.sqlStr = function(sqlText,items){
+    var params = items ? items : []
     return new Promise(function(resolve, reject){
-        execQuery(sqlText,[],function(err, rows){
+        execQuery(sqlText,params,function(err, rows){
             if(err){
                 reject(err);
             }else{

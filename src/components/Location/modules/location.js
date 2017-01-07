@@ -45,7 +45,7 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: true})
   },
   [RECEIVE_LOCATION]: (state, action) => {
-    return ({...state, fetching: false, text:action.payload})
+    return ({...state, fetching: false, text:action.payload,isloaded:true})
   }
 }
 
@@ -54,7 +54,8 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 export const initialState = {
   fetching: false,
-  text: {}
+  text: {},
+  isloaded:false
 }
 export default function (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

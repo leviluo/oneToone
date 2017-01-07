@@ -20,6 +20,7 @@ export default class Tip extends Component {
     
     componentDidUpdate = (e) => {
         findDOMNode(this).style.left = ((document.body.clientWidth-window.getComputedStyle(findDOMNode(this),null).width.slice(0,-2)) / 2) + 'px';
+        findDOMNode(this).style.top = (document.body.scrollTop + 60) + 'px';
     }
 
     componentWillUpdate() {
@@ -33,7 +34,7 @@ export default class Tip extends Component {
             if (nextProps.result.type=="success") {
                 this.showTip("#008B00")
             }else{
-                this.showTip("rgb(200,0,0)")
+                this.showTip("#FF7F00")
             }
             setTimeout(()=>{
             that.hideTip();
@@ -64,6 +65,7 @@ export default class Tip extends Component {
 
     render() {
         console.log("tips")
+        console.log(this.props)
         return ( 
             < div id = "tips" > {this.props.result.msg} </div >
         )

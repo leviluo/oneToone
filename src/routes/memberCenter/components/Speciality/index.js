@@ -5,8 +5,10 @@ export default (store) => ({
     getComponent(nextState, cb) {
         require.ensure([], (require) => {
             const speciality = require('./speciality').default
-            const reducer = require('./modules').default
+            var reducer = require('./modules').default
             injectReducer(store, { key: 'myspecialities', reducer })
+            reducer = require('../../../../reducers/category').default
+            injectReducer(store, { key: 'catelogues', reducer })
             cb(null, speciality)
         })
     },

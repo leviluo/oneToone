@@ -7,7 +7,7 @@ import Textarea from '../../../../components/Textarea'
 import {modal} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {addSpeciatity,fetchSpeciality} from './modules'
-// import {fetchCatelogue} from '../../../Home/modules'
+import {fetchCatelogue} from '../../../../reducers/category'
 import './speciality.scss'
 import {asyncConnect} from 'redux-async-connect'
 
@@ -17,6 +17,9 @@ import {asyncConnect} from 'redux-async-connect'
     const promises = [];
     if (!getState().myspecialities.isloaded) {
       promises.push(dispatch(fetchSpeciality()));
+    }
+    if (!getState().catelogues.isloaded) {
+      promises.push(dispatch(fetchCatelogue()));
     }
     return Promise.all(promises);
   }
@@ -50,6 +53,7 @@ export default class SpecialityComponent extends Component {
 
 
   addSpeciatity=()=>{
+
     if (!this.state.speciality) {
       this.props.tipShow({type:"error",msg:"选择一个专业"})
       return

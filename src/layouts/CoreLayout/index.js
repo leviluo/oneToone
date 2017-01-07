@@ -9,7 +9,7 @@ export default function MyCoreLayout(store){
 	injectReducer(store, { key: 'modal', reducer })
 	reducer = require('../../components/Location/modules/location').default  
 	injectReducer(store, { key: 'mylocation', reducer })
-	reducer = require('../../components/Header/modules/auth').default  
+	reducer = require('../../reducers/auth').default  
 	injectReducer(store, { key: 'auth', reducer })
 	return CoreLayout
 }

@@ -10,9 +10,10 @@ const initialReducers = {
   mytips: (state = require('../components/Tips/modules/tips').initialState) => state,
   modal: (state = require('../components/Modal/modules/modal').initialState) => state,
   mylocation: (state = require('../components/Location/modules/location').initialState) => state,
-  auth: (state = require('../components/Header/modules/auth').initialState) => state,
-  catelogues:(state = require('../routes/Home/modules').initialState) => state,
-  myspecialities:(state = {text:[],isloaded:false}) => state
+  auth: (state = require('../reducers/auth').initialState) => state,
+  catelogues:(state = require('../reducers/category').initialState) => state,
+  myspecialities:(state = {text:[],isloaded:false}) => state,
+  items:(state = {text:[],isloaded:false}) => state,
 }
 
 

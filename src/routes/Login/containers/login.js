@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import './login.scss'
-import {login} from '../../../components/Header/modules/auth'
+import {login} from '../../../reducers/auth'
 import {connect} from 'react-redux'
 import {tipShow} from '../../../components/Tips/modules/tips'
 import {modal} from '../../../components/Modal/modules/modal'
@@ -30,8 +30,8 @@ export default class Login extends Component{
         return;
     };
 
-    if (!this.refs.password.value) {
-        this.props.tipShow({type:"error",msg:'未填写密码'})
+    if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,20}$/.test(this.refs.password.value)) {
+        this.props.tipShow({type:"error",msg:'密码格式不正确'})
         return;
     }
 
@@ -69,7 +69,7 @@ export default class Login extends Component{
           <input type="text" onClick={this.codeChange} placeholder="验证码（6位）" style={{width:"80%"}}/><button className="btn-primary" style={{width:"20%"}}>发送验证码</button>
         </div>
         <div>
-          <input type="password" onClick={this.passChange} placeholder="新密码（6-20位字母数字_,无空格）"/>
+          <input type="password" onClick={this.passChange} placeholder="新密码(6-20位字母数字_,无空格)"/>
         </div>
         </div>
     })
@@ -88,7 +88,7 @@ export default class Login extends Component{
         </div>
         <br />
         <div>
-            <input type="password" ref="password" placeholder="密码（6-16位字母数字，无空格）"/>
+            <input type="password" ref="password" placeholder="密码（6-16位字母数字_,无空格）"/>
         </div>
         <div>
             <button className="btn-primary" type="submit" onClick={this.submit}>提交</button>

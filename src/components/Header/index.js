@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { IndexLink, Link } from 'react-router'
-import {loginOut,isAuth} from './modules/auth'
+import {loginOut,isAuth} from '../../reducers/auth'
 import Location from '../Location'
 import {connect} from 'react-redux'
 import './Header.scss'

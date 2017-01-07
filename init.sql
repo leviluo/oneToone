@@ -7,10 +7,12 @@ CREATE TABLE `member` (
   `phone` varchar(40) DEFAULT '',   
   `location` varchar(15) default '',
   `head` varchar(30) default '',
+  `sex` char(1),
   `createAt` datetime default now(),
   `updateAt` datetime default now(),
   PRIMARY KEY  (`id`)
 );
+
 //专业类目表
 CREATE TABLE `specialityCategory` (  
   `id` mediumint(8) unsigned auto_increment,
@@ -46,6 +48,7 @@ insert into specialityCategory set name="健康";
 insert into specialityCategory set name="理财/经济";
 insert into specialityCategory set name="法律";
 insert into specialityCategory set name="学习";
+insert into specialityCategory set name="生活";
 
 insert into specialities set name="健身教练",categoryId=1;
 insert into specialities set name="游泳教练",categoryId=1;

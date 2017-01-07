@@ -18,6 +18,16 @@ export default class Register extends Component {
     router: React.PropTypes.object.isRequired
   };
 
+  state = {
+    sex:0
+  }
+
+  sexChange =(e)=>{
+    this.setState({
+      sex:e.target.value
+    })
+  }
+
   submit =()=>{
 
     var pattern = /^[1][34578][0-9]{9}$/;
@@ -26,14 +36,14 @@ export default class Register extends Component {
         return;
     };
 
-    pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_\.]{6,20}$/;
+    pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,20}$/;
     if (!pattern.test(this.refs.password.value)){
       this.props.tipShow({type:"error",msg:"密码格式不正确"})
       return
     }
-
-    if (!this.refs.nickname.value) {
-      this.props.tipShow({type:"error",msg:"请填写昵称"})
+console.log(this.refs.nickname.value.length)
+    if (!this.refs.nickname.value || this.refs.nickname.value.length > 20) {
+      this.props.tipShow({type:"error",msg:"昵称格式不正确"})
       return
     }
 
@@ -43,7 +53,14 @@ export default class Register extends Component {
     }
 
     let address = this.props.mylocation.content ? this.props.mylocation.content.address :'';
-    this.props.fetchRegister({phone:this.refs.phone.value,password:this.refs.password.value,nickname:this.refs.nickname.value,code:this.refs.code.value,location:address},this.context.router)
+    this.props.fetchRegister({
+      phone:this.refs.phone.value,
+      password:this.refs.password.value,
+      nickname:this.refs.nickname.value,
+      code:this.refs.code.value,
+      sex:this.state.sex,
+      location:address
+    },this.context.router)
   }
 
   render () {
@@ -63,7 +80,12 @@ export default class Register extends Component {
         </div>
         <br />
         <div>
-            <input type="text" ref="nickname" placeholder="昵称"/>
+            <input type="text" ref="nickname" placeholder="昵称(小于20个字符)"/>
+        </div>
+        <div className="registerSex">
+            性别:
+            <input type="radio" onChange={this.sexChange} value="0" defaultChecked name="sex"/>男
+            <input type="radio" onChange={this.sexChange} value="1" name="sex"/>女
         </div>
         <br />
         <div>

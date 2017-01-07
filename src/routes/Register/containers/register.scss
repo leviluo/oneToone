@@ -13,14 +13,6 @@
 	 margin:0 auto;
 	 text-align:center;
 	 padding-bottom:30px;
-	 input{
-	 	width:300px;
-	 	height:40px;
-	 	background:#efefef;
-	 	-webkit-tap-highlight-color:none;
-	 	border:none;
-	 	text-indent:5px
-	 }
 	 input:focus{
 	 	border:1px solid #1C86EE
 	 }
@@ -28,6 +20,11 @@
 	 	position:relative;
 	 	top:-1px;
 	 	width:250px
+	 }
+	 .registerSex{
+	 text-align:left;
+	 height:40px;
+	 padding-top:20px;
 	 }
 	 .codebtn{
 	 	width:50px;

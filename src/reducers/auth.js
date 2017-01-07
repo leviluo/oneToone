@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {tipResult} from '../../../components/Tips/modules/tips'
+import {tipResult} from '../components/Tips/modules/tips'
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -35,7 +35,7 @@ function authOut () {
 export function isAuth(history) {
   return (dispatch, getState) => {
     axios.get('/auth').then(({data}) => {
-      if (data.status == "success") {
+      if (data.status == 200) {
         // localStorage.setItem("nickname",data.nickname)
         dispatch(authIn(data.nickname));
       } else{
@@ -53,7 +53,7 @@ export function login(items,history) {
   return (dispatch, getState) => {
     dispatch(requestLOGIN())
     axios.post('/login',items).then(({data}) => {
-      if (data.status == "success") {
+      if (data.status == 200) {
           // localStorage.setItem("nickname",data.nickname)
           dispatch(authIn(data.nickname));
           history.push('/memberCenter')
@@ -67,7 +67,7 @@ export function login(items,history) {
 export function loginOut (history) {
   return (dispatch, getState) => {
     axios.get('/loginOut').then(({data}) => {
-      if (data.status == "success") {
+      if (data.status == 200) {
       // localStorage.removeItem("nickname")
       dispatch(authOut())
       history.push('/')

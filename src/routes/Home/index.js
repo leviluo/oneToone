@@ -11,7 +11,7 @@ export default (store) => ({
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
       const HomeView = require('./components/HomeView').default
-      const reducer = require('./modules').default
+      const reducer = require('../../reducers/category').default
       injectReducer(store, { key: 'catelogues', reducer })
       cb(null, HomeView)
     })

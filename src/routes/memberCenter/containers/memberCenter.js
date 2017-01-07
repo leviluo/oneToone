@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Helmet from 'react-helmet'
 import './membercenter.scss'
 import {Link} from 'react-router'
-import {isAuth} from '../../../components/Header/modules/auth'
+import {isAuth} from '../../../reducers/auth'
 import { connect } from 'react-redux'
 
 @connect(
@@ -21,6 +21,7 @@ export default class memberCenter extends Component {
   }
 
     render(){
+      console.log(this.props)
       return(
           <div className="memberCentercontent">
             <Helmet title='个人中心' />
