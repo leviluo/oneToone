@@ -1,0 +1,77 @@
+.location {
+    position:relative;
+    div {
+        position:absolute;
+        width:375px;
+        heigth:150px;
+        border:1px solid #ccc;
+        background:#fff;
+        left:0;
+        top:24px;
+        padding:5px;
+        display:none;
+        z-index:100;
+        ul{
+        	padding:0;
+        	margin:0;
+        	li{
+        	 float:left;
+        	 width:60px;
+        	 height:40px;
+        	 line-height:40px;
+        	 text-align:center;
+	        	 a{
+	        	    display:block;
+		        	 &:hover{
+		        	 background:#efefef;
+		        	 }
+        	 	 }
+        	}
+        	li:last-of-type a{
+        	color:#ff552e;
+        	}
+        }
+    }
+    span{
+    color:#ff552e;
+    }
+    .showmove{
+    	animation: moveshow 0.2s linear;
+        -moz-animation: moveshow 0.2s linear;
+        /* Firefox */
+        -webkit-animation: moveshow 0.2s linear;
+        /* Safari 和 Chrome */
+        -o-animation: moveshow 0.2s linear;
+        /* Opera */
+    }
+}
+
+@keyframes moveshow {
+    from {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        left:-100px;
+    }
+
+    to {
+        filter: alpha(opacity=1);
+        opacity: 1;
+        left:0
+    }
+}
+
+@-webkit-keyframes moveshow
+/*Safari and Chrome*/
+{
+   	from {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        left:-100px;
+    }
+
+    to {
+        filter: alpha(opacity=1);
+        opacity: 1;
+        left:0
+    }
+}

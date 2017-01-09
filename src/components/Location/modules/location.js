@@ -30,12 +30,12 @@ export function fetchLocation () {
     })
   }
 }
-
-export const actions = {
-  requestLocation,
-  receiveLocation,
-  fetchLocation
+export function modifyLocation(city) {
+  return (dispatch, getState) => {
+      dispatch(receiveLocation({content:{address:city}}))
+  }
 }
+
 
 // ------------------------------------
 // Action Handlers

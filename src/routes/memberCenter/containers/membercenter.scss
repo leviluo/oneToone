@@ -1,9 +1,11 @@
 .memberCentercontent{
+	position:relative;
 	.memberCenterContentLeft{
-		float:left;
+		display:inline-block;
 		width:15%;
-
 		text-align:center;
+		position:absolute;
+		top:0;
 		h3{
 			color:#1C86EE;
 			background:white;
@@ -11,7 +13,6 @@
 			margin:0 auto;
 			height:30px;
 			line-height:30px;
-			border-radius:5px;
 		}
 		ul{
 			padding:0;
@@ -31,8 +32,9 @@
 		border:1px solid #ccc;
 		border-radius:5px;
 		padding:10px;
-		float:right;
+		display:inline-block;
 		background:white;
+		margin-left:15%;
 		width:85%;
 	/*	box-shadow:0 0 3px 3px #ccc; */
 		table{

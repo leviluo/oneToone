@@ -36,6 +36,7 @@ const authController = {
             return
         }
         this.request.body.head = `./server/upload/headImages/${this.request.body.phone}.jpg`
+        this.request.body.address = this.request.body.location;
         var resultt = await insert("member", this.request.body)
         if (resultt.affectedRows == 1) {
             this.body = { status: 200 }

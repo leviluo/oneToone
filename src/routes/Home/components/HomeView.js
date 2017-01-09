@@ -36,10 +36,10 @@ export default class HomeView extends React.Component{
              _object[item.parentCatelogue].push(<li key={index}><Link to="/categories/" query={{parentCatelogue:item.parentCatelogue,childCatelogue:item.childCatelogue}}>{item.childCatelogue}</Link></li>)
         })
         for(var key in _object){
-            this.cateItems.push(<li key={key}><Link to="/categories/" query={{parentCatelogue:key}}>{key}</Link><span className="fa fa-angle-right"></span><div className="categoryDetails"><ul>{_object[key]}</ul></div></li>)
+            this.cateItems.push(<li key={key}><Link to="/categories/" query={{parentCatelogue:key}}>{key}<span className="fa fa-angle-right"></span></Link><div className="categoryDetails"><ul>{_object[key]}</ul></div></li>)
         }
 
-        return <div>
+        return <div className="home">
         <Helmet title='首页' />
         <div className="homeContent">
         	<div className="categoryContent">

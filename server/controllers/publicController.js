@@ -6,11 +6,15 @@ const publicController = {
         this.body = {status:200,data:result}
     },
     items:async function(next){
-    	if (!this.request.body.address || !this.request.body.speciality) {
+    	if (!this.request.body.address) {
     		this.body = {status:500,msg:"缺少参数"}
     		return
     	}
-    	var result = await sqlStr("select m.nickname,m.location,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?);",[this.request.body.speciality,this.request.body.address,this.request.body.address.slice(0,-1)])
+        if (this.request.body.parentSpeciality) {
+    	   var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.categoryId = (select id from specialityCategory where name = ? ) and (m.location = ? or m.location = ?);",[this.request.body.parentSpeciality,this.request.body.address,this.request.body.address+'市'])
+        }else if(this.request.body.speciality){
+           var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?);",[this.request.body.speciality,this.request.body.address,this.request.body.address+'市'])
+        }
     	this.body = {status:200,data:result}
     }
 }

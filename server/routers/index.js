@@ -17,6 +17,7 @@ export default function routers(router){
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
 	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
+	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods());
 
 	// router.get('*', async function (next){

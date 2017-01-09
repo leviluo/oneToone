@@ -1,0 +1,29 @@
+.pagedown{
+   float:right;
+   margin:15px 0;
+   li{
+    list-style-type: none;
+    float: left;
+    a{
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        display: block;
+        text-align: center;
+        margin-left: 5px;
+        color:#436EEE;
+        text-decoration:none;
+        cursor:pointer;
+        background: #ccc;
+        &:hover{
+            background: #436EEE; 
+            color:white
+        }
+    }
+     .btn-primary {
+        margin-left: 5px;
+        line-height:30px;
+        height:30px
+     }
+   }
+}

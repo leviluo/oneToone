@@ -27,6 +27,16 @@ const memberController = {
         }
         var result = await sqlStr("select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[this.session.user])
         this.body = {status:200,data:result}
+    },
+    getMemberInfo:async function(){
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        console.log(this.session.user)
+        var result = await sqlStr("select address,sex from member where phone = ?",[this.session.user])
+        console.log(result)
+        this.body = {status:200,data:result}
     }
 }
 export default memberController;

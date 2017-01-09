@@ -4,19 +4,33 @@ import { connect } from 'react-redux'
 import Modal from '../../../../components/Modal'
 import {modal} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg} from './modules/basicInfo'
+import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
+import axios from 'axios'
 
 @connect(
   state => ({
     auth:state.auth,
     }),
-  {modal,tipShow,commitHeadImg}
+  {modal,tipShow,commitHeadImg,getMemberInfo}
 )
 
 export default class BasicInfo extends Component {
 
   state ={
-    content: <div></div>
+    content: <div></div>,
+    address: ''
+  }
+
+  componentWillMount =()=>{
+    axios.get('/member/getMemberInfo').then(({data}) => {
+        if (data.status==200) {
+            this.setState({
+              address:data.data[0].address
+            })
+        }else{
+            this.props.tipShow({type:'error',msg:data.msg})
+        }
+      })
   }
 
 
@@ -142,9 +156,9 @@ export default class BasicInfo extends Component {
     <div>
           <table className="basicInfo">
             <tbody>
-            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload" /><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
-            <tr><td>昵称</td><td>{nickname}</td></tr>
-            <tr><td colSpan="2"><button className="btn-primary">修改密码</button></td></tr>
+            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
+            <tr><td>昵称</td><td>{nickname}</td><td><a>修改</a></td></tr>
+            <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
             </tbody>
           </table>
           <Modal header="修改头像" type="提交" content={this.state.content} submit={this.modifyHeadSubmit} />

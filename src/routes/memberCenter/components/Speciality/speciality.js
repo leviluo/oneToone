@@ -12,12 +12,13 @@ import './speciality.scss'
 import {asyncConnect} from 'redux-async-connect'
 
 
+
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-    if (!getState().myspecialities.isloaded) {
+    // if (!getState().myspecialities.isloaded) {
       promises.push(dispatch(fetchSpeciality()));
-    }
+    // }
     if (!getState().catelogues.isloaded) {
       promises.push(dispatch(fetchCatelogue()));
     }

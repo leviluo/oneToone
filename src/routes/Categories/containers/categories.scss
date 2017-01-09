@@ -28,10 +28,12 @@
 							border-bottom:1px dotted #999;
 							ul{
 								padding:0;
+								margin:0;
 								li{
 									float:left;
 									a{
 										height:35px;
+										line-height:35px;
 										width:90px;
 										display:block;
 										color:#000;
@@ -51,8 +53,41 @@
 	.itemContent{
 		margin-top:5px;
 		width:100%;
-		border:2px solid #D1EEEE;
-		height:200px;
+		height:150px;
 		background:#fff;
+		border:2px solid #D1EEEE;
+		border-radius:50px 0 0 50px;
+		div:first-of-type{
+			height:110px;
+			width:110px;
+			padding:5px;
+			float:left;
+			background:#efefef;
+			margin:15px;
+			border-radius:50px;
+			img{
+				border-radius:50px;
+			}
+		}
+		&>span{
+			float:right;
+			color:#3A5FCD;
+			background:#D1EEEE;
+			padding:5px 15px;
+		}
+		div:nth-of-type(2){
+			li{
+				height:30px;
+				line-height:30px
+			}
+			.fa-female{
+				color:red;
+				font-size:130%
+			}
+			.fa-male{
+				color:#3a5fcd;
+				font-size:130%
+			}
+		}
 	}
 }

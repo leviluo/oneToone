@@ -12,3 +12,15 @@ export function commitHeadImg(items) {
     })
   }
 }
+
+export function getMemberInfo() {
+	    axios.get('/member/getMemberInfo').then(({data}) => {
+	      if (data.status==200) {
+	      	console.log(data)
+	          return Promise.resolve(data.data)
+	      }else{
+	          dispatch(tipResult({type:"error",msg:data.msg}))
+	          return Promise.reject(data.msg)
+	      }
+	    })
+}
