@@ -51,7 +51,7 @@ export default class Location extends Component{
     return(
       <span className="location">
        <span><i className="fa fa-map-marker"></i>&nbsp;[{address}]&nbsp;</span>
-        <a onClick={this.changeCity}>切换城市
+        <a onClick={this.changeCity}>切换城市&nbsp;<i className="fa fa-sort-down"></i>
         </a>
           <div id="locationCities">
             <ul>

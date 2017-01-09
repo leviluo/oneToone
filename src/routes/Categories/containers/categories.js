@@ -46,7 +46,7 @@ export default class Categories extends React.Component{
         if(document.getElementsByName(this.props.location.query.childCatelogue)[0]){
             document.getElementsByName(this.props.location.query.childCatelogue)[0].style.color = "#3a5fcd"
         }else{
-            document.getElementsByName("allCategory")[0].style.color = "#3a5fcd"
+            document.getElementsByName(this.props.location.query.parentCatelogue)[0].style.color = "#3a5fcd"
         }
     }
 
@@ -62,7 +62,11 @@ export default class Categories extends React.Component{
             address:address,
             childCatelogue:props.location.query.childCatelogue
         })
+        if (props.location.query.childCatelogue) {   //从子条目进入
         this.props.fetchItems({address:address,speciality:speciality})
+        }else{                                       //从父条目进入
+        this.props.fetchItems({address:address,parentSpeciality:speciality})  
+        }
     }
 
     componentWillReceiveProps =(nextProps)=>{
@@ -170,7 +174,7 @@ export default class Categories extends React.Component{
                 return <div key={index} className="itemContent">
                      <span><a>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
                     <div><img src={src} alt=""/></div>
-                    <div><ul><li>{item.nickname}({item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li>{brief}</li><li>{item.name}</li><li>{item.address}</li></ul></div>
+                    <div><ul><li>{item.nickname}(<span className="title">性别:</span>{item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li><span className="title">简介:</span>{brief}</li><li><span className="title">能力:</span>{item.name}</li><li><span className="title">现居住地:</span>{item.address}</li></ul></div>
                 </div>
             }
             )}

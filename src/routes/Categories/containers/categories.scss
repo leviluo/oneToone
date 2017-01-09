@@ -1,14 +1,14 @@
 .category{
 	.categoryTop{
 		width:100%;
-		border-bottom:2px solid #D1EEEE;
+		border-bottom:2px solid #F0F8FF;
 		background:	#fff;
 		nav{
 			height:40px;
 			line-height:40px;
 			padding-left:15px;
 			width:100%;
-			background:#D1EEEE;
+			background:#F0F8FF;
 			color:#3A5FCD;
 			a{
 			color:#3A5FCD;
@@ -55,7 +55,7 @@
 		width:100%;
 		height:150px;
 		background:#fff;
-		border:2px solid #D1EEEE;
+		border:2px solid #F0F8FF;
 		border-radius:50px 0 0 50px;
 		div:first-of-type{
 			height:110px;
@@ -72,13 +72,17 @@
 		&>span{
 			float:right;
 			color:#3A5FCD;
-			background:#D1EEEE;
+			background:#F0F8FF;
 			padding:5px 15px;
 		}
 		div:nth-of-type(2){
 			li{
 				height:30px;
-				line-height:30px
+				line-height:30px;
+				.title{
+					color:#999;
+					margin-right:10px;
+				}
 			}
 			.fa-female{
 				color:red;

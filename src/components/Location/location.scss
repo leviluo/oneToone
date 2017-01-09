@@ -1,5 +1,14 @@
 .location {
     position:relative;
+    a:hover{
+        .fa-sort-down{
+         transform:rotate(-90deg)
+        }
+    }
+    .fa-sort-down{
+         position:relative;
+         top:-2px;
+    }
     div {
         position:absolute;
         width:375px;
