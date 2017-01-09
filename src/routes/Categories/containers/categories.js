@@ -50,17 +50,23 @@ export default class Categories extends React.Component{
         }
     }
 
+    state ={
+        childCatelogue:''
+    }
+
     initItems =(props)=>{
+
         let speciality = props.location.query.childCatelogue ? props.location.query.childCatelogue :props.location.query.parentCatelogue
         let address = props.mylocation.text.content ? props.mylocation.text.content.address :'';
         this.setState({
-            address:address
+            address:address,
+            childCatelogue:props.location.query.childCatelogue
         })
         this.props.fetchItems({address:address,speciality:speciality})
     }
 
     componentWillReceiveProps =(nextProps)=>{
-        if (nextProps.mylocation.isloaded && !nextProps.items.isloaded) {
+        if ((nextProps.mylocation.isloaded && !nextProps.items.isloaded) || nextProps.mylocation != this.props.mylocation) { //首次更新或者更新地址后再次更新视图
             this.initItems(nextProps)
             this.resetStyle(nextProps.location.query.childCatelogue?nextProps.location.query.childCatelogue:nextProps.location.query.parentCatelogue);   //刷新页面
         }
@@ -68,7 +74,7 @@ export default class Categories extends React.Component{
 
     state = {
         currentPage:1,
-        averagenum:10
+        averagenum:5
     }    
 
     pageup = (e)=>{
@@ -100,7 +106,7 @@ export default class Categories extends React.Component{
     }
 
     pagego = (e,currentPage) =>{
-        console.log(currentPage)
+        // console.log(currentPage)
         if (this.state.currentPage == currentPage) {return};
             this.setState({
                 currentPage:currentPage
@@ -121,11 +127,17 @@ export default class Categories extends React.Component{
     allCategory = (e)=>{
         this.resetStyle(this.props.location.query.parentCatelogue)
         this.props.fetchItems({address:this.state.address,parentSpeciality:this.props.location.query.parentCatelogue})
+        this.setState({
+            childCatelogue:''
+        })
     }
 
     getoneCategory=(speciality)=>{
         this.resetStyle(speciality)
         this.props.fetchItems({address:this.state.address,speciality:speciality})
+        this.setState({
+            childCatelogue:speciality
+        })
     }
 
 
@@ -135,7 +147,7 @@ export default class Categories extends React.Component{
         return <div className="category">
         <Helmet title={this.props.location.query.parentCatelogue} />
         <div className="categoryTop">
-            <nav><Link to="/">首页</Link> &gt; <Link to="/categories/" query={{parentCatelogue:this.props.location.query.parentCatelogue}}>{this.props.location.query.parentCatelogue}</Link>{this.props.location.query.childCatelogue && <span> &gt; {this.props.location.query.childCatelogue}</span>}</nav>
+            <nav><Link to="/">首页</Link> &gt; <a onClick={this.allCategory}>{this.props.location.query.parentCatelogue}</a>{this.state.childCatelogue && <span> &gt; {this.state.childCatelogue}</span>}</nav>
             <div>
                 <table >
                     <tbody>

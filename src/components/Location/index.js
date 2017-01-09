@@ -6,7 +6,7 @@ const citys = ["北京","上海","广州","深圳","天津","苏州","重庆","�
 
 @connect(
   state => ({
-    mylocation: state.mylocation.text
+    mylocation: state.mylocation
     }),
   {fetchLocation,modifyLocation}
 )
@@ -46,9 +46,8 @@ export default class Location extends Component{
   }
 
   render(){
-    console.log(this.props.mylocation)
     const {mylocation} = this.props
-    let address = mylocation.content ? mylocation.content.address :'';
+    let address = mylocation.text.content ? mylocation.text.content.address :'';
     return(
       <span className="location">
        <span><i className="fa fa-map-marker"></i>&nbsp;[{address}]&nbsp;</span>
