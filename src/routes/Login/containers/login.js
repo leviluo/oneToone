@@ -15,7 +15,7 @@ import {Link} from 'react-router'
 export default class Login extends Component{
 
   state = {
-    content:<div>ssfdfsd</div>
+    content:<div></div>
   }
 
   static contextTypes = {
@@ -73,6 +73,7 @@ export default class Login extends Component{
         </div>
         </div>
     })
+    console.log(this.props)
     this.props.modal(true)
   }
 

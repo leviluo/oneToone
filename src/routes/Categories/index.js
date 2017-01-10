@@ -5,10 +5,15 @@ export default (store) => ({
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
       const categories = require('./containers/categories').default
+      
       var reducer = require('./modules').default
       injectReducer(store, { key: 'items', reducer })
-       reducer = require('../../reducers/category').default
+
+      reducer = require('../../reducers/category').default
       injectReducer(store, { key: 'catelogues', reducer })
+
+      reducer = require('../../components/Chat/modules/chat').default
+      injectReducer(store, { key: 'chat', reducer })
       cb(null, categories)
     })
   }

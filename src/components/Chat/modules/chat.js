@@ -2,16 +2,15 @@
 // ------------------------------------
 // Constants
 // ------------------------------------
-const MODAL_STATUS = 'MODAL_STATUS'
+const CHAT_STATUS = 'CHAT_STATUS'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function modal(text) {
-  console.log(text)
+export function chat(text) {
   return (dispatch, getState) => {
-      dispatch({type:MODAL_STATUS,status:text})
+      dispatch({type:CHAT_STATUS,status:text})
   }
 }
 
@@ -19,7 +18,7 @@ export function modal(text) {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [MODAL_STATUS]: (state, action) => {
+  [CHAT_STATUS]: (state, action) => {
     return ({...state, isShow:action.status})
   }
 }

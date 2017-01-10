@@ -9,6 +9,7 @@ const initialReducers = {
   zen: (state = require('../routes/Zen/modules/zen').initialState) => state,
   mytips: (state = require('../components/Tips/modules/tips').initialState) => state,
   modal: (state = require('../components/Modal/modules/modal').initialState) => state,
+  chat: (state = require('../components/Chat/modules/chat').initialState) => state,
   mylocation: (state = require('../components/Location/modules/location').initialState) => state,
   auth: (state = require('../reducers/auth').initialState) => state,
   catelogues:(state = require('../reducers/category').initialState) => state,

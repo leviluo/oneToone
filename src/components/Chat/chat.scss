@@ -1,59 +1,123 @@
-.chat {
-	position: absolute;
-    width:100%;
-    background:rgba(0,0,0,0.4);
+#chat {
+    position: absolute;
     z-index: 100;
     top:0;
     display:none;
-    left:0;
+    left:calc(100% - 450px);
+    width:450px;
+    height:600px;
+    border:4px solid #f0f8ff;
     .content {
-        width:500px;
         position: absolute;
+        width:100%;
+        height:100%;
         background:#fff;
-    	.content-header{
-            height:60px;
-    		line-height:60px;
-    		border-bottom:1px solid #efefef;
+        .content-header{
+            height:50px;
+            line-height:50px;
+            background:#f0f8ff;
             text-align:center;
             position:relative;
-    		.close{
+            color:#555;
+            .close{
                 position:absolute;
-                top:0px;
-                left:460px; 
-                width:30px;
-                margin:5px;
-			    height:30px;
-			    border-radius: 15px;
-			    background:white;
-			    float:right;
-			    text-align: center;
-			    line-height:30px;
-			    font-size: 120%;
-			    font-weight: bold;
-			    cursor: pointer;
-			    color:#1C86EE
-    		}
-            h2{
+                top:-15px;
+                left:426px; 
+                float:right;
+                font-size: 120%;
+                font-weight: bold;
+                cursor: pointer;
+                color:#1C86EE
+            }
+            h3{
                  margin:0;                                                    
             }
-    		.close:hover{
-    			background:#ccc
-    		}
-    	}
+            .close:hover{
+                font-size:150%;
+                font-weight:bold
+            }
+        }
         .content-body{
-            padding:10px 20px;
+            padding:10px;
+            height:400px;
+            p{
+                text-align:center;
+                margin:0;
+            }
             div{
                 margin:10px 0;
             }
         }
-        .content-footer{
+        .content-message{
+            height:90px;
+            padding:5px 0;
             border-top:1px solid #efefef;
-            padding:20px;
             text-align:center;
-            background:#efefef;
-            button{
-                width:100%;
+            textarea{
+                width:90%;
+                margin:0 auto;
+                border:1px solid #ccc;
+                border-radius:5px;
             }
         }
+        .content-footer{
+            border-top:1px solid #efefef;
+            padding:5px 20px;
+            margin-top:5px;
+            text-align:center;
+            i{
+                float:left;
+                color:#666;
+                font-size:120%;
+                &:hover{
+                    cursor:pointer
+                }
+            }
+            button{
+                float:right;
+                width:60px;
+            }
+        }
+    }
+}
+
+.showChat{
+    animation: showChata 0.3s ease-out;
+    -moz-animation: showChata 0.3s ease-out;
+    /* Firefox */
+    -webkit-animation: showChata 0.3s ease-out;
+    /* Safari 和 Chrome */
+    -o-animation: showChata 0.3s ease-out;
+    /* Opera */
+}
+
+
+@keyframes showChata {
+    from {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        left:calc(100% - 650px)
+    }
+
+    to {
+        filter: alpha(opacity=1);
+        opacity: 1;
+        left:calc(100% - 450px)
+    }
+}
+
+@-webkit-keyframes showChata
+/*Safari and Chrome*/
+{
+    from {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        left:calc(100% - 650px)
+    }
+
+    to {
+        filter: alpha(opacity=1);
+        opacity: 1;
+        left:calc(100% - 450px)
     }
 }

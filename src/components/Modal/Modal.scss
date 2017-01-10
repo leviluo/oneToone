@@ -13,21 +13,22 @@
     	.content-header{
             height:60px;
     		line-height:60px;
-    		border-bottom:1px solid #efefef;
+            background:#efefef;
             text-align:center;
             position:relative;
+            color:#555;
     		.close{
                 position:absolute;
-                top:0px;
-                left:460px; 
-                width:30px;
+                top:-20px;
+                left:476px; 
+                width:34px;
                 margin:5px;
-			    height:30px;
-			    border-radius: 15px;
-			    background:white;
+			    height:34px;
+			    border-radius: 17px;
+			    background:#efefef;
 			    float:right;
 			    text-align: center;
-			    line-height:30px;
+			    line-height:34px;
 			    font-size: 120%;
 			    font-weight: bold;
 			    cursor: pointer;
@@ -37,7 +38,8 @@
                  margin:0;                                                    
             }
     		.close:hover{
-    			background:#ccc
+    			font-size:180%;
+                font-weight:bold
     		}
     	}
         .content-body{
@@ -50,7 +52,6 @@
             border-top:1px solid #efefef;
             padding:20px;
             text-align:center;
-            background:#efefef;
             button{
                 width:100%;
             }

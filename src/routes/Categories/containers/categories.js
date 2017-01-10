@@ -7,6 +7,8 @@ import {fetchItems} from '../modules'
 import {asyncConnect} from 'redux-async-connect'
 import Select from '../../../components/Select'
 import PageNavBar from '../../../components/PageNavBar'
+import Chat from '../../../components/Chat'
+import {chat} from '../../../components/Chat/modules/chat'
 import './categories.scss'
 
 @asyncConnect([{
@@ -25,7 +27,7 @@ import './categories.scss'
     items:state.items,
     catelogues:state.catelogues,
     mylocation: state.mylocation
-}),{fetchItems})
+}),{fetchItems,chat})
 export default class Categories extends React.Component{
 
     componentWillMount=(nextProps)=>{
@@ -48,10 +50,6 @@ export default class Categories extends React.Component{
         }else{
             document.getElementsByName(this.props.location.query.parentCatelogue)[0].style.color = "#3a5fcd"
         }
-    }
-
-    state ={
-        childCatelogue:''
     }
 
     initItems =(props)=>{
@@ -78,7 +76,9 @@ export default class Categories extends React.Component{
 
     state = {
         currentPage:1,
-        averagenum:5
+        averagenum:5,
+        childCatelogue:'',
+        content:<div></div>
     }    
 
     pageup = (e)=>{
@@ -144,6 +144,18 @@ export default class Categories extends React.Component{
         })
     }
 
+    showChat =(name)=>{
+        this.setState({
+            chatTO:name,
+            content:<div>test</div>
+        })
+        this.props.chat(true)
+    }
+
+    sendMessage =()=>{
+
+    }
+
 
     render(){   
         const{catelogues,mylocation,location,items} = this.props
@@ -172,7 +184,7 @@ export default class Categories extends React.Component{
                 let src = `/public/Headload?member=${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 return <div key={index} className="itemContent">
-                     <span><a>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
+                     <span><a onClick={()=>this.showChat(item.nickname)}>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
                     <div><img src={src} alt=""/></div>
                     <div><ul><li>{item.nickname}(<span className="title">性别:</span>{item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li><span className="title">简介:</span>{brief}</li><li><span className="title">能力:</span>{item.name}</li><li><span className="title">现居住地:</span>{item.address}</li></ul></div>
                 </div>
@@ -180,6 +192,7 @@ export default class Categories extends React.Component{
             )}
             <PageNavBar pagego={this.pagego} firstpage={this.firstpage} lastpage={this.lastpage} pageup={this.pageup} pagedown={this.pagedown} pageNums={Math.ceil(items.text.length/this.state.averagenum)} currentPage={this.state.currentPage}/>
         </div>
+        <Chat header={`与${this.state.chatTO}的聊天`} content={this.state.content} submit={this.sendMessage} />
       </div>
     }
 }

@@ -7,7 +7,8 @@
     }
     .fa-sort-down{
          position:relative;
-         top:-2px;
+         height:20px;
+         top:-3px;
     }
     div {
         position:absolute;
@@ -45,12 +46,12 @@
     color:#ff552e;
     }
     .showmove{
-    	animation: moveshow 0.2s linear;
-        -moz-animation: moveshow 0.2s linear;
+    	animation: moveshow 0.2s ease-out;
+        -moz-animation: moveshow 0.2s ease-out;
         /* Firefox */
-        -webkit-animation: moveshow 0.2s linear;
+        -webkit-animation: moveshow 0.2s ease-out;
         /* Safari 和 Chrome */
-        -o-animation: moveshow 0.2s linear;
+        -o-animation: moveshow 0.2s ease-out;
         /* Opera */
     }
 }

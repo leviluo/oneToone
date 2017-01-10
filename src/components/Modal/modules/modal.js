@@ -9,7 +9,6 @@ const MODAL_STATUS = 'MODAL_STATUS'
 // ------------------------------------
 
 export function modal(text) {
-  console.log(text)
   return (dispatch, getState) => {
       dispatch({type:MODAL_STATUS,status:text})
   }
