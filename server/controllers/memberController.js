@@ -20,7 +20,7 @@ const memberController = {
             return
         };
     },
-    specialities:async function(){
+    specialities:async function(next){
         if (!this.session.user) {
             this.body = { status: 500, msg: "未登录" }
             return
@@ -28,7 +28,7 @@ const memberController = {
         var result = await sqlStr("select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[this.session.user])
         this.body = {status:200,data:result}
     },
-    getMemberInfo:async function(){
+    getMemberInfo:async function(next){
         if (!this.session.user) {
             this.body = { status: 500, msg: "未登录" }
             return
@@ -37,6 +37,28 @@ const memberController = {
         var result = await sqlStr("select address,sex from member where phone = ?",[this.session.user])
         console.log(result)
         this.body = {status:200,data:result}
+    },
+    messageText:async function(next){
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        if(!this.request.body.text || !this.request.body.sendTo){
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        if(this.session.user == this.request.body.sendTo){
+            this.body = { status: 500, msg: "不能给自己发送消息" }
+            return
+        }
+        var result = await sqlStr("insert into message set fromMember = (select id from member where phone = ?),toMember = (select id from member where phone = ?),text = ?",[this.session.user,this.request.body.sendTo,this.request.body.text])
+        if (result.affectedRows == 1) {
+            this.body = { status: 200}
+            return
+        }else{
+            this.body = { status: 500,msg:'数据库插入失败'}
+        }
+        await next
     }
 }
 export default memberController;

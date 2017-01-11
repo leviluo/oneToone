@@ -13,12 +13,14 @@ export default function routers(router){
 	router.get("/loginOut",authController.loginOut,router.allowedMethods());
 	router.get("/public/catelogues",publicController.catelogues,router.allowedMethods());
 	router.post("/public/items",publicController.items,router.allowedMethods());
+	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods());
 	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
 	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
-	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods());
+	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
+	router.post("/member/messageImg",fileController.insertImg,fileController.messageImg,router.allowedMethods());
 
 	// router.get('*', async function (next){
 		// console.log("0000")

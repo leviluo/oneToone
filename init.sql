@@ -14,20 +14,20 @@ CREATE TABLE `member` (
   PRIMARY KEY  (`id`)
 );
 
-//专业类目表
+--专业类目表
 CREATE TABLE `specialityCategory` (  
   `id` mediumint(8) unsigned auto_increment,
   `name` varchar(20) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
-//专业表
+--专业表
 CREATE TABLE `specialities` (  
   `id` mediumint(8) unsigned auto_increment,
   `categoryId` mediumint(8) unsigned,
   `name` varchar(20) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
-//用户专业表
+--用户专业表
 CREATE TABLE `memberSpeciality` (  
   `id` mediumint(8) unsigned auto_increment,
   `memberId` mediumint(8) unsigned,
@@ -36,11 +36,21 @@ CREATE TABLE `memberSpeciality` (
   `experience` text ,
   PRIMARY KEY  (`id`)
 );
-//用户服务关系表
+--用户服务关系表
 CREATE TABLE `memberToMember` (  
   `id` mediumint(8) unsigned auto_increment,
   `hostId` mediumint(8) unsigned,
   `memberId` mediumint(8) unsigned,
+  PRIMARY KEY  (`id`)
+);
+-- 私信
+CREATE TABLE `message` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `fromMember` mediumint(8) unsigned,
+  `toMember` mediumint(8) unsigned,
+  `active` char(1) default 0,
+  `text` varchar(300) default '',
+  `imgUrl` varchar(80) default '',
   PRIMARY KEY  (`id`)
 );
 

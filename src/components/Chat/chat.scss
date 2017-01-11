@@ -40,20 +40,36 @@
         .content-body{
             padding:10px;
             height:400px;
+            overflow:auto;
+            color:#555;
             p{
                 text-align:center;
-                margin:0;
+                margin-bottom:10px;
             }
             div{
                 margin:10px 0;
             }
+            .sendFrom{
+                height:30px;
+                span{
+                    float:right
+                }
+                span:last-of-type{
+                    background:#00be5f;
+                    color:#fff;
+                    padding:5px 10px;
+                    border-radius:5px;
+                }
+            }
         }
         .content-message{
-            height:90px;
+            height:95px;
             padding:5px 0;
             border-top:1px solid #efefef;
             text-align:center;
             textarea{
+            padding:5px;
+                color:#666;
                 width:90%;
                 margin:0 auto;
                 border:1px solid #ccc;
@@ -65,15 +81,29 @@
             padding:5px 20px;
             margin-top:5px;
             text-align:center;
-            i{
-                float:left;
-                color:#666;
-                font-size:120%;
+            a{
+            display:block;
+            overflow:hidden;
+            position:relative;
+            color:#666;
+            font-size:120%;
+            float:left;
                 &:hover{
                     cursor:pointer
                 }
+                input{
+                    width:60px;
+                    height:30px;
+                    filter:alpha(opacity=0);
+                    opacity:0;
+                    position:absolute;
+                    left:0;
+                }
             }
             button{
+                height:35px;
+                line-height:35px;
+                margin:0 5px;
                 float:right;
                 width:60px;
             }

@@ -6,7 +6,7 @@ import '../../styles/core.scss'
 
 export const CoreLayout = ({ children }) => (
   <div className='container text-center'>
-  <Header />
+    <Header />
     <Tip />
     <div className='mainContainer'>
       {children}

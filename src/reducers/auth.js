@@ -19,10 +19,11 @@ function requestLOGIN () {
 }
 
 
-function authIn (nickname) {
+function authIn (nickname,phone) {
   return {
     type: AUTHIN,
-    nickname: nickname
+    nickname: nickname,
+    phone:phone
   }
 }
 
@@ -37,7 +38,7 @@ export function isAuth(history) {
     axios.get('/auth').then(({data}) => {
       if (data.status == 200) {
         // localStorage.setItem("nickname",data.nickname)
-        dispatch(authIn(data.nickname));
+        dispatch(authIn(data.nickname,data.phone));
       } else{
         // localStorage.setItem("nickname",data.nickname)
         if (history) {
@@ -55,7 +56,7 @@ export function login(items,history) {
     axios.post('/login',items).then(({data}) => {
       if (data.status == 200) {
           // localStorage.setItem("nickname",data.nickname)
-          dispatch(authIn(data.nickname));
+          dispatch(authIn(data.nickname,items.phone));
           history.push('/memberCenter')
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
@@ -84,7 +85,7 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: true})
   },
   [AUTHIN]:(state,action)=>{
-    return({...state,isAuth: true,nickname:action.nickname})
+    return({...state,isAuth: true,nickname:action.nickname,phone:action.phone})
   },
   [AUTHOUT]:(state)=>{
     return({...state,isAuth: false})
@@ -99,7 +100,8 @@ const ACTION_HANDLERS = {
 export const initialState = {
   fetching: false,
   isAuth: false,
-  nickname:''
+  nickname:'',
+  phone:''
 }
 export default function (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

@@ -21,18 +21,17 @@ function getImage(url){
    }) 
 }
 
-function form(ob,user){
+function form(ob,user,url){
     return new Promise(function(reslove,reject){
-          var form = new multiparty.Form({ uploadDir: './server/upload/headImages/' });
+          var form = new multiparty.Form({ uploadDir: url });
             //上传完成后处理
             form.parse(ob, function(err, fields, files) {
-                 var filesTmp = JSON.stringify(files, null, 2);
                 if (err) {
                     reject(err)
                 } else {
                             var inputFile = files.file[0];
                             var uploadedPath = inputFile.path;
-                            var dstPath = './server/upload/headImages/' + user + '.jpg';
+                            var dstPath = url + user + '.jpg';
                     //       //重命名为真实文件名
                             fs.rename(uploadedPath, dstPath, function(err) {
                                 if (err) {
@@ -60,8 +59,6 @@ const fileController = {
         this.res.end();
     },
     publicuploadHeadImg:async function(next){
-        // console.log(this.request.body)
-        // console.log(this.request.query)
         if (!this.request.query.member) {
             this.body = { status: "err", msg: "缺少参数" }
             return
@@ -73,17 +70,36 @@ const fileController = {
         this.res.end();
     },
     uploadHeadImg:async function(next){
-        // console.log(this.request)
-        var user = this.session.user
         if (!this.session.user) {
             this.body = { status: "err", msg: "未登录" }
             return
         }
-        var result = await form(this.req,user)
+        var user = this.session.user
+        var result = await form(this.req,user,'./server/upload/headImages/')
         if (result == 'success') {
-            // var resultt = await sqlStr(`update member set head = '${dstPath}' where phone = ${user}`)
             this.body = {status:200}
+            return
         }
+        await next
+    },
+    messageImg:async function(next){
+        console.log("1111")
+        if (!this.session.user) {
+            this.body = { status: "err", msg: "未登录" }
+            return
+        }
+        var name = this.session.user + Date.parse(new Date())
+
+        var result = await form(this.req,name,'./server/upload/messageImages/')
+        console.log(result)
+        if (result == 'success') {
+            console.log("0000")
+            
+        }
+    },
+    insertImg:async function(next){
+        await next
+       // local result
     }
 }
 

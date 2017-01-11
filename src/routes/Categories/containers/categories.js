@@ -9,6 +9,7 @@ import Select from '../../../components/Select'
 import PageNavBar from '../../../components/PageNavBar'
 import Chat from '../../../components/Chat'
 import {chat} from '../../../components/Chat/modules/chat'
+import {tipShow} from '../../../components/Tips/modules/tips'
 import './categories.scss'
 
 @asyncConnect([{
@@ -26,8 +27,9 @@ import './categories.scss'
 @connect(state=>({
     items:state.items,
     catelogues:state.catelogues,
-    mylocation: state.mylocation
-}),{fetchItems,chat})
+    mylocation: state.mylocation,
+    auth:state.auth
+}),{fetchItems,chat,tipShow})
 export default class Categories extends React.Component{
 
     componentWillMount=(nextProps)=>{
@@ -78,7 +80,8 @@ export default class Categories extends React.Component{
         currentPage:1,
         averagenum:5,
         childCatelogue:'',
-        content:<div></div>
+        chatTo:'',
+        sendTo:''
     }    
 
     pageup = (e)=>{
@@ -144,10 +147,15 @@ export default class Categories extends React.Component{
         })
     }
 
-    showChat =(name)=>{
+    showChat =(name,phone)=>{
+        if (!this.props.auth.phone) {
+            this.props.tipShow({type:'error',msg:'您还未登录,请先登录'})
+            return
+        }
+        if (phone == this.props.auth.phone) return
         this.setState({
-            chatTO:name,
-            content:<div>test</div>
+            chatTo:name,
+            sendTo:phone
         })
         this.props.chat(true)
     }
@@ -184,7 +192,7 @@ export default class Categories extends React.Component{
                 let src = `/public/Headload?member=${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 return <div key={index} className="itemContent">
-                     <span><a onClick={()=>this.showChat(item.nickname)}>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
+                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
                     <div><img src={src} alt=""/></div>
                     <div><ul><li>{item.nickname}(<span className="title">性别:</span>{item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li><span className="title">简介:</span>{brief}</li><li><span className="title">能力:</span>{item.name}</li><li><span className="title">现居住地:</span>{item.address}</li></ul></div>
                 </div>
@@ -192,7 +200,7 @@ export default class Categories extends React.Component{
             )}
             <PageNavBar pagego={this.pagego} firstpage={this.firstpage} lastpage={this.lastpage} pageup={this.pageup} pagedown={this.pagedown} pageNums={Math.ceil(items.text.length/this.state.averagenum)} currentPage={this.state.currentPage}/>
         </div>
-        <Chat header={`与${this.state.chatTO}的聊天`} content={this.state.content} submit={this.sendMessage} />
+        <Chat chatTo={this.state.chatTo} sendFrom = {this.props.auth.nickname} sendTo={this.state.sendTo} />
       </div>
     }
 }
