@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
-import Modal from '../../../../components/Modal'
-import {modal} from '../../../../components/Modal/modules/modal'
+import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
 import axios from 'axios'
@@ -11,7 +10,7 @@ import axios from 'axios'
   state => ({
     auth:state.auth,
     }),
-  {modal,tipShow,commitHeadImg,getMemberInfo}
+  {modalShow,modalHide,tipShow,commitHeadImg,getMemberInfo}
 )
 
 export default class BasicInfo extends Component {
@@ -50,9 +49,7 @@ export default class BasicInfo extends Component {
     }
 
     var imageUrl = window.URL.createObjectURL(e.target.files[0])
-    this.setState({
-      content: 
-      <div id="headerEdit" onWheel={this.imgZoom} style={{width:"400px",height:'250px',position:'relative',margin:'0 auto',backgroundImage:`url(${imageUrl})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'100%'}}>
+    var content = <div id="headerEdit" onWheel={this.imgZoom} style={{width:"400px",height:'250px',position:'relative',margin:'0 auto',backgroundImage:`url(${imageUrl})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'100%'}}>
                 <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <div style={{width:'150px',height:'100px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <canvas id="editCanvas" width="100" height="100" style={{width:'100px',height:'100px',float:'left',margin:'0',cursor:'move',border:'1px solid white'}} onMouseDown={this.start} onMouseUp={this.end} onMouseOut={this.end} ></canvas>
@@ -60,8 +57,8 @@ export default class BasicInfo extends Component {
                 <div style={{width:'400px',height:'75px',float:'left',margin:'0',background:'rgba(0,0,0,0.4)'}}></div>
                 <img id="editImg" src={imageUrl} alt="" style={{display:'none'}}/>
       </div>
-    })
-    this.props.modal(true)
+
+    this.props.modalShow({header:"修改头像",content:content,submit:this.modifyHeadSubmit})
   }
 
   imgZoom =(e)=>{ //放大缩小图片
@@ -110,7 +107,7 @@ export default class BasicInfo extends Component {
     fd.append('file',blob);
     // console.log(fd)
     this.props.commitHeadImg(fd)
-    this.props.modal(false)
+    this.props.modalHide()
   }
 
   editInit=(e)=>{
@@ -161,7 +158,6 @@ export default class BasicInfo extends Component {
             <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
             </tbody>
           </table>
-          <Modal header="修改头像" type="提交" content={this.state.content} submit={this.modifyHeadSubmit} />
     </div>
     )
   }

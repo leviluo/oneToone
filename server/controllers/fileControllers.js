@@ -83,23 +83,25 @@ const fileController = {
         await next
     },
     messageImg:async function(next){
-        console.log("1111")
         if (!this.session.user) {
             this.body = { status: "err", msg: "未登录" }
             return
         }
         var name = this.session.user + Date.parse(new Date())
-
         var result = await form(this.req,name,'./server/upload/messageImages/')
-        console.log(result)
-        if (result == 'success') {
-            console.log("0000")
-            
+        this.request.body.imgUrl = './server/upload/messageImages/' + name
+        if (result != 'success') {
+            this.body = {status:500,msg:'上传失败'}
+            return
         }
     },
     insertImg:async function(next){
         await next
-       // local result
+        var result = await sqlStr("insert into message set fromMember = (select id from member where phone = ?),toMember = (select id from member where phone = ?),imgUrl = ?",[this.session.user,this.request.body.sendTo,this.request.body.imgUrl])
+        if(result.affectedRows==1){
+            this.body = {status:200}
+        }
+        next
     }
 }
 

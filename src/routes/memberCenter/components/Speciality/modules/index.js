@@ -1,13 +1,11 @@
 import axios from 'axios'
 import {tipResult} from '../../../../../components/Tips/modules/tips'
-import {modal} from '../../../../../components/Modal/modules/modal'
 
 export function addSpeciatity (items) {
   return (dispatch, getState) => {
     axios.post('/member/addSpeciality',items).then(({data}) => {
       if (data.status==200) {
-          // dispatch(tipResult({type:"success",msg:"添加成功"}))
-          dispatch({type:"MODAL_STATUS",status:false})
+          dispatch({type:"MODAL_HIDE"})
       	  dispatch({type:"RECEIVE_SPECIALITIES",value:[items]})
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))

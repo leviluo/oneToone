@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { findDOMNode } from 'react-dom'
-import Modal from '../../../../components/Modal'
 import Select from '../../../../components/Select'
 import Textarea from '../../../../components/Textarea'
-import {modal} from '../../../../components/Modal/modules/modal'
+import {modalShow} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {addSpeciatity,fetchSpeciality} from './modules'
 import {fetchCatelogue} from '../../../../reducers/category'
@@ -31,7 +30,7 @@ import {asyncConnect} from 'redux-async-connect'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modal,tipShow,addSpeciatity}
+  {modalShow,tipShow,addSpeciatity}
 )
 export default class SpecialityComponent extends Component {
 
@@ -97,13 +96,12 @@ export default class SpecialityComponent extends Component {
   showAddSpciality=()=>{
 
     let items = [];
- 
+
     this.props.catelogues.text.map((item,index)=>{
       items.push({key:item.childCatelogue,value:item.childCatelogue})
     })
-
-    this.setState({
-      content:<div>
+    
+    var content = <div>
       <div>
       <Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} />
       </div><div>
@@ -111,10 +109,9 @@ export default class SpecialityComponent extends Component {
       </div><div>
       <Textarea header="经验" handleTextarea={this.experienceChange} />
       </div>
-      </div>
-    })
+      </div>;
 
-    this.props.modal(true);
+    this.props.modalShow({header:"添加新专业",content:content,submit:this.addSpeciatity});
   }
 
 
@@ -134,9 +131,8 @@ export default class SpecialityComponent extends Component {
             </div>
             )}
           <div className="addSpeciaity">
-          <button onClick={this.showAddSpciality} className="btn-primary">+</button>
+          <button onClick={this.showAddSpciality} className="btn-primary">+添加专业能力</button>
           </div>
-          <Modal header="添加专业" content={this.state.content} submit={this.addSpeciatity} />
           </div>
     )
   }

@@ -3,15 +3,14 @@ import './login.scss'
 import {login} from '../../../reducers/auth'
 import {connect} from 'react-redux'
 import {tipShow} from '../../../components/Tips/modules/tips'
-import {modal} from '../../../components/Modal/modules/modal'
-import Modal from '../../../components/Modal'
+import {modalShow} from '../../../components/Modal/modules/modal'
 import Input from '../../../components/Input'
 import Helmet from 'react-helmet'
 import {Link} from 'react-router'
 
 @connect(
   state=>({auth:state.auth}),
-{login,tipShow,modal})
+{login,tipShow,modalShow})
 export default class Login extends Component{
 
   state = {
@@ -39,7 +38,7 @@ export default class Login extends Component{
   }
 
   submitRepass =()=>{
-
+      alert("提交了")
   }
 
   phoneChange =(e)=>{
@@ -59,22 +58,15 @@ export default class Login extends Component{
   }
 
   rePass =()=>{
-    this.setState({
-      content:
-        <div>
-        <div>
-          <input type="text" onClick={this.phoneChange} placeholder="手机号"/>
-        </div>
+    var content = <div><div><input type="text" onClick={this.phoneChange} placeholder="手机号"/></div>
         <div>
           <input type="text" onClick={this.codeChange} placeholder="验证码（6位）" style={{width:"80%"}}/><button className="btn-primary" style={{width:"20%"}}>发送验证码</button>
         </div>
         <div>
           <input type="password" onClick={this.passChange} placeholder="新密码(6-20位字母数字_,无空格)"/>
         </div>
-        </div>
-    })
-    console.log(this.props)
-    this.props.modal(true)
+        </div>;
+    this.props.modalShow({header:"重置密码",submit:this.submitRepass,content:content})
   }
 
   render(){
@@ -108,7 +100,6 @@ export default class Login extends Component{
         <button></button>
         </div>
         </div>
-        <Modal header="重置密码" content={this.state.content} submit={this.submitRepass} />
       </div>
       )
   }

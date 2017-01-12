@@ -2,15 +2,22 @@
 // ------------------------------------
 // Constants
 // ------------------------------------
-const MODAL_STATUS = 'MODAL_STATUS'
+const MODAL_SHOW = 'MODAL_SHOW'
+const MODAL_HIDE = 'MODAL_HIDE'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function modal(text) {
+export function modalShow(text) {
   return (dispatch, getState) => {
-      dispatch({type:MODAL_STATUS,status:text})
+      dispatch({type:MODAL_SHOW,text:text})
+  }
+}
+
+export function modalHide() {
+  return (dispatch, getState) => {
+      dispatch({type:MODAL_HIDE})
   }
 }
 
@@ -18,8 +25,11 @@ export function modal(text) {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [MODAL_STATUS]: (state, action) => {
-    return ({...state, isShow:action.status})
+  [MODAL_SHOW]: (state, action) => {
+    return ({...state, isShow:true,header:action.text.header,content:action.text.content,submit:action.text.submit})
+  },
+  [MODAL_HIDE]: (state, action) => {
+    return ({...state, isShow:false,header:'',content:'',submit:null})
   }
 }
 
@@ -27,7 +37,10 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 export const initialState = {
-  isShow:false
+  isShow:false,
+  header:'',
+  content:'',
+  submit:null
 }
 
 export default function (state = initialState, action) {

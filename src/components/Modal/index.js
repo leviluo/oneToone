@@ -54,15 +54,13 @@ export default class Modal extends Component{
   }
 
   static propTypes = {
-    header:React.PropTypes.string.isRequired,
-    content:React.PropTypes.element.isRequired,
-    submit:React.PropTypes.func.isRequired,
+    // header:React.PropTypes.string.isRequired,
+    // content:React.PropTypes.element.isRequired,
+    // submit:React.PropTypes.func.isRequired,
   }
 
   render(){
-    console.log(this.props)
-    const{header,content,submit,type} = this.props;
-    var ok = type ? type : '确定'
+    const{header,content,submit} = this.props.modalStatus;
     return(
         <div className='modal'>
           <div className="content">
@@ -74,7 +72,7 @@ export default class Modal extends Component{
                   {content}
             </div>
             <div className="content-footer">
-              <button className="btn-primary" onClick={submit}>{ok}</button>
+              <button className="btn-primary" onClick={submit}>提交</button>
             </div>
           </div>
         </div>
