@@ -51,6 +51,7 @@ CREATE TABLE `message` (
   `active` char(1) default 0,
   `text` varchar(300) default '',
   `imgUrl` varchar(80) default '',
+  `time` datetime default now(),
   PRIMARY KEY  (`id`)
 );
 

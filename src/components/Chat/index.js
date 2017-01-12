@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import {connect} from 'react-redux'
-import {chat,submitText,submitImg} from './modules/chat'
+import {chat,submitText,submitImg,getHistory} from './modules/chat'
 import './chat.scss'
 
 @connect(
   state=>({chatStatus:state.chat}),
-{chat,submitText,submitImg})
+{chat})
 
 export default class Chat extends Component{
 
@@ -20,7 +20,7 @@ export default class Chat extends Component{
 
   componentDidMount =(e)=>{
     // this.refs.text.focus()
-
+    this.Chat = findDOMNode(this).getElementsByClassName('chat')[0]
   }
 
   componentWillReceiveProps =(nextProps)=>{
@@ -79,9 +79,37 @@ export default class Chat extends Component{
   }
 
   submitText =()=>{
-    console.log(this.refs.text.value)
-    if (!this.refs.text.value) return
-    this.props.submitText({text:this.refs.text.value,sendTo:this.props.sendTo},findDOMNode(this).getElementsByClassName('chat')[0],this.props.sendFrom)
+    if (!/[^\t\r\n\s]/.test(this.refs.text.value)) {
+      this.refs.text.focus()
+      return //过滤只有制表符
+    }
+    if (this.refs.text.value.length > 280) {
+      this.error('文本过长')
+      return;
+    }
+    submitText({text:this.refs.text.value,sendTo:this.props.sendTo}).then(({data}) => {
+      if (data.status==200) {
+          var str = `<p class="sendFrom"><span>${this.refs.text.value}</span>&nbsp;<span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span></p>`
+          this.Chat.innerHTML += str; 
+      }else{
+          this.error('发送失败')
+      }
+    }).then(()=>{
+          this.refs.text.value = ''
+          this.refs.text.focus()
+    })
+  }
+
+  error =(error)=>{
+    this.setState({
+      error:error
+    })
+    var _this = this;
+    setTimeout(()=>{
+      _this.setState({
+      error:'',
+      })
+    },2000)
   }
 
   submitImage =(e)=>{
@@ -91,20 +119,33 @@ export default class Chat extends Component{
     filextension = filextension.toLowerCase();
     if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
     {
-      var ele = findDOMNode(this).getElementsByClassName('chat')[0];
-      ele.innerHTML += `<p style="color:red">文件类型不正确</p>`
+      this.error('文件类型不正确')
       return;
     }
-
+    var file = e.target.files[0]
     var fd = new FormData(); 
-    fd.append("file", e.target.files[0]); 
+    fd.append("file", file); 
     fd.append("sendTo",this.props.sendTo)
-
-    this.props.submitImg(fd,findDOMNode(this).getElementsByClassName('chat')[0],this.props.sendFrom,e.target.files[0])
+    var me = this;
+    submitImg(fd).then(({data}) => {
+      if (data.status==200) {
+            var reader = new FileReader();  
+            reader.onload = function(e) {  
+                var src = e.target.result + "";   
+                var str = `<p class="sendFrom img"><img src="${src}"/>&nbsp;<span class="name">&nbsp;:&nbsp;${me.props.sendFrom}</span></p>`
+                me.Chat.innerHTML += str; 
+            }  
+            reader.readAsDataURL(file);  
+      }else{
+          this.error(data.msg)
+      }
+    })
   }
 
   checkHistory =()=>{
-    alert('')
+    getHistory({chatWith:this.props.sendTo}).then((data)=>{
+      console.log(data)
+    })
   }
 
   send =(e)=>{
@@ -124,12 +165,11 @@ export default class Chat extends Component{
             </div>
             <div className="content-body">
                   <p><a onClick={this.checkHistory}>查看历史消息...</a></p>
-                  <div className="chat">
-
-                  </div>
+                  <p style={{color:"red"}}>{this.state.error}</p>
+                  <div className="chat"></div>
             </div>
             <div className="content-message">
-                  <textarea rows="5" ref="text" onKeyDown={this.send} defaultValue="说些什么吧"></textarea>
+                  <textarea rows="5" ref="text" defaultValue="说些什么吧"></textarea>
             </div>
             <div className="content-footer">
               <a className="fa fa-image"><input onChange={this.submitImage} type="file" /></a>

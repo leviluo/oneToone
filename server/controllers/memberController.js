@@ -57,6 +57,19 @@ const memberController = {
             this.body = { status: 500,msg:'数据库插入失败'}
         }
         await next
+    },
+    historyChat:async function(next){
+        if (!this.request.body.chatWith) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where (m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?)) order by time",[this.session.user,this.request.body.chatWith])
+        this.body = {status:200,data:result}
     }
 }
 export default memberController;
+

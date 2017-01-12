@@ -192,7 +192,7 @@ export default class Categories extends React.Component{
                 let src = `/public/Headload?member=${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 return <div key={index} className="itemContent">
-                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<a>查看他/她的名片</a></span>
+                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<a>查看名片</a></span>
                     <div><img src={src} alt=""/></div>
                     <div><ul><li>{item.nickname}(<span className="title">性别:</span>{item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li><span className="title">简介:</span>{brief}</li><li><span className="title">能力:</span>{item.name}</li><li><span className="title">现居住地:</span>{item.address}</li></ul></div>
                 </div>

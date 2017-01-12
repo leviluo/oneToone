@@ -20,6 +20,7 @@ export default function routers(router){
 	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
+	router.post("/member/historyChat",memberController.historyChat,router.allowedMethods());
 	router.post("/member/messageImg",fileController.insertImg,fileController.messageImg,router.allowedMethods());
 
 	// router.get('*', async function (next){
