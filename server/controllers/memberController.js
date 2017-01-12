@@ -33,9 +33,7 @@ const memberController = {
             this.body = { status: 500, msg: "未登录" }
             return
         }
-        console.log(this.session.user)
         var result = await sqlStr("select address,sex from member where phone = ?",[this.session.user])
-        console.log(result)
         this.body = {status:200,data:result}
     },
     messageText:async function(next){

@@ -35,9 +35,9 @@ function form(ob,user,url){
                     //       //重命名为真实文件名
                             fs.rename(uploadedPath, dstPath, function(err) {
                                 if (err) {
-                                    reject(err)
+                                    reject({status:500,type:err})
                                 } else {
-                                    reslove("success")
+                                    reslove({status:200,msg:fields})
                                 }   
                             })
                 }
@@ -76,7 +76,7 @@ const fileController = {
         }
         var user = this.session.user
         var result = await form(this.req,user,'./server/upload/headImages/')
-        if (result == 'success') {
+        if (result.status == 200 ) {
             this.body = {status:200}
             return
         }
@@ -89,19 +89,21 @@ const fileController = {
         }
         var name = this.session.user + Date.parse(new Date())
         var result = await form(this.req,name,'./server/upload/messageImages/')
+        console.log(result)
         this.request.body.imgUrl = './server/upload/messageImages/' + name
-        if (result != 'success') {
+        if (result.status != 200) {
             this.body = {status:500,msg:'上传失败'}
             return
         }
+        this.request.body.sendTo = result.msg.sendTo[0]
     },
     insertImg:async function(next){
         await next
         var result = await sqlStr("insert into message set fromMember = (select id from member where phone = ?),toMember = (select id from member where phone = ?),imgUrl = ?",[this.session.user,this.request.body.sendTo,this.request.body.imgUrl])
         if(result.affectedRows==1){
             this.body = {status:200}
+            return
         }
-        next
     }
 }
 

@@ -50,15 +50,20 @@
                 margin:10px 0;
             }
             .sendFrom{
-                height:30px;
-                span{
-                    float:right
-                }
-                span:last-of-type{
+                text-align:right;
+                margin:30px 0;
+                .name{
+                    vertical-align:top;
+                    position:relative;
+                    top:0;
                     background:#00be5f;
                     color:#fff;
-                    padding:5px 10px;
+                    padding:5px;
                     border-radius:5px;
+                }
+                img{
+                    width:150px;
+                    border:2px solid #ccc;
                 }
             }
         }

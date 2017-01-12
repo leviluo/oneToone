@@ -15,22 +15,27 @@ export default class Chat extends Component{
   }
 
   componentWillMount =()=>{
-    // console.log("000000")
+    
   }
 
   componentDidMount =(e)=>{
+    // this.refs.text.focus()
 
   }
 
   componentWillReceiveProps =(nextProps)=>{
     //清空留言板
-    var ele = findDOMNode(this).getElementsByClassName('content-body')[0].getElementsByTagName('p')
-    for (var i = 0; i < ele.length; i++) {
-      if(i){
-        ele[i].parentNode.removeChild(ele[i])
-      }
+    var ele = findDOMNode(this).getElementsByClassName('chat')[0].getElementsByTagName('p')
+    var num = ele.length
+    for (var i = 0; i < num; i++) {
+        ele[0].parentNode.removeChild(ele[0])
     }
     this.refs.text.value = '说些什么吧'
+
+    setTimeout(()=>{  //定位输入焦点
+    this.refs.text.focus()
+    },10)
+
   }
 
   shouldComponentUpdate =(nextProps,nextState)=>{
@@ -76,7 +81,7 @@ export default class Chat extends Component{
   submitText =()=>{
     console.log(this.refs.text.value)
     if (!this.refs.text.value) return
-    this.props.submitText({text:this.refs.text.value,sendTo:this.props.sendTo},findDOMNode(this).getElementsByClassName('content-body')[0],this.props.sendFrom)
+    this.props.submitText({text:this.refs.text.value,sendTo:this.props.sendTo},findDOMNode(this).getElementsByClassName('chat')[0],this.props.sendFrom)
   }
 
   submitImage =(e)=>{
@@ -86,18 +91,26 @@ export default class Chat extends Component{
     filextension = filextension.toLowerCase();
     if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
     {
-      var ele = findDOMNode(this).getElementsByClassName('content-body')[0];
+      var ele = findDOMNode(this).getElementsByClassName('chat')[0];
       ele.innerHTML += `<p style="color:red">文件类型不正确</p>`
       return;
     }
 
     var fd = new FormData(); 
     fd.append("file", e.target.files[0]); 
-    this.props.submitImg(fd)
+    fd.append("sendTo",this.props.sendTo)
+
+    this.props.submitImg(fd,findDOMNode(this).getElementsByClassName('chat')[0],this.props.sendFrom,e.target.files[0])
   }
 
   checkHistory =()=>{
     alert('')
+  }
+
+  send =(e)=>{
+    if(e.keyCode==13){
+      this.submitText()
+    }
   }
 
   render(){
@@ -111,9 +124,12 @@ export default class Chat extends Component{
             </div>
             <div className="content-body">
                   <p><a onClick={this.checkHistory}>查看历史消息...</a></p>
+                  <div className="chat">
+
+                  </div>
             </div>
             <div className="content-message">
-                  <textarea rows="5" ref="text" defaultValue="说些什么吧"></textarea>
+                  <textarea rows="5" ref="text" onKeyDown={this.send} defaultValue="说些什么吧"></textarea>
             </div>
             <div className="content-footer">
               <a className="fa fa-image"><input onChange={this.submitImage} type="file" /></a>
