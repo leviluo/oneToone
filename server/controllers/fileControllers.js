@@ -49,7 +49,7 @@ function form(ob,user,url){
 const fileController = {
     loadImg:async function(next){
         var url = config.messageImgDir + this.request.query.name + '.jpg';
-        var result = await getImage(url);
+        var result = await getImage(url,config.messageImgDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
@@ -61,7 +61,7 @@ const fileController = {
             return
         }
         var url = config.headDir + user + '.jpg';
-        var result = await getImage(url,config.headDir + 'demo.jpg');
+        var result = await getImage(url,config.headDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();

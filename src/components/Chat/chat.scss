@@ -48,27 +48,37 @@
             .chat{
                 margin:10px 0;
                 p{
-                    display:block;
                     margin:30px 0;
+
+                    .text{
+                        display:block;
+                         text-align:left;
+                    }
                     .name{
-                        vertical-align:top;
-                        position:relative;
-                        top:0;
-                        background:#00be5f;
-                        color:#fff;
                         padding:5px;
+                        display:inline-block;
+                        vertical-align:top;
+                        color:#fff;
                         border-radius:5px;
+                        margin-bottom:5px;
                     }
                     img{
+                        display:block;
                         width:150px;
                         border:1px solid #efefef;
                     }
                 }
                 .sendFrom{
-                    text-align:right
+                    text-align:right;
+                    .name{
+                          background:#00be5f;
+                    }
                 }
                 .sendTo{
-                    text-align:left
+                    text-align:left;
+                    .name{
+                          background:#ccc;
+                    }
                 }
             }
         }
