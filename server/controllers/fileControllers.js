@@ -1,14 +1,15 @@
 var multiparty = require('multiparty')
 var fs  = require('fs')
 import { sqlStr } from '../dbHelps/mysql'
+import config from '../config'
 
-function getImage(url){
+function getImage(url,defaultImg){
     return new Promise(function(reslove,reject){
         fs.exists(url, function (exists) {
                     if (exists) {
                         var file = url
                     }else{
-                        var file = './server/upload/headImages/demo.jpg'
+                        var file = defaultImg
                     }
          fs.readFile(file, "binary", function(error, file) {
                 if (error) {
@@ -46,14 +47,21 @@ function form(ob,user,url){
 }
 
 const fileController = {
+    loadImg:async function(next){
+        var url = config.messageImgDir + this.request.query.name + '.jpg';
+        var result = await getImage(url);
+        this.res.writeHead(200, { "Content-Type": "image/png" });
+        this.res.write(result, "binary");
+        this.res.end();
+    },
     loadHeadImg:async function(next){
         var user = this.session.user
         if (!this.session.user) {
             this.body = { status: "err", msg: "未登录" }
             return
         }
-        var url = './server/upload/headImages/' + user + '.jpg';
-        var result = await getImage(url);
+        var url = config.headDir + user + '.jpg';
+        var result = await getImage(url,config.headDir + 'demo.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
@@ -63,8 +71,8 @@ const fileController = {
             this.body = { status: "err", msg: "缺少参数" }
             return
         }
-        var url = './server/upload/headImages/' + this.request.query.member + '.jpg';
-        var result = await getImage(url);
+        var url = config.headDir + this.request.query.member + '.jpg';
+        var result = await getImage(url,config.headDir + 'demo.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
@@ -75,7 +83,7 @@ const fileController = {
             return
         }
         var user = this.session.user
-        var result = await form(this.req,user,'./server/upload/headImages/')
+        var result = await form(this.req,user,config.headDir)
         if (result.status == 200 ) {
             this.body = {status:200}
             return
@@ -88,9 +96,9 @@ const fileController = {
             return
         }
         var name = this.session.user + Date.parse(new Date())
-        var result = await form(this.req,name,'./server/upload/messageImages/')
-        console.log(result)
-        this.request.body.imgUrl = './server/upload/messageImages/' + name
+        var result = await form(this.req,name,config.messageImgDir)
+
+        this.request.body.imgUrl = name
         if (result.status != 200) {
             this.body = {status:500,msg:'上传失败'}
             return

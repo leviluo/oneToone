@@ -35,7 +35,7 @@ const authController = {
             this.body = { status: 500, msg: "此用户已注册"}
             return
         }
-        this.request.body.head = `./server/upload/headImages/${this.request.body.phone}.jpg`
+        // this.request.body.head = `./server/upload/headImages/${this.request.body.phone}.jpg`
         this.request.body.address = this.request.body.location;
         var resultt = await insert("member", this.request.body)
         if (resultt.affectedRows == 1) {

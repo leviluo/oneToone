@@ -6,7 +6,6 @@ CREATE TABLE `member` (
   `password` char(40) DEFAULT '',
   `phone` varchar(40) DEFAULT '',   
   `location` varchar(15) default '',
-  `head` varchar(30) default '',
   `address` varchar(100) default '',
   `sex` char(1),
   `createAt` datetime default now(),

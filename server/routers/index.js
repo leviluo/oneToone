@@ -2,9 +2,9 @@ import publicController from '../controllers/publicController'
 import memberController from '../controllers/memberController'
 import authController from '../controllers/authController'
 import fileController from '../controllers/fileControllers'
-import config from '../../config'
+// import config from '../../config'
 
-const paths = config.utils_paths
+// const paths = config.utils_paths
 
 export default function routers(router){
 	router.post("/register",authController.register,router.allowedMethods());
@@ -18,13 +18,13 @@ export default function routers(router){
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
 	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
+	router.get("/img",fileController.loadImg,router.allowedMethods());
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
 	router.post("/member/historyChat",memberController.historyChat,router.allowedMethods());
 	router.post("/member/messageImg",fileController.insertImg,fileController.messageImg,router.allowedMethods());
-
 	// router.get('*', async function (next){
-		// console.log("0000")
+	// console.log("0000")
 	// 	// await next
 	//   this.res.sendFile(paths.src('static'))
 		// this.res.redirect('/')

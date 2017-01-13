@@ -21,6 +21,7 @@ export default class Chat extends Component{
   componentDidMount =(e)=>{
     // this.refs.text.focus()
     this.Chat = findDOMNode(this).getElementsByClassName('chat')[0]
+    this.contentBody = findDOMNode(this).getElementsByClassName('content-body')[0]
   }
 
   componentWillReceiveProps =(nextProps)=>{
@@ -91,6 +92,7 @@ export default class Chat extends Component{
       if (data.status==200) {
           var str = `<p class="sendFrom"><span>${this.refs.text.value}</span>&nbsp;<span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span></p>`
           this.Chat.innerHTML += str; 
+          this.contentBody.scrollTop = this.contentBody.scrollHeight;
       }else{
           this.error('发送失败')
       }
@@ -134,6 +136,7 @@ export default class Chat extends Component{
                 var src = e.target.result + "";   
                 var str = `<p class="sendFrom img"><img src="${src}"/>&nbsp;<span class="name">&nbsp;:&nbsp;${me.props.sendFrom}</span></p>`
                 me.Chat.innerHTML += str; 
+                this.contentBody.scrollTop = this.contentBody.scrollHeight;
             }  
             reader.readAsDataURL(file);  
       }else{
@@ -143,8 +146,25 @@ export default class Chat extends Component{
   }
 
   checkHistory =()=>{
-    getHistory({chatWith:this.props.sendTo}).then((data)=>{
-      console.log(data)
+    getHistory({chatWith:this.props.sendTo}).then((response)=>{
+        var data = response.data.data
+        var str = ''
+        for (var i = 0; i < data.length; i++) {
+          if(data[i].send != this.props.sendTo){ //我是发送者
+            if (data[i].text) {
+              str += `<p class="sendFrom"><span>${data[i].text}</span>&nbsp;<span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span></p>`
+            }else{
+              str += `<p class="sendFrom img"><img src="/img?name=${data[i].imgUrl}"/>&nbsp;<span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span></p>`
+            }
+          }else{
+            if (data[i].text) {
+              str += `<p class="sendTo"><span class="name">${this.props.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span>${data[i].text}</span></p>`
+            }else{
+              str += `<p class="sendTo img"><span class="name">${this.props.chatTo}&nbsp;:&nbsp;</span>&nbsp;<img src="/img?name=${data[i].imgUrl}"/></p>`
+            }
+          }
+        };
+        this.Chat.innerHTML = str + this.Chat.innerHTML; 
     })
   }
 
