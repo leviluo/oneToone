@@ -6,6 +6,7 @@ CREATE TABLE `member` (
   `password` char(40) DEFAULT '',
   `phone` varchar(40) DEFAULT '',   
   `location` varchar(15) default '',
+  `head` varchar(30) default '',
   `address` varchar(100) default '',
   `sex` char(1),
   `createAt` datetime default now(),
@@ -46,11 +47,11 @@ CREATE TABLE `memberToMember` (
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,
   `fromMember` mediumint(8) unsigned,
-  `toMember` mediumint(8) unsigned,
+  `toMember` mediumint(8) unsigned,'',
+
   `active` char(1) default 0,
   `text` varchar(300) default '',
-  `imgUrl` varchar(80) default '',
-  `time` datetime default now(),
+  `imgUrl` varchar(80) default   `time` datetime default NOW(),
   PRIMARY KEY  (`id`)
 );
 

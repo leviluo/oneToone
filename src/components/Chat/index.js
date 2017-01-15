@@ -90,7 +90,7 @@ export default class Chat extends Component{
     }
     submitText({text:this.refs.text.value,sendTo:this.props.sendTo}).then(({data}) => {
       if (data.status==200) {
-          var str = `<p class="sendFrom"><span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span><span class="text">${this.refs.text.value}</span></p>`
+          var str = `<p class="sendFrom"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><span class="text">${this.refs.text.value}</span></p>`
           this.Chat.innerHTML += str; 
           this.contentBody.scrollTop = this.contentBody.scrollHeight;
       }else{
@@ -134,9 +134,9 @@ export default class Chat extends Component{
             var reader = new FileReader();  
             reader.onload = function(e) {  
                 var src = e.target.result + "";   
-                var str = `<p class="sendFrom img"><span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span><img src="${src}"/></p>`
+                var str = `<p class="sendFrom img"><span class="name">${me.props.sendFrom}&nbsp;:&nbsp;</span><img src="${src}"/></p>`
                 me.Chat.innerHTML += str; 
-                this.contentBody.scrollTop = this.contentBody.scrollHeight;
+                me.contentBody.scrollTop = me.contentBody.scrollHeight;
             }  
             reader.readAsDataURL(file);  
       }else{
@@ -152,9 +152,9 @@ export default class Chat extends Component{
         for (var i = 0; i < data.length; i++) {
           if(data[i].send != this.props.sendTo){ //我是发送者
             if (data[i].text) {
-              str += `<p class="sendFrom"><span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span><span class="text">${data[i].text}</span></p>`
+              str += `<p class="sendFrom"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><span class="text">${data[i].text}</span></p>`
             }else{
-              str += `<p class="sendFrom img"><span class="name">&nbsp;:&nbsp;${this.props.sendFrom}</span><img src="/img?name=${data[i].imgUrl}"/></p>`
+              str += `<p class="sendFrom img"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><img src="/img?name=${data[i].imgUrl}"/></p>`
             }
           }else{
             if (data[i].text) {
@@ -176,6 +176,7 @@ export default class Chat extends Component{
   }
 
   render(){
+    // console.log(this.props)
     const{chatTo} = this.props;
     return(
         <div id='chat'>

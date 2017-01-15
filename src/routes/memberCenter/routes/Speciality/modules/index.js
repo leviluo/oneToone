@@ -6,7 +6,7 @@ export function addSpeciatity (items) {
     axios.post('/member/addSpeciality',items).then(({data}) => {
       if (data.status==200) {
           dispatch({type:"MODAL_HIDE"})
-      	  dispatch({type:"RECEIVE_SPECIALITIES",value:[items]})
+      	  dispatch({type:"ADD_SPECIALITIES",value:[items]})
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
       }
@@ -18,6 +18,7 @@ export function addSpeciatity (items) {
 // Constants
 // ------------------------------------
 const RECEIVE_SPECIALITIES = 'RECEIVE_SPECIALITIES'
+const ADD_SPECIALITIES = 'ADD_SPECIALITIES'
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -40,7 +41,10 @@ export function fetchSpeciality () {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [RECEIVE_SPECIALITIES]: (state, action) => {
-    return ({...state, text: state.text.concat(action.value),isloaded:true})
+    return ({...state, text: action.value,isloaded:true})
+  },
+  [ADD_SPECIALITIES]: (state, action) => {
+    return ({...state, text: state.text.concat(action.value)})
   }
 }
 

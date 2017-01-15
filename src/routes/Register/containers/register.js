@@ -4,13 +4,14 @@ import './register.scss'
 import { connect } from 'react-redux';
 import { fetchRegister } from '../modules/register'
 import { tipShow } from '../../../components/Tips/modules/tips'
-// import {browserHistory} from 'react-router'
+import {login} from '../../../reducers/auth'
+
 @connect(
   state => ({
     register: state.register,
     mylocation: state.mylocation.text
     }),
-  {tipShow,fetchRegister}
+  {tipShow,login}
 )
 export default class Register extends Component {
 
@@ -41,7 +42,6 @@ export default class Register extends Component {
       this.props.tipShow({type:"error",msg:"密码格式不正确"})
       return
     }
-console.log(this.refs.nickname.value.length)
     if (!this.refs.nickname.value || this.refs.nickname.value.length > 20) {
       this.props.tipShow({type:"error",msg:"昵称格式不正确"})
       return
@@ -53,14 +53,26 @@ console.log(this.refs.nickname.value.length)
     }
 
     let address = this.props.mylocation.content ? this.props.mylocation.content.address :'';
-    this.props.fetchRegister({
+    var me = this
+    fetchRegister({
       phone:this.refs.phone.value,
       password:this.refs.password.value,
       nickname:this.refs.nickname.value,
       code:this.refs.code.value,
       sex:this.state.sex,
       location:address
-    },this.context.router)
+    }).then(({data}) => {
+      if (data.status==200) {
+        console.log("0000")
+          this.props.tipShow({type:"success",msg:"注册成功,3S后自动跳转个人中心"})
+          setTimeout(()=>{
+            me.props.login({phone:me.refs.phone.value,password:me.refs.password.value},me.context.router)
+          },3000)
+      }else{
+          this.props.tipShow({type:"error",msg:data.msg})
+      }
+    })
+
   }
 
   render () {

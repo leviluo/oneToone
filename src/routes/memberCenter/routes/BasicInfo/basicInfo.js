@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
-import axios from 'axios'
+// import axios from 'axios'
 
 @connect(
   state => ({
     auth:state.auth,
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,getMemberInfo}
+  {modalShow,modalHide,tipShow,commitHeadImg}
 )
 
 export default class BasicInfo extends Component {
@@ -21,7 +21,7 @@ export default class BasicInfo extends Component {
   }
 
   componentWillMount =()=>{
-    axios.get('/member/getMemberInfo').then(({data}) => {
+    getMemberInfo().then(({data}) => {
         if (data.status==200) {
             this.setState({
               address:data.data[0].address
@@ -153,11 +153,12 @@ export default class BasicInfo extends Component {
     <div>
           <table className="basicInfo">
             <tbody>
-            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
+            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload?Math.random()" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
             <tr><td>昵称</td><td>{nickname}</td><td><a>修改</a></td></tr>
             <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
             </tbody>
           </table>
+          <a className="btn-primary card">查看名片</a>
     </div>
     )
   }

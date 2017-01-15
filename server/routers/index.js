@@ -23,6 +23,7 @@ export default function routers(router){
 	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
 	router.post("/member/historyChat",memberController.historyChat,router.allowedMethods());
 	router.post("/member/messageImg",fileController.insertImg,fileController.messageImg,router.allowedMethods());
+	router.get("/member/getMessageList",memberController.getMessageList,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

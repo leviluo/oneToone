@@ -1,0 +1,34 @@
+.specialities {
+    border-bottom: 1px solid #1c86ee;
+    table {
+        tr{
+            td{
+              border-bottom:1px dotted #ccc;
+            }
+            td:first-of-type{
+                color:#666;
+            }
+        }
+        tr:last-of-type{
+            td{
+                border:none
+            }
+        }
+        &:hover{
+       
+        }
+    }
+}
+
+.addSpeciaity {
+    margin:10px;
+    text-align: center;
+    button {
+        font-size:20px;
+        color:#efefef;
+        width: 200px;
+        height: 50px;
+        line-height: 50px;
+        padding-bottom: 10px
+    }
+}
