@@ -76,17 +76,23 @@ const memberController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
-            return
-        }
         if (this.request.body.lastUpdate) {
         var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where ((m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?))) and unix_timestamp(m.time) < unix_timestamp(?) order by m.time desc limit 10",[this.session.user,this.request.body.chatWith,this.session.user,this.request.body.chatWith,this.request.body.lastUpdate])
         }else{ 
         var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where (m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?)) order by m.time desc limit 10",[this.session.user,this.request.body.chatWith,this.session.user,this.request.body.chatWith])
-        var resultt = await sqlStr("update message set active = 1 where toMember = (select id from member where phone = ?) and fromMember = (select id from member where phone = ?)",[this.session.user,this.request.body.chatWith])
         }
         this.body = {status:200,data:result}
+    },
+    updateActive:async function(next){
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        await next;
+        if (!this.request.body.lastUpdate && this.body.status == 200) {
+            var result = await sqlStr("update message set active = 1 where toMember = (select id from member where phone = ?) and fromMember = (select id from member where phone = ?) and active = 0",[this.session.user,this.request.body.chatWith])
+        }
+        // this.body = this.body
     },
     getMessageList:async function(){
         if (!this.session.user) {

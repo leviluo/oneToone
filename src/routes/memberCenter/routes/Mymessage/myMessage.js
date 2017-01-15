@@ -49,13 +49,15 @@ export default class myMessage extends Component {
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
           if (item.isSend) {
             var head = <span>你发送给 <b>{item.nickname}</b> 的消息:</span>
+            var isRead = item.active == '0'?'对方未读':'对方已读'
           }else{
             var head = <span><b>{item.nickname}</b> 发送给你的消息:</span> 
+            var isRead = item.active == '0'?'未读':'已读'
           }
           return <div key = {index}>
               <img src={headImg} /><span><a onClick={()=>this.showChat(item.nickname,item.phone)}>查看</a></span>
               <ul>
-                <li><span style={{color:item.active == '0' ? 'green' : '#666'}}>●</span><span>{time}</span>{head} </li>
+                <li><span style={{color:item.active == '0' ? 'green' : '#666'}}>●</span><span>({isRead})</span><span>{time}</span>{head} </li>
                 <li>{item.text}{item.imgUrl && <img src={imgUrl} />}</li>
               </ul>
           </div>
