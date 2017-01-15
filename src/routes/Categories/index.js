@@ -14,6 +14,7 @@ export default (store) => ({
 
       reducer = require('../../components/Chat/modules/chat').default
       injectReducer(store, { key: 'chat', reducer })
+      
       cb(null, categories)
     })
   }

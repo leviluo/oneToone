@@ -1,4 +1,4 @@
-// import { injectReducer } from '../../store/reducers'
+import { injectReducer } from '../../../../store/reducers'
 
 export default (store) => ({
 	path:"/memberCenter/myMessage",
@@ -9,6 +9,8 @@ export default (store) => ({
             // injectReducer(store, { key: 'myspecialities', reducer })
             // reducer = require('../../../../reducers/category').default
             // injectReducer(store, { key: 'catelogues', reducer })
+            var reducer = require('../../../../components/Chat/modules/chat').default
+            injectReducer(store, { key: 'chat', reducer })
             cb(null, myMessage)
         })
     },

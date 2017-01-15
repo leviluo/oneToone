@@ -11,6 +11,8 @@ export default function MyCoreLayout(store){
 	injectReducer(store, { key: 'mylocation', reducer })
 	reducer = require('../../reducers/auth').default  
 	injectReducer(store, { key: 'auth', reducer })
+	// reducer = require('../../components/Chat/modules/chat').default
+ //    injectReducer(store, { key: 'chat', reducer })
 	return CoreLayout
 }
 

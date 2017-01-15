@@ -7,8 +7,8 @@ import {fetchItems} from '../modules'
 import {asyncConnect} from 'redux-async-connect'
 import Select from '../../../components/Select'
 import PageNavBar from '../../../components/PageNavBar'
-import Chat from '../../../components/Chat'
-import {chat} from '../../../components/Chat/modules/chat'
+// import Chat from '../../../components/Chat'
+import {chatShow} from '../../../components/Chat/modules/chat'
 import {tipShow} from '../../../components/Tips/modules/tips'
 import './categories.scss'
 
@@ -29,7 +29,7 @@ import './categories.scss'
     catelogues:state.catelogues,
     mylocation: state.mylocation,
     auth:state.auth
-}),{fetchItems,chat,tipShow})
+}),{fetchItems,chatShow,tipShow})
 export default class Categories extends React.Component{
 
     componentWillMount=(nextProps)=>{
@@ -157,7 +157,7 @@ export default class Categories extends React.Component{
             chatTo:name,
             sendTo:phone
         })
-        this.props.chat(true)
+        this.props.chatShow({chatTo:name,chatFrom:this.props.auth.nickname,sendTo:phone})
     }
 
     sendMessage =()=>{
@@ -200,7 +200,6 @@ export default class Categories extends React.Component{
             )}
             <PageNavBar pagego={this.pagego} firstpage={this.firstpage} lastpage={this.lastpage} pageup={this.pageup} pagedown={this.pagedown} pageNums={Math.ceil(items.text.length/this.state.averagenum)} currentPage={this.state.currentPage}/>
         </div>
-        <Chat chatTo={this.state.chatTo} sendFrom = {this.props.auth.nickname} sendTo={this.state.sendTo} />
       </div>
     }
 }

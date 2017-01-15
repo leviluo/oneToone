@@ -14,6 +14,19 @@ const memberController = {
             this.body = { status: 500, msg: "简介超过了300个字符" }
             return
         }
+        var resultcount = await sqlStr("select count(*) as count from memberSpeciality where memberId=(select id from member where phone = ?)",[this.session.user])
+        if(resultcount[0].count > 4){
+            this.body = { status: 500, msg: "最多添加5项专业" }
+            return
+        }
+
+        var resultrepeat = await sqlStr("select * from memberSpeciality where memberId=(select id from member where phone = ?) and specialitiesId=(select id from specialities where name= ?)",[this.session.user,this.request.body.speciality])
+        
+        if(resultrepeat.length > 0){
+            this.body = { status: 500, msg: "已经添加了此专业" }
+            return
+        }
+
         var result = await sqlStr("insert into memberSpeciality set brief = ?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,this.request.body.experience,this.session.user,this.request.body.speciality])
     	if (result.affectedRows == 1) {
             this.body = { status: 200}
@@ -68,11 +81,11 @@ const memberController = {
             return
         }
         if (this.request.body.lastUpdate) {
-        var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where (m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?) and m.time < ? ) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?) and m.time < ? ) order by m.time limit 50",[this.session.user,this.request.body.chatWith,this.request.body.lastUpdate,this.session.user,this.request.body.chatWith,this.request.body.lastUpdate])
+        var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where ((m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?))) and unix_timestamp(m.time) < unix_timestamp(?) order by m.time desc limit 10",[this.session.user,this.request.body.chatWith,this.session.user,this.request.body.chatWith,this.request.body.lastUpdate])
         }else{ 
-        var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where (m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?)) order by m.time limit 50",[this.session.user,this.request.body.chatWith,this.session.user,this.request.body.chatWith])
+        var result = await sqlStr("select m.text,m.imgUrl,m.time,mF.phone as send,mT.phone as sendto from message as m left join member as mF on mF.id = m.fromMember left join member as mT on mT.id=m.toMember where (m.fromMember = (select id from member where phone = ?) and m.toMember = (select id from member where phone = ?)) or (m.toMember = (select id from member where phone = ?) and m.fromMember = (select id from member where phone = ?)) order by m.time desc limit 10",[this.session.user,this.request.body.chatWith,this.session.user,this.request.body.chatWith])
+        var resultt = await sqlStr("update message set active = 1 where toMember = (select id from member where phone = ?) and fromMember = (select id from member where phone = ?)",[this.session.user,this.request.body.chatWith])
         }
-
         this.body = {status:200,data:result}
     },
     getMessageList:async function(){
@@ -85,4 +98,3 @@ const memberController = {
     }
 }
 export default memberController;
-

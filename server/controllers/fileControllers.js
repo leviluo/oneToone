@@ -72,7 +72,7 @@ const fileController = {
             return
         }
         var url = config.headDir + this.request.query.member + '.jpg';
-        var result = await getImage(url,config.headDir + 'demo.jpg');
+        var result = await getImage(url,config.headDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();

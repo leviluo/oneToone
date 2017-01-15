@@ -3,15 +3,22 @@ import axios from 'axios'
 // ------------------------------------
 // Constants
 // ------------------------------------
-const CHAT_STATUS = 'CHAT_STATUS'
+const CHAT = 'CHAT'
+const CHAT_HIDE = 'CHAT_HIDE'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function chat(text) {
+export function chatShow(text) {
+  // console.log(text)
   return (dispatch, getState) => {
-      dispatch({type:CHAT_STATUS,status:text})
+      dispatch({type:CHAT,value:text})
+  }
+}
+export function chatHide() {
+  return (dispatch, getState) => {
+      dispatch({type:CHAT_HIDE})
   }
 }
 
@@ -19,16 +26,24 @@ export function chat(text) {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [CHAT_STATUS]: (state, action) => {
-    return ({...state, isShow:action.status})
+  [CHAT]: (state, action) => {
+    return ({...state, isShow:true, chatTo:action.value.chatTo,chatFrom:action.value.chatFrom,sendTo:action.value.sendTo})
+  },
+  [CHAT_HIDE]: (state, action) => {
+    return ({...state, isShow:false, chatTo:'',chatFrom:'',sendTo:''})
   }
 }
+
+// <Chat chatTo={this.state.chatTo} sendFrom = {this.props.auth.nickname} sendTo={this.state.sendTo} />
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export const initialState = {
-  isShow:false
+  isShow:false,
+  chatTo:'',
+  chatFrom:'',
+  sendTo:''
 }
 
 export default function (state = initialState, action) {

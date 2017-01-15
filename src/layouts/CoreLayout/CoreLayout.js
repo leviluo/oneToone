@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../../components/Header'
 import Tip from '../../components/Tips'
 import Modal from '../../components/Modal'
+import Chat from '../../components/Chat'
 import './CoreLayout.scss'
 import '../../styles/core.scss'
 
@@ -10,6 +11,7 @@ export const CoreLayout = ({ children }) => (
     <Header />
     <Tip />
     <Modal />
+    <Chat />
     <div className='mainContainer'>
       {children}
     </div>

@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import {connect} from 'react-redux'
-import {chat,submitText,submitImg,getHistory} from './modules/chat'
+import {chatHide,submitText,submitImg,getHistory} from './modules/chat'
 import './chat.scss'
 
 @connect(
-  state=>({chatStatus:state.chat}),
-{chat})
+  state=>({chat:state.chat}),
+{chatHide})
 
 export default class Chat extends Component{
 
@@ -40,19 +40,21 @@ export default class Chat extends Component{
   }
 
   shouldComponentUpdate =(nextProps,nextState)=>{
-    if (nextProps.chatStatus.isShow) {
+    if (nextProps.chat.isShow) {
       this.showchat();
     }else{
-      this.hidechat();
+      return false
     }
       return true
   }
 
   componentDidUpdate =()=>{
-    if (this.props.chatStatus.isShow) {
+    if (this.props.chat.isShow) {
       var ele = findDOMNode(this)
       var height = window.getComputedStyle(ele,null).height.slice(0,-2)
       ele.style.top = document.body.scrollTop + document.body.clientHeight - height+'px'
+      this.checkHistory(true)
+
     }else{
       this.hidechat()
     }
@@ -66,18 +68,21 @@ export default class Chat extends Component{
       var height = window.getComputedStyle(ele,null).height.slice(0,-2)
       ele.style.top = document.body.scrollTop + document.body.clientHeight - height+'px'
     }
+    var me = this
+    // setTimeout(()=>me.checkHistory(),10)
   }
 
   hidechat =()=>{
     findDOMNode(this).setAttribute('class','')
     findDOMNode(this).style.display = "none"
     window.onscroll = null
+    this.props.chatHide()
   }
 
-  static propTypes = {
-    chatTo:React.PropTypes.string.isRequired,
-    sendTo:React.PropTypes.string.isRequired,
-  }
+  // static propTypes = {
+  //   chatTo:React.PropTypes.string.isRequired,
+  //   sendTo:React.PropTypes.string.isRequired,
+  // }
 
   submitText =()=>{
     if (!/[^\t\r\n\s]/.test(this.refs.text.value)) {
@@ -88,9 +93,10 @@ export default class Chat extends Component{
       this.error('文本过长')
       return;
     }
-    submitText({text:this.refs.text.value,sendTo:this.props.sendTo}).then(({data}) => {
+    submitText({text:this.refs.text.value,sendTo:this.props.chat.sendTo}).then(({data}) => {
       if (data.status==200) {
-          var str = `<p class="sendFrom"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><span class="text">${this.refs.text.value}</span></p>`
+          var date = new Date()
+          var str = `<p class="sendFrom"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}</span><span class="text">${this.refs.text.value}</span></p>`
           this.Chat.innerHTML += str; 
           this.contentBody.scrollTop = this.contentBody.scrollHeight;
       }else{
@@ -127,14 +133,15 @@ export default class Chat extends Component{
     var file = e.target.files[0]
     var fd = new FormData(); 
     fd.append("file", file); 
-    fd.append("sendTo",this.props.sendTo)
+    fd.append("sendTo",this.props.chat.sendTo)
     var me = this;
     submitImg(fd).then(({data}) => {
       if (data.status==200) {
             var reader = new FileReader();  
             reader.onload = function(e) {  
-                var src = e.target.result + "";   
-                var str = `<p class="sendFrom img"><span class="name">${me.props.sendFrom}&nbsp;:&nbsp;</span><img src="${src}"/></p>`
+                var src = e.target.result + "";  
+                var date = new Date() 
+                var str = `<p class="sendFrom img"><span class="name">${me.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}</span><img src="${src}"/></p>`
                 me.Chat.innerHTML += str; 
                 me.contentBody.scrollTop = me.contentBody.scrollHeight;
             }  
@@ -145,48 +152,57 @@ export default class Chat extends Component{
     })
   }
 
-  checkHistory =()=>{
-    getHistory({chatWith:this.props.sendTo,lastUpdate:this.lastUpdate || ''}).then((response)=>{
+  checkHistory =(isTop)=>{
+    getHistory({chatWith:this.props.chat.sendTo,lastUpdate:this.lastUpdate || ''}).then((response)=>{
         var data = response.data.data
         var str = ''
-        for (var i = 0; i < data.length; i++) {
-          if(data[i].send != this.props.sendTo){ //我是发送者
+        for (var i = data.length-1; i >= 0; i--) {
+              var date = new Date(data[i].time)
+              var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+          if(data[i].send != this.props.chat.sendTo){ //我是发送者
             if (data[i].text) {
-              str += `<p class="sendFrom"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><span class="text">${data[i].text}</span></p>`
+              str += `<p class="sendFrom"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><span class="text">${data[i].text}</span></p>`
             }else{
-              str += `<p class="sendFrom img"><span class="name">${this.props.sendFrom}&nbsp;:&nbsp;</span><img src="/img?name=${data[i].imgUrl}"/></p>`
+              str += `<p class="sendFrom img"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="/img?name=${data[i].imgUrl}"/></p>`
             }
           }else{
             if (data[i].text) {
-              str += `<p class="sendTo"><span class="name">${this.props.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="text">${data[i].text}</span></p>`
+              str += `<p class="sendTo"><span class="name">${this.props.chat.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="time">${time}</span><span class="text">${data[i].text}</span></p>`
             }else{
-              str += `<p class="sendTo img"><span class="name">${this.props.chatTo}&nbsp;:&nbsp;</span>&nbsp;<img src="/img?name=${data[i].imgUrl}"/></p>`
+              str += `<p class="sendTo img"><span class="name">${this.props.chat.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="time">${time}</span><img src="/img?name=${data[i].imgUrl}"/></p>`
             }
           }
         };
-        this.Chat.innerHTML = str + this.Chat.innerHTML;
-        this.lastUpdate = data[0].time;
+        if (this.lastUpdate) {
+          this.Chat.innerHTML = str + this.Chat.innerHTML;
+        }else{
+          this.Chat.innerHTML = str
+        }
+        var sendDate = new Date(data[data.length-1].time)
+
+        if(data[0])this.lastUpdate = `${sendDate.getFullYear()}-${sendDate.getMonth()+1}-${sendDate.getDate()} ${sendDate.getHours()}:${sendDate.getMinutes()}:${sendDate.getSeconds()}`;
+
+        if(isTop==true)this.contentBody.scrollTop = this.contentBody.scrollHeight;
     })
   }
 
-  send =(e)=>{
-    if(e.keyCode==13){
-      this.submitText()
-    }
-  }
+  // send =(e)=>{
+  //   if(e.keyCode==13){
+  //     this.submitText()
+  //   }
+  // }
 
   render(){
-    // console.log(this.props)
-    const{chatTo} = this.props;
+    const{chatTo} = this.props.chat;
     return(
         <div id='chat'>
           <div className="content">
             <div className="content-header">
               <div className="close" onClick={this.hidechat}>×</div>
-              <h3>{`给${chatTo}的留言`}</h3>
+              <h3>{`与${chatTo}的对话`}</h3>
             </div>
             <div className="content-body">
-                  <p><a onClick={this.checkHistory}>查看历史消息...</a></p>
+                  <p><a onClick={this.checkHistory}>查看更多...</a></p>
                   <p style={{color:"red"}}>{this.state.error}</p>
                   <div className="chat"></div>
             </div>

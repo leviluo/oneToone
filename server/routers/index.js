@@ -18,7 +18,7 @@ export default function routers(router){
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
 	router.get("/member/Headload",fileController.loadHeadImg,router.allowedMethods());
-	router.get("/img",fileController.loadImg,router.allowedMethods());
+	router.get("/img",fileController.loadImg,router.allowedMethods());  
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
 	router.post("/member/historyChat",memberController.historyChat,router.allowedMethods());
