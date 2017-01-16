@@ -25,7 +25,8 @@ export default class BasicInfo extends Component {
     getMemberInfo().then(({data}) => {
         if (data.status==200) {
             this.setState({
-              address:data.data[0].address
+              address:data.data[0].address,
+              sex:data.data[0].sex
             })
         }else{
             this.props.tipShow({type:'error',msg:data.msg})
@@ -184,8 +185,10 @@ export default class BasicInfo extends Component {
               </div>
             </div>
               <ul>
-                <li><h3>昵称</h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" defaultValue={nickname} /> <button className="btn-default" onClick={this.saveNickname}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={this.modifynickname}><i className="fa fa-edit"></i>修改</a></li>
-                <li><h3>详细地址</h3><p>{this.state.address}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" defaultValue={nickname} /> <button className="btn-default" onClick={this.saveNickname}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={this.modifynickname}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>性别</span></h3><p>{this.state.sex}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
               </ul>
           </div>
           <Modal />
