@@ -27,10 +27,8 @@ export default class myMessage extends Component {
 
   componentWillMount =()=>{
     messageList().then(({data})=>{
-      if (data.data.length > 1 && !this.props.pagenavbar.isloaded) {   //初始化翻页条
-            var pageNums = Math.ceil(data.data.length/this.state.averagenum)
-            this.props.pageNavInit(pageNums)
-        };
+      var pageNums = Math.ceil(data.data.length/this.state.averagenum)
+      this.props.pageNavInit(pageNums)
       this.setState({
         items:data.data
       })

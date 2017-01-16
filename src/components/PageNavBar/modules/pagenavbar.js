@@ -22,11 +22,11 @@ export function pageNumChange(text) {
   }
 }
 
-export function pageReset(text) {
-  return (dispatch, getState) => {
-      dispatch({type:PAGERESET})
-  }
-}
+// export function pageReset(text) {
+//   return (dispatch, getState) => {
+//       dispatch({type:PAGERESET})
+//   }
+// }
 
 
 // ------------------------------------
