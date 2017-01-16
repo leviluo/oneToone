@@ -15,7 +15,8 @@ export const receiveItems = (value) => ({
 export function fetchItems (items) {
   return (dispatch, getState) => {
     axios.post('/public/Items',items).then(({data}) => {
-      dispatch(receiveItems(data.data))
+        dispatch({type:'PAGERESET'})   //请求数据重置reset
+        dispatch(receiveItems(data.data))
       })
   }
 }

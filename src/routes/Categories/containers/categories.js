@@ -7,7 +7,7 @@ import {fetchItems} from '../modules'
 import {asyncConnect} from 'redux-async-connect'
 import Select from '../../../components/Select'
 import PageNavBar from '../../../components/PageNavBar'
-// import Chat from '../../../components/Chat'
+import {pageNavInit} from '../../../components/PageNavBar/modules/pagenavbar'
 import {chatShow} from '../../../components/Chat/modules/chat'
 import {tipShow} from '../../../components/Tips/modules/tips'
 import './categories.scss'
@@ -29,8 +29,10 @@ import Chat from '../../../components/Chat'
     items:state.items,
     catelogues:state.catelogues,
     mylocation: state.mylocation,
+    pagenavbar:state.pagenavbar,
     auth:state.auth
-}),{fetchItems,chatShow,tipShow})
+
+}),{fetchItems,chatShow,tipShow,pageNavInit})
 export default class Categories extends React.Component{
 
     componentWillMount=(nextProps)=>{
@@ -75,51 +77,19 @@ export default class Categories extends React.Component{
             this.initItems(nextProps)
             this.resetStyle(nextProps.location.query.childCatelogue?nextProps.location.query.childCatelogue:nextProps.location.query.parentCatelogue);   //刷新页面
         }
+
+        if (nextProps.items.isloaded && nextProps.items.text.length > 1 && !this.props.pagenavbar.isloaded) {   //初始化翻页条
+            var pageNums = Math.ceil(this.props.items.text.length/this.state.averagenum)
+            this.props.pageNavInit(pageNums)
+        };
     }
 
     state = {
-        currentPage:1,
         averagenum:5,
         childCatelogue:'',
         chatTo:'',
         sendTo:''
     }    
-
-    pageup = (e)=>{
-        if (this.state.currentPage == 1) {return};
-        this.setState({
-            currentPage:this.state.currentPage == 1 ? 1 : this.state.currentPage - 1
-        })
-    }
-
-    pagedown = (e,pageNums)=>{
-        if (this.state.currentPage == pageNums) {return};
-        this.setState({
-            currentPage:this.state.currentPage == pageNums ? pageNums : this.state.currentPage + 1
-        })
-    }
-
-    firstpage = () =>{
-        if (this.state.currentPage == 1) {return};
-        this.setState({
-            currentPage:1
-        })
-    }
-
-    lastpage = (e,pageNums) =>{
-        if (this.state.currentPage == pageNums) {return};
-        this.setState({
-            currentPage:pageNums
-        })
-    }
-
-    pagego = (e,currentPage) =>{
-        // console.log(currentPage)
-        if (this.state.currentPage == currentPage) {return};
-            this.setState({
-                currentPage:currentPage
-            })
-    }
 
     resetStyle =(name)=>{
         var ele = document.getElementById('categoryItems').getElementsByTagName('a')
@@ -127,9 +97,6 @@ export default class Categories extends React.Component{
             ele[i].style.color = "#000"
         }
         document.getElementsByName(name)[0].style.color = "#3a5fcd"
-        this.setState({
-            currentPage:1,
-        })
     }
 
     allCategory = (e)=>{
@@ -161,10 +128,6 @@ export default class Categories extends React.Component{
         this.props.chatShow({chatTo:name,chatFrom:this.props.auth.nickname,sendTo:phone})
     }
 
-    sendMessage =()=>{
-
-    }
-
 
     render(){   
         const{catelogues,mylocation,location,items} = this.props
@@ -189,7 +152,7 @@ export default class Categories extends React.Component{
             </div>
         </div>
         <div className="categoryContent">
-            {items.text.slice(this.state.averagenum*(this.state.currentPage-1),this.state.averagenum*this.state.currentPage).map((item,index)=> {
+            {items.text.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=> {
                 let src = `/public/Headload?member=${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 return <div key={index} className="itemContent">
@@ -199,7 +162,7 @@ export default class Categories extends React.Component{
                 </div>
             }
             )}
-            <PageNavBar pagego={this.pagego} firstpage={this.firstpage} lastpage={this.lastpage} pageup={this.pageup} pagedown={this.pagedown} pageNums={Math.ceil(items.text.length/this.state.averagenum)} currentPage={this.state.currentPage}/>
+            <PageNavBar />
         </div>
         <Chat />
       </div>
