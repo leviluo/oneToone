@@ -148,13 +148,30 @@ export default class BasicInfo extends Component {
     document.onmousemove = null;
   }
 
-          // <table className="basicInfo">
-          //   <tbody>
-          //   <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload?Math.random()" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
-          //   <tr><td>昵称</td><td>{nickname}</td><td><a>修改</a></td></tr>
-          //   <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
-          //   </tbody>
-          // </table>
+  modifynickname =(e)=>{
+    this.setState({
+      showNickname:true
+    })
+  }
+
+  saveNickname =(e)=>{
+    this.setState({
+      showNickname:false
+    })
+  }
+
+  modifyAddress =(e)=>{
+    this.setState({
+      showAddress:true
+    })
+  }
+
+  saveAddress =(e)=>{
+    this.setState({
+      showAddress:false
+    })
+  }
+
   render () {
     let nickname = this.props.auth.nickname
     return (
@@ -163,13 +180,12 @@ export default class BasicInfo extends Component {
             <div>
               <div>
                 <img id="memberinfoHeadImg" src="/member/Headload?Math.random()" />
-                <div></div>
-                <input onChange={this.modifyHead} type="file" />
+                <a className="fa fa-image"><input onChange={this.modifyHead} type="file" /></a>
               </div>
             </div>
               <ul>
-                <li><span>昵称</span><span>{nickname}</span><a>修改</a></li>
-                <li><span>详细地址</span><span>{this.state.address}</span><a>修改</a></li>
+                <li><h3>昵称</h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" defaultValue={nickname} /> <button className="btn-default" onClick={this.saveNickname}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={this.modifynickname}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3>详细地址</h3><p>{this.state.address}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
               </ul>
           </div>
           <Modal />
