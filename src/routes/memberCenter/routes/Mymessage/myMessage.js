@@ -7,23 +7,30 @@ import { connect } from 'react-redux'
 import {chatShow} from '../../../../components/Chat/modules/chat'
 import {messageList} from './modules/myMessage'
 import Chat from '../../../../components/Chat'
+import PageNavBar from '../../../../components/PageNavBar'
+import {pageNavInit} from '../../../../components/PageNavBar/modules/pagenavbar'
 
 @connect(
   state => ({
     auth:state.auth,
+    pagenavbar:state.pagenavbar,
     }),
-  {chatShow}
+  {chatShow,pageNavInit}
 )
 
 export default class myMessage extends Component {
 
   state ={
-    items:[]
+    items:[],
+    averagenum:5
   }
 
   componentWillMount =()=>{
     messageList().then(({data})=>{
-      console.log(data.data)
+      if (data.data.length > 1 && !this.props.pagenavbar.isloaded) {   //初始化翻页条
+            var pageNums = Math.ceil(data.data.length/this.state.averagenum)
+            this.props.pageNavInit(pageNums)
+        };
       this.setState({
         items:data.data
       })
@@ -43,7 +50,7 @@ export default class myMessage extends Component {
     return (
     <div>
       <div className="messageContent">
-        {this.state.items.map((item,index)=>{
+        {this.state.items.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
           var headImg = `/public/Headload?member=${item.phone}`
           var imgUrl = item.imgUrl ? `/img?name=${item.imgUrl}` : ''
           var date = new Date(item.time)
@@ -63,6 +70,7 @@ export default class myMessage extends Component {
               </ul>
           </div>
         })}
+      <PageNavBar />
       </div>
       <Chat />
     </div>
