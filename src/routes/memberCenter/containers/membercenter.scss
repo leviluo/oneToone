@@ -1,13 +1,11 @@
 .memberCentercontent{
-	position:relative;
+	min-height:850px;
 	.memberCenterContentLeft{
-		display:inline-block;
 		width:14%;
 		height:300px;
 		background:#fff;
 		text-align:center;
-		position:absolute;
-		top:0;
+		float:left;
 		h3{
 			color:#1C86EE;
 			width:80%;
@@ -39,11 +37,9 @@
 	}
 	.memberCenterContentRight{
 		padding:10px;
-		display:inline-block;
 		background:#fff;
-		margin-left:15%;
 		width:85%;
-		min-height:1000px;
+		float:right;
 		table{
 			width:100%;
 			tr{

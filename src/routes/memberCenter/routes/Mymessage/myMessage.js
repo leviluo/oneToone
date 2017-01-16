@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 // import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
 import {chatShow} from '../../../../components/Chat/modules/chat'
 import {messageList} from './modules/myMessage'
+import Chat from '../../../../components/Chat'
 
 @connect(
   state => ({
@@ -63,6 +64,7 @@ export default class myMessage extends Component {
           </div>
         })}
       </div>
+      <Chat />
     </div>
     )
   }

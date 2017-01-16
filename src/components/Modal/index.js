@@ -31,13 +31,12 @@ export default class Modal extends Component{
   }
 
   componentDidUpdate =()=>{
-    console.log(this.props.modalStatus)
     if (this.props.modalStatus.isShow) {
       var ele = findDOMNode(this)
       var element = ele.getElementsByClassName("content")[0];
       var height = window.getComputedStyle(element,null).height.slice(0,-2)
       var width = window.getComputedStyle(element,null).width.slice(0,-2)
-      ele.style.height = document.body.clientHeight + document.body.scrollTop + 'px';
+      ele.style.height = document.body.scrollHeight + document.body.scrollTop + 'px';
       element.style.top = (document.body.scrollTop + (document.body.clientHeight - height)/2)+'px'
       element.style.left = (document.body.clientWidth - width)/2 + 'px'
     }else{

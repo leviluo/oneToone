@@ -1,7 +1,7 @@
 .messageContent{
 	div{
-		height:130px;
-		padding:10px 0;
+		height:140px;
+		padding:15px 0;
 		border-bottom:1px solid #ccc;
 		&>img{
 			border-radius:75px;
@@ -40,9 +40,14 @@
 				}
 			}
 			li:nth-of-type(2){
-				color:#666;
+				color:#444;
+				background:#efefef;
+				border-radius:5px;
+				padding:3px 5px;
+				 word-wrap: break-word;
+				 max-width:400px;
 				img{
-					height:90px;
+					height:80px;
 				}
 			}
 		}

@@ -7,6 +7,7 @@ import {modalShow} from '../../../components/Modal/modules/modal'
 import Input from '../../../components/Input'
 import Helmet from 'react-helmet'
 import {Link} from 'react-router'
+import Modal from '../../../components/Modal'
 
 @connect(
   state=>({auth:state.auth}),
@@ -100,6 +101,7 @@ export default class Login extends Component{
         <button></button>
         </div>
         </div>
+        <Modal />
       </div>
       )
   }

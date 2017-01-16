@@ -9,7 +9,7 @@ import {addSpeciatity,fetchSpeciality} from './modules'
 import {fetchCatelogue} from '../../../../reducers/category'
 import './speciality.scss'
 import {asyncConnect} from 'redux-async-connect'
-
+import Modal from '../../../../components/Modal'
 
 
 @asyncConnect([{
@@ -132,6 +132,7 @@ export default class SpecialityComponent extends Component {
           <div className="addSpeciaity">
           <button onClick={this.showAddSpciality} className="btn-primary">+添加专业能力</button>
           </div>
+          <Modal />
           </div>
     )
   }

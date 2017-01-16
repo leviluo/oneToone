@@ -5,6 +5,7 @@ import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
 // import axios from 'axios'
+import Modal from '../../../../components/Modal'
 
 @connect(
   state => ({
@@ -159,6 +160,7 @@ export default class BasicInfo extends Component {
             </tbody>
           </table>
           <a className="btn-primary card">查看名片</a>
+          <Modal />
     </div>
     )
   }

@@ -96,7 +96,8 @@ export default class Chat extends Component{
     submitText({text:this.refs.text.value,sendTo:this.props.chat.sendTo}).then(({data}) => {
       if (data.status==200) {
           var date = new Date()
-          var str = `<p class="sendFrom"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}</span><span class="text">${this.refs.text.value}</span></p>`
+          var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+          var str = `<p class="sendFrom"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><span class="text">${this.refs.text.value}</span></p>`
           this.Chat.innerHTML += str; 
           this.contentBody.scrollTop = this.contentBody.scrollHeight;
       }else{
@@ -141,7 +142,8 @@ export default class Chat extends Component{
             reader.onload = function(e) {  
                 var src = e.target.result + "";  
                 var date = new Date() 
-                var str = `<p class="sendFrom img"><span class="name">${me.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}</span><img src="${src}"/></p>`
+                var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+                var str = `<p class="sendFrom img"><span class="name">${me.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="${src}"/></p>`
                 me.Chat.innerHTML += str; 
                 me.contentBody.scrollTop = me.contentBody.scrollHeight;
             }  

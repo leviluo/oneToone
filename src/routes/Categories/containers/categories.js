@@ -11,6 +11,7 @@ import PageNavBar from '../../../components/PageNavBar'
 import {chatShow} from '../../../components/Chat/modules/chat'
 import {tipShow} from '../../../components/Tips/modules/tips'
 import './categories.scss'
+import Chat from '../../../components/Chat'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState},a}) => {
@@ -200,6 +201,7 @@ export default class Categories extends React.Component{
             )}
             <PageNavBar pagego={this.pagego} firstpage={this.firstpage} lastpage={this.lastpage} pageup={this.pageup} pagedown={this.pagedown} pageNums={Math.ceil(items.text.length/this.state.averagenum)} currentPage={this.state.currentPage}/>
         </div>
+        <Chat />
       </div>
     }
 }
