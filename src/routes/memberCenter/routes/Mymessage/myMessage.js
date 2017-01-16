@@ -44,7 +44,7 @@ export default class myMessage extends Component {
   }
 
   render () {
-    console.log(this.state.items)
+
     return (
     <div>
       <div className="messageContent">

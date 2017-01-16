@@ -148,18 +148,30 @@ export default class BasicInfo extends Component {
     document.onmousemove = null;
   }
 
+          // <table className="basicInfo">
+          //   <tbody>
+          //   <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload?Math.random()" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
+          //   <tr><td>昵称</td><td>{nickname}</td><td><a>修改</a></td></tr>
+          //   <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
+          //   </tbody>
+          // </table>
   render () {
     let nickname = this.props.auth.nickname
     return (
     <div>
-          <table className="basicInfo">
-            <tbody>
-            <tr><td>头像</td><td><img id="memberinfoHeadImg" src="/member/Headload?Math.random()" /></td><td><a><input onChange={this.modifyHead} type="file" />修改</a></td></tr>
-            <tr><td>昵称</td><td>{nickname}</td><td><a>修改</a></td></tr>
-            <tr><td>详细地址</td><td>{this.state.address}</td><td><a>修改</a></td></tr>
-            </tbody>
-          </table>
-          <a className="btn-primary card">查看名片</a>
+          <div className="basicInfo">
+            <div>
+              <div>
+                <img id="memberinfoHeadImg" src="/member/Headload?Math.random()" />
+                <div></div>
+                <input onChange={this.modifyHead} type="file" />
+              </div>
+            </div>
+              <ul>
+                <li><span>昵称</span><span>{nickname}</span><a>修改</a></li>
+                <li><span>详细地址</span><span>{this.state.address}</span><a>修改</a></li>
+              </ul>
+          </div>
           <Modal />
     </div>
     )
