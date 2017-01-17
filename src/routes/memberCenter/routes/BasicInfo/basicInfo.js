@@ -5,7 +5,7 @@ import './basicInfo.scss'
 import { connect } from 'react-redux'
 import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality} from './modules/basicInfo'
+import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality} from './modules/basicInfo'
 import Modal from '../../../../components/Modal'
 import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
@@ -223,29 +223,47 @@ export default class BasicInfo extends Component {
 
     this.props.modalShow({header:"添加新专业",content:content,submit:this.addSpeciatity});
   }
-
-  modifynickname =(e)=>{
-    this.setState({
-      showNickname:true
-    })
-  }
-
+// modifyNickname,modifyAddress,modifySpeciality
   saveNickname =(e)=>{
-    this.setState({
-      showNickname:false
-    })
-  }
-
-  modifyAddress =(e)=>{
-    this.setState({
-      showAddress:true
+    if (!this.refs.nickname.value) {
+      this.props.tipShow({type:'error',msg:"昵称不能为空"})
+      return
+    }
+    if (!this.refs.nickname.value.length > 19) {
+      this.props.tipShow({type:'error',msg:"昵称不能大于20个字符"})
+      return
+    }
+    modifyNickname({nickname:this.refs.nickname.value}).then(({data})=>{
+      if (data.status == 200) {
+        this.setState({
+          showNickname:false
+        })
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
     })
   }
 
   saveAddress =(e)=>{
-    this.setState({
-      showAddress:false
+    if (!this.refs.address.value) {
+      this.props.tipShow({type:'error',msg:"昵称不能为空"})
+      return
+    }
+    if (!this.refs.address.value.length > 19) {
+      this.props.tipShow({type:'error',msg:"地址不能大于100个字符"})
+      return
+    }
+    modifyAddress({address:this.refs.address.value}).then(({data})=>{
+      if (data.status == 200) {
+            this.setState({
+              showAddress:false,
+              address:this.refs.address.value
+            })
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
     })
+
   }
 
   modifySpeciality =(e,name)=>{
@@ -259,6 +277,10 @@ export default class BasicInfo extends Component {
   }
 
   saveSpeciality=(e,index)=>{
+    console.log(index)
+  }
+
+  deleteSpeciality=(e,index)=>{
     console.log(index)
   }
 
@@ -278,21 +300,21 @@ export default class BasicInfo extends Component {
               <ul>
                 <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p></li>
                 <li><h3><hr /><span>性别</span></h3><p>{this.state.sex == 0 ? "男" : "女"}</p></li>
-                <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" defaultValue={nickname} /> <button className="btn-default" onClick={()=>this.setState({showNickname:false})}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={this.modifynickname}><i className="fa fa-edit"></i>修改</a></li>
-                <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" ref="nickname" defaultValue={nickname} /> <button className="btn-default" onClick={()=>this.setState({showNickname:false})}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showNickname:true})}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input ref="address" type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showAddress:true})}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
                   {this.props.myspecialities.text.map((item,index)=>
                     <ul key={index}>
-                      <li><b>{item.speciality}</b><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
+                      <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,index)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
                       <li><span>简介&nbsp;:&nbsp;</span>{item.brief}</li>
                       <li><span>经验&nbsp;:&nbsp;</span>{item.experience}</li>
                       {this.state[item.speciality] && <li>
-                        <span>简介&nbsp;:&nbsp;</span><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,index)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
-                        <textarea rows="4">{item.brief}</textarea>
+                        <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,index)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
+                        <textarea rows="4" defaultValue={item.brief}></textarea>
                         <br/>
                         <br/>
-                        <span>经验&nbsp;:&nbsp;</span><textarea rows="10">{item.experience}</textarea>
+                        <p>经验&nbsp;:&nbsp;</p><textarea defaultValue={item.experience} rows="10"></textarea>
                       </li>}
                     </ul>
                     )}

@@ -52,7 +52,8 @@ export default class Chat extends Component{
     if (this.props.chat.isShow) {
       var ele = findDOMNode(this)
       var height = window.getComputedStyle(ele,null).height.slice(0,-2)
-      ele.style.top = document.body.scrollTop + document.body.clientHeight - height+'px'
+      var scrollTop = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop
+      ele.style.top = scrollTop + document.body.clientHeight - height+'px'
       this.checkHistory(true)
     }else{
       this.hidechat()
@@ -65,10 +66,9 @@ export default class Chat extends Component{
     var ele = findDOMNode(this) 
     window.onscroll = function (){
       var height = window.getComputedStyle(ele,null).height.slice(0,-2)
-      ele.style.top = document.body.scrollTop + document.body.clientHeight - height+'px'
+      var scrollTop = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop
+      ele.style.top = scrollTop + document.body.clientHeight - height+'px'
     }
-    var me = this
-    // setTimeout(()=>me.checkHistory(),10)
   }
 
   hidechat =()=>{

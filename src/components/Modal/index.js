@@ -37,7 +37,10 @@ export default class Modal extends Component{
       var height = window.getComputedStyle(element,null).height.slice(0,-2)
       var width = window.getComputedStyle(element,null).width.slice(0,-2)
       ele.style.height = document.body.scrollHeight + document.body.scrollTop + 'px';
-      element.style.top = (document.body.scrollTop + (document.body.clientHeight - height)/2)+'px'
+
+      var scrollTop = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop
+      
+      element.style.top = scrollTop + ((document.body.clientHeight - height)/2)+'px'
       element.style.left = (document.body.clientWidth - width)/2 + 'px'
     }else{
       this.hideModal()

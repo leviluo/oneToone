@@ -1,6 +1,6 @@
 .pagedown{
    float:right;
-   margin:15px 0;
+   margin:15px;
    li{
     list-style-type: none;
     float: left;
@@ -11,16 +11,16 @@
         display: block;
         text-align: center;
         margin-left: 5px;
-        color:#436EEE;
+        color:#FF8C00;
         text-decoration:none;
         cursor:pointer;
         background: #ccc;
         &:hover{
-            background: #436EEE; 
+            background: #FF8C00; 
             color:white
         }
     }
-     .btn-primary {
+     button {
         margin-left: 5px;
         line-height:30px;
         height:30px

@@ -24,6 +24,10 @@ export default function routers(router){
 	router.post("/member/historyChat",memberController.updateActive,memberController.historyChat,router.allowedMethods());
 	router.post("/member/messageImg",fileController.insertImg,fileController.messageImg,router.allowedMethods());
 	router.get("/member/getMessageList",memberController.getMessageList,router.allowedMethods());
+
+	router.post("/member/modifyNickname",memberController.modifyNickname,router.allowedMethods());
+	router.post("/member/modifyAddress",memberController.modifyAddress,router.allowedMethods());
+	router.post("/member/modifySpeciality",memberController.modifySpeciality,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

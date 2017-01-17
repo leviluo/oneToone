@@ -18,10 +18,10 @@ export default class PageNavBar extends Component {
 
     SetStyle = (currentPage)=>{
         for (var i = 0; i < document.getElementsByName('pagenum').length; i++) {
-            document.getElementsByName('pagenum')[i].style.background = '#ccc';
-            document.getElementsByName('pagenum')[i].style.color = '#436EEE';
+            document.getElementsByName('pagenum')[i].style.background = '#efefef';
+            document.getElementsByName('pagenum')[i].style.color = '#ff7f00';
         };
-        document.getElementById('pagenum'+currentPage).style.background = '#436EEE';
+        document.getElementById('pagenum'+currentPage).style.background = '#ff7f00';
         document.getElementById('pagenum'+currentPage).style.color = 'white';
     }
 
@@ -101,11 +101,11 @@ export default class PageNavBar extends Component {
         };
 
         return ( < ul className = "pagedown" >
-            < li > < button className = "btn-primary" onClick={this.firstpage}> 首页 < /button></li >
-            < li > < button className = "btn-primary" onClick={this.pageup}> 上一页 </button > < /li> 
+            < li > < button className = "btn-white" onClick={this.firstpage}> 首页 < /button></li >
+            < li > < button className = "btn-white" onClick={this.pageup}> 上一页 </button > < /li> 
             { items } 
-            < li > < button className = "btn-primary" onClick={(e)=>this.pagedown(e,pageNums)}> 下一页 </button >< /li> 
-            < li > < button className = "btn-primary" onClick={(e)=>this.lastpage(e,pageNums)}> 尾页 < /button></li >
+            < li > < button className = "btn-white" onClick={(e)=>this.pagedown(e,pageNums)}> 下一页 </button >< /li> 
+            < li > < button className = "btn-white" onClick={(e)=>this.lastpage(e,pageNums)}> 尾页 < /button></li >
             < /ul>
         )
     }

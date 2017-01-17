@@ -2,6 +2,7 @@
 		padding:15px 0;
 		&>div{
 			background:#f0f8ff;
+			margin-bottom:50px;
 			&>div{
 				position:relative;
 				width:110px;
@@ -49,12 +50,11 @@
 		}
 		ul{
 			width:100%;
-			margin:10px 0;
 			padding:0;
 			li{
 				text-align:center;
 				position:relative;
-				margin:30px 0;
+				margin:40px 0;
 				h3{
 					margin:0;
 					text-align:center;
@@ -91,9 +91,9 @@
     				border-radius:5px;
     				padding:0 10px;
     				width:70px;
-    				top:-5px;
+    				top:-7px;
     				position:absolute;
-    				left:calc(100% - 60px);
+    				left:calc(100% - 65px);
     				background:#fff;
 				}
 				ul{
@@ -119,16 +119,19 @@
 							color:#444;
 						}
 						a{
-							position:absolute;
-    						left:calc(100% - 65px);
-    						width:70px;
-    						color: #ff7f00
+							float:right;
+    						color: #ff7f00;
+    						width:60px;
+    						text-align:center;
+    						text-indent:0;
 						}
 					}
 					li:nth-of-type(4){
-						span:first-of-type{
+						margin:0;
+						p:first-of-type{
+							width:50%;
 							position:relative;
-							top:30px;
+							top:50px;
 						}
 					}
 				}

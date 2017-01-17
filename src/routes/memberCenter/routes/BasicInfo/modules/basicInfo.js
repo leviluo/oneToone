@@ -14,7 +14,22 @@ export function commitHeadImg(items) {
 }
 
 export function getMemberInfo() {
-	    return axios.get('/member/getMemberInfo')
+      return axios.get('/member/getMemberInfo')
+}
+
+
+export function modifyNickname(item) {
+      return axios.post('/member/modifyNickname',item)
+}
+
+
+export function modifyAddress(item) {
+      return axios.post('/member/modifyAddress',item)
+}
+
+
+export function modifySpeciality(item) {
+	    return axios.post('/member/modifySpeciality',item)
 }
 
 export function addSpeciatity (items) {

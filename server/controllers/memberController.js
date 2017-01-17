@@ -94,13 +94,60 @@ const memberController = {
         }
         // this.body = this.body
     },
-    getMessageList:async function(){
+    getMessageList:async function(next){
         if (!this.session.user) {
             this.body = { status: 500, msg: "未登录" }
             return
         }
         var result = await sqlStr("select message.time,message.text,message.imgUrl,message.active,member.nickname,member.phone,if(message.fromMember=(select id from member where phone = ?),1,0) as isSend from message left join member on (member.id = message.fromMember or member.id = message.toMember) and member.phone != ? where message.id in (select max(ms.id) from message as ms left join member as m on (m.id = ms.toMember or m.id = ms.fromMember) and m.phone != ? where ms.fromMember = (select id from member where phone = ?) or ms.toMember = (select id from member where phone = ?) group by m.phone);",[this.session.user,this.session.user,this.session.user,this.session.user,this.session.user])
         this.body = {status:200,data:result}
-    }
+    },
+    modifyNickname:async function(next){
+        if (!this.request.body.nickname) {
+            this.body = { status: 500, msg: "昵称不能为空" }
+            return
+        }
+        if (this.request.body.nickname.length > 19) {
+            this.body = { status: 500, msg: "昵称小于20个字符" }
+            return
+        }
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        var result = await sqlStr("update member set nickname = ? where phone = ?",[this.request.body.nickname,this.session.user])
+        if (result.affectedRows == 1) {
+        this.body = {status:200}
+        return
+        }
+        this.body = {status:500,msg:"修改失败"}
+    },
+    modifyAddress:async function(next){
+        if (!this.request.body.address) {
+            this.body = { status: 500, msg: "昵称不能为空" }
+            return
+        }
+        if (this.request.body.address.length > 98) {
+            this.body = { status: 500, msg: "地址小于100个字符" }
+            return
+        }
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        var result = await sqlStr("update member set address = ? where phone = ?",[this.request.body.address,this.session.user])
+        if (result.affectedRows == 1) {
+        this.body = {status:200}
+        return
+        }
+        this.body = {status:500,msg:"修改失败"}
+    },
+    modifySpeciality:async function(next){
+        // if (!this.request.body.nickname) {
+        //     this.body = { status: 500, msg: "昵称不能为空" }
+        //     return
+        // }
+
+    },
 }
 export default memberController;
