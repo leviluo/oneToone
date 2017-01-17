@@ -5,8 +5,6 @@ import { ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from 'r
 // Fix: "React-Redux: Combining reducers: Unexpected Keys"
 // http://stackoverflow.com/a/33678198/789076
 const initialReducers = {
-  counter: (state = 0) => state,
-  zen: (state = require('../routes/Zen/modules/zen').initialState) => state,
   mytips: (state = require('../components/Tips/modules/tips').initialState) => state,
   modal: (state = require('../components/Modal/modules/modal').initialState) => state,
   chat: (state = require('../components/Chat/modules/chat').initialState) => state,

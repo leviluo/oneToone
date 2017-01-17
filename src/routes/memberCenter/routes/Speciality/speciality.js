@@ -87,12 +87,7 @@ export default class SpecialityComponent extends Component {
       experience:e.target.value
     })
   }
-  componentWillReceiveProps =(nextProps)=>{
-    
-  }
-  shouldComponentUpdate =(nextProps)=>{
-    return true
-  }
+
   showAddSpciality=()=>{
 
     let items = [];
