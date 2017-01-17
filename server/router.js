@@ -9,11 +9,11 @@ export default async function (ctx) {
         resolve({zen: { text: [{text: data}]} })
       })
     } 
-    else if(ctx.req.url == '/' || ctx.req.url == '/memberCenter/speciality' || ctx.req.url == '/categories/' ){
+    else if(ctx.req.url == '/' || ctx.req.url == '/categories/' || ctx.req.url =='/memberCenter'){
       axios.get('http://localhost:3000/public/catelogues').then(({data}) => {
         resolve({catelogues:{text:data.data,isloaded:true}})
       })
-    }
+    } 
     else {
       resolve({})
     }

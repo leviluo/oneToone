@@ -116,6 +116,7 @@ export default class SpecialityComponent extends Component {
 
 
   render () {
+    
     return (
         <div>
           {this.props.myspecialities.text.map((item,index)=>

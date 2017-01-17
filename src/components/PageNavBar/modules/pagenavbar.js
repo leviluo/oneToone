@@ -34,7 +34,7 @@ export function pageNumChange(text) {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [PAGENAVINIT]: (state, action) => {
-    return ({...state,pageNums:action.pageNums,isloaded:true})
+    return ({...state,pageNums:action.pageNums,currentPage:1,isloaded:true})
   },
   [PAGENUM]: (state, action) => {
     return ({...state,currentPage:action.currentPage})

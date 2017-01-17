@@ -31,7 +31,6 @@ export default class memberCenter extends Component {
             <h3><i className="fa fa-person"></i>个人中心</h3>
             <ul>
               <li><Link to="/memberCenter" className={this.props.location.pathname == '/memberCenter' ? 'active' : ''}><i className="fa fa-id-card"></i>&nbsp;我的名片</Link></li>
-              <li><Link to="/memberCenter/speciality" className={this.props.location.pathname == '/memberCenter/speciality' ? 'active' : ''} ><i className="fa fa-thumbs-up"></i>&nbsp;专业能力</Link></li>
               <li><Link to="/memberCenter/myTeam" className={this.props.location.pathname == '/memberCenter/myTeam' ? 'active' : ''}><i className="fa fa-users"></i>&nbsp;社团</Link></li>
               <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/myMessage' ? 'active' : ''}><i className="fa fa-comments"></i>&nbsp;消息</Link></li>
             </ul>

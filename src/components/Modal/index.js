@@ -46,10 +46,12 @@ export default class Modal extends Component{
 
   showModal =()=>{
     findDOMNode(this).style.display = "block"
+    document.body.style.overflow = "hidden"
   }
 
   hideModal =()=>{
     findDOMNode(this).style.display = "none"
+    document.body.style.overflow = "auto"
   }
 
   static propTypes = {

@@ -1,17 +1,35 @@
 import React, {Component} from 'react'
+import Select from '../../../../components/Select'
+import Textarea from '../../../../components/Textarea'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
 import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
-// import axios from 'axios'
+import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality} from './modules/basicInfo'
 import Modal from '../../../../components/Modal'
+import {asyncConnect} from 'redux-async-connect'
+import {fetchCatelogue} from '../../../../reducers/category'
+
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    const promises = [];
+    // if (!getState().myspecialities.isloaded) {
+      promises.push(dispatch(fetchSpeciality()));
+    // }
+    if (!getState().catelogues.isloaded) {
+      promises.push(dispatch(fetchCatelogue()));
+    }
+    return Promise.all(promises);
+  }
+}])
 
 @connect(
   state => ({
     auth:state.auth,
+    myspecialities:state.myspecialities,
+    catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity}
 )
 
 export default class BasicInfo extends Component {
@@ -149,6 +167,63 @@ export default class BasicInfo extends Component {
     document.onmousemove = null;
   }
 
+  addSpeciatity=()=>{
+
+    if (!this.state.speciality) {
+      this.props.tipShow({type:"error",msg:"选择一个专业"})
+      return
+    }
+    if (!this.state.brief || this.state.brief.length < 10 || this.state.brief.length >= 295) {
+      this.props.tipShow({type:"error",msg:"简介在10到300个字符之间"})
+      return
+    }
+    if (!this.state.experience) {
+      this.props.tipShow({type:"error",msg:"未填写工作经验"})
+      return
+    }
+
+    this.props.addSpeciatity({speciality:this.state.speciality,brief:this.state.brief,experience:this.state.experience})
+  }
+
+  specialityChange =(e)=>{
+    this.setState({
+      speciality:e.target.value
+    })
+  }
+
+  briefChange = (e)=>{
+    this.setState({
+      brief:e.target.value
+    })
+  }
+
+  experienceChange = (e)=>{
+    this.setState({
+      experience:e.target.value
+    })
+  }
+
+  showAddSpciality=()=>{
+
+    let items = [];
+
+    this.props.catelogues.text.map((item,index)=>{
+      items.push({key:item.childCatelogue,value:item.childCatelogue})
+    })
+    
+    var content = <div>
+      <div>
+      <Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} />
+      </div><div>
+      <Textarea header="简介" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+      </div><div>
+      <Textarea header="经验" handleTextarea={this.experienceChange} />
+      </div>
+      </div>;
+
+    this.props.modalShow({header:"添加新专业",content:content,submit:this.addSpeciatity});
+  }
+
   modifynickname =(e)=>{
     this.setState({
       showNickname:true
@@ -173,7 +248,23 @@ export default class BasicInfo extends Component {
     })
   }
 
+  modifySpeciality =(e,name)=>{
+    this.state[name] = true
+    this.setState({})
+  }
+
+  cancelSpeciality =(e,name)=>{
+    this.state[name] = false
+    this.setState({})
+  }
+
+  saveSpeciality=(e,index)=>{
+    console.log(index)
+  }
+
   render () {
+    // console.log(this.props.myspecialities)
+    
     let nickname = this.props.auth.nickname
     return (
     <div>
@@ -185,10 +276,28 @@ export default class BasicInfo extends Component {
               </div>
             </div>
               <ul>
+                <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p></li>
+                <li><h3><hr /><span>性别</span></h3><p>{this.state.sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" defaultValue={nickname} /> <button className="btn-default" onClick={this.saveNickname}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={this.modifynickname}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
-                <li><h3><hr /><span>性别</span></h3><p>{this.state.sex}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
-                <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p>{this.state.showAddress && <p><input type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={this.saveAddress}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={this.modifyAddress}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>专长领域</span></h3></li>
+                <li>
+                  {this.props.myspecialities.text.map((item,index)=>
+                    <ul key={index}>
+                      <li><b>{item.speciality}</b><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
+                      <li><span>简介&nbsp;:&nbsp;</span>{item.brief}</li>
+                      <li><span>经验&nbsp;:&nbsp;</span>{item.experience}</li>
+                      {this.state[item.speciality] && <li>
+                        <span>简介&nbsp;:&nbsp;</span><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,index)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
+                        <textarea rows="4">{item.brief}</textarea>
+                        <br/>
+                        <br/>
+                        <span>经验&nbsp;:&nbsp;</span><textarea rows="10">{item.experience}</textarea>
+                      </li>}
+                    </ul>
+                    )}
+                    <button onClick={this.showAddSpciality} className="btn-primary">+添加专业能力</button>
+                </li>
               </ul>
           </div>
           <Modal />

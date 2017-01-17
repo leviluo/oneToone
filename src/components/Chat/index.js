@@ -54,7 +54,6 @@ export default class Chat extends Component{
       var height = window.getComputedStyle(ele,null).height.slice(0,-2)
       ele.style.top = document.body.scrollTop + document.body.clientHeight - height+'px'
       this.checkHistory(true)
-
     }else{
       this.hidechat()
     }
@@ -157,6 +156,9 @@ export default class Chat extends Component{
   checkHistory =(isTop)=>{
     getHistory({chatWith:this.props.chat.sendTo,lastUpdate:this.lastUpdate || ''}).then((response)=>{
         var data = response.data.data
+        if (data.length == 0) {
+          return
+        };
         var str = ''
         for (var i = data.length-1; i >= 0; i--) {
               var date = new Date(data[i].time)
@@ -180,10 +182,9 @@ export default class Chat extends Component{
         }else{
           this.Chat.innerHTML = str
         }
+
         var sendDate = new Date(data[data.length-1].time)
-
-        if(data[0])this.lastUpdate = `${sendDate.getFullYear()}-${sendDate.getMonth()+1}-${sendDate.getDate()} ${sendDate.getHours()}:${sendDate.getMinutes()}:${sendDate.getSeconds()}`;
-
+        if(data[data.length-1])this.lastUpdate = `${sendDate.getFullYear()}-${sendDate.getMonth()+1}-${sendDate.getDate()} ${sendDate.getHours()}:${sendDate.getMinutes()}:${sendDate.getSeconds()}`;
         if(isTop==true)this.contentBody.scrollTop = this.contentBody.scrollHeight;
     })
   }
