@@ -154,10 +154,9 @@ export default class Categories extends React.Component{
         <div className="categoryContent">
             {items.text.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=> {
                 let src = `/public/Headload?member=${item.phone}`
-                let url = `/memberBrief/${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 return <div key={index} className="itemContent">
-                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<Link to={url}>查看名片</Link></span>
+                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<Link to='/memberBrief' query={{phone:item.phone,nickname:item.nickname,sex:item.sex,address:item.address}} >查看名片</Link></span>
                     <div><img src={src} alt=""/></div>
                     <div><ul><li>{item.nickname}(<span className="title">性别:</span>{item.sex==0 && <span className="fa fa-male"></span>}{item.sex==1 && <span className="fa fa-female"></span>})</li><li><span className="title">简介:</span>{brief}</li><li><span className="title">能力:</span>{item.name}</li><li><span className="title">现居住地:</span>{item.address}</li></ul></div>
                 </div>

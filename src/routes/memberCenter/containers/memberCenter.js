@@ -15,11 +15,11 @@ export default class memberCenter extends Component {
 
     static contextTypes = {
     router: React.PropTypes.object.isRequired
-  };
+    };
 
   componentWillMount =()=>{
     if(!this.props.auth.isAuth)this.props.isAuth(this.context.router) 
-      console.log(this.props)
+      // console.log(this.props)
   }
 
     render(){

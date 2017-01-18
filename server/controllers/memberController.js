@@ -34,11 +34,12 @@ const memberController = {
         };
     },
     specialities:async function(next){
-        if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+        var phone = this.request.query.phone ? this.request.query.phone : this.session.user
+        if (!phone) {
+            this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[this.session.user])
+        var result = await sqlStr("select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[phone])
         this.body = {status:200,data:result}
     },
     getMemberInfo:async function(next){
@@ -183,7 +184,7 @@ const memberController = {
         return
         }
 
-        this.body = {status:500,msg:"修改失败"}
+        this.body = {status:500,msg:"删除失败"}
         next
     }
 }

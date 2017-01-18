@@ -55,12 +55,12 @@ const fileController = {
         this.res.end();
     },
     loadHeadImg:async function(next){
-        var user = this.session.user
-        if (!this.session.user) {
+        var phone = this.request.query.phone ? this.request.query.phone : this.session.user
+        if (!phone) {
             this.body = { status: "err", msg: "未登录" }
             return
         }
-        var url = config.headDir + user + '.jpg';
+        var url = config.headDir + phone + '.jpg';
         var result = await getImage(url,config.headDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
