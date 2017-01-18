@@ -141,13 +141,51 @@ const memberController = {
         return
         }
         this.body = {status:500,msg:"修改失败"}
+        next
     },
     modifySpeciality:async function(next){
-        // if (!this.request.body.nickname) {
-        //     this.body = { status: 500, msg: "昵称不能为空" }
-        //     return
-        // }
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        if (!this.request.body.speciality || !this.request.body.brief || !this.request.body.experience ) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        if (this.request.body.brief.length > 300) {
+            this.body = { status: 500, msg: "简介超过了300个字符" }
+            return
+        }
+        // console.log()
+        var result = await sqlStr("update memberSpeciality set brief = ?,experience=? where specialitiesId = (select id from specialities where name = ?) and memberId = (select id from member where phone = ?)",[this.request.body.brief,this.request.body.experience,this.request.body.speciality,this.session.user])
+        
+        if (result.affectedRows == 1) {
+        this.body = {status:200}
+        return
+        }
 
+        this.body = {status:500,msg:"修改失败"}
+        next
     },
+    deleteSpeciality:async function(next){
+        if (!this.session.user) {
+            this.body = { status: 500, msg: "未登录" }
+            return
+        }
+        if (!this.request.body.speciality) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("delete from memberSpeciality where specialitiesId = (select id from specialities where name = ?) and memberId = (select id from member where phone = ?)",[this.request.body.speciality,this.session.user])
+        
+        if (result.affectedRows == 1) {
+        this.body = {status:200}
+        return
+        }
+
+        this.body = {status:500,msg:"修改失败"}
+        next
+    }
 }
 export default memberController;
+

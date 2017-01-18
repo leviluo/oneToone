@@ -6,6 +6,7 @@ import {tipResult} from '../components/Tips/modules/tips'
 const REQUEST_LOGIN = 'REQUEST_LOGIN'
 const AUTHIN = 'AUTHIN'
 const AUTHOUT = 'AUTHOUT'
+const MODIFYNICKNAME = 'MODIFYNICKNAME'
 // const CLEAR_LOGIN = 'CLEAR_LOGIN'
 
 // ------------------------------------
@@ -77,6 +78,12 @@ export function loginOut (history) {
   }
 }
 
+export function modifyNickname (newName) {
+  return (dispatch, getState) => {
+      dispatch({type:MODIFYNICKNAME,nickname:newName})
+  }
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -89,6 +96,9 @@ const ACTION_HANDLERS = {
   },
   [AUTHOUT]:(state)=>{
     return({...state,isAuth: false})
+  },
+  [MODIFYNICKNAME]:(state,action)=>{
+    return({...state,nickname:action.nickname})
   },
 }
 

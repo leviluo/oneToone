@@ -26,12 +26,13 @@
 					&:hover{
 						color:#1C86EE; 
 						cursor:pointer;
-						background:rgb(213, 226, 239)
+						background:#f0f8ff
 					}
 				}
 				.active{
 					color:#1C86EE; 
-					background:rgb(213, 226, 239)
+					background:#f0f8ff;
+					border-left:2px solid #1c86ee;
 				}
 			}
 		}

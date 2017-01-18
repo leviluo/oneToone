@@ -5,10 +5,11 @@ import './basicInfo.scss'
 import { connect } from 'react-redux'
 import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality} from './modules/basicInfo'
+import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
 import Modal from '../../../../components/Modal'
 import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
+import {modifyNickname as modifyname} from '../../../../reducers/auth'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -29,7 +30,7 @@ import {fetchCatelogue} from '../../../../reducers/category'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality}
 )
 
 export default class BasicInfo extends Component {
@@ -181,6 +182,10 @@ export default class BasicInfo extends Component {
       this.props.tipShow({type:"error",msg:"未填写工作经验"})
       return
     }
+    if (this.state.experience.length > 300) {
+      this.props.tipShow({type:"error",msg:"工作经验不能超过300个字符"})
+      return
+    }
 
     this.props.addSpeciatity({speciality:this.state.speciality,brief:this.state.brief,experience:this.state.experience})
   }
@@ -235,6 +240,7 @@ export default class BasicInfo extends Component {
     }
     modifyNickname({nickname:this.refs.nickname.value}).then(({data})=>{
       if (data.status == 200) {
+        this.props.modifyname(this.refs.nickname.value)
         this.setState({
           showNickname:false
         })
@@ -276,17 +282,67 @@ export default class BasicInfo extends Component {
     this.setState({})
   }
 
-  saveSpeciality=(e,index)=>{
-    console.log(index)
+  saveSpeciality=(e,speciality)=>{
+    var brief = this.refs[speciality+'brief'].value
+    var experience = this.refs[speciality+'experience'].value
+
+    if (!speciality) {
+      this.props.tipShow({type:"error",msg:"专业不为空"})
+      return
+    }
+    if (!brief || brief.length < 10 || brief.length >= 295) {
+      this.props.tipShow({type:"error",msg:"简介在10到300个字符之间"})
+      return
+    }
+    if (!experience) {
+      this.props.tipShow({type:"error",msg:"未填写工作经验"})
+      return
+    }
+
+    modifySpeciality({speciality:speciality,brief:brief,experience:experience}).then(({data})=>{
+      if (data.status == 200) {
+          var data = this.props.myspecialities.text.concat();
+          for (var i = data.length - 1; i >= 0; i--) {
+            if(data[i].speciality == speciality){
+              data[i].brief = brief;
+              data[i].experience = experience;
+            }
+          };
+          this.props.updateSpeciality(data)
+          this.state[speciality] = false
+          this.setState({})
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
+    })
   }
 
-  deleteSpeciality=(e,index)=>{
-    console.log(index)
+  deleteSpeciality=(e,speciality)=>{
+    if (!speciality) {
+      this.props.tipShow({type:"error",msg:"专业不为空"})
+      return
+    }
+
+    deleteSpeciality({speciality:speciality}).then(({data})=>{
+      if (data.status == 200) {
+          var data = this.props.myspecialities.text.concat();
+          for (var i = data.length - 1; i >= 0; i--) {
+            if(data[i].speciality == speciality){
+              data.splice(i,1)
+              break;
+            }
+          };
+          this.props.updateSpeciality(data)
+          this.state[speciality] = false
+          this.setState({})
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
+    })
   }
 
   render () {
     // console.log(this.props.myspecialities)
-    
     let nickname = this.props.auth.nickname
     return (
     <div>
@@ -304,19 +360,22 @@ export default class BasicInfo extends Component {
                 <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input ref="address" type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showAddress:true})}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
-                  {this.props.myspecialities.text.map((item,index)=>
-                    <ul key={index}>
-                      <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,index)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
+                  {this.props.myspecialities.text.map((item,index)=>{
+                    var brief = `${item.speciality}brief`;
+                    var experience = `${item.speciality}experience`;
+                    return <ul key={index}>
+                      <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
                       <li><span>简介&nbsp;:&nbsp;</span>{item.brief}</li>
                       <li><span>经验&nbsp;:&nbsp;</span>{item.experience}</li>
                       {this.state[item.speciality] && <li>
-                        <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,index)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
-                        <textarea rows="4" defaultValue={item.brief}></textarea>
+                        <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
+                        <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>
                         <br/>
                         <br/>
-                        <p>经验&nbsp;:&nbsp;</p><textarea defaultValue={item.experience} rows="10"></textarea>
+                        <p>经验&nbsp;:&nbsp;</p><textarea ref={experience} defaultValue={item.experience} rows="10"></textarea>
                       </li>}
                     </ul>
+                  }
                     )}
                     <button onClick={this.showAddSpciality} className="btn-primary">+添加专业能力</button>
                 </li>

@@ -29,7 +29,11 @@ export function modifyAddress(item) {
 
 
 export function modifySpeciality(item) {
-	    return axios.post('/member/modifySpeciality',item)
+      return axios.post('/member/modifySpeciality',item)
+}
+
+export function deleteSpeciality(item) {
+	    return axios.post('/member/deleteSpeciality',item)
 }
 
 export function addSpeciatity (items) {
@@ -64,6 +68,12 @@ export function fetchSpeciality () {
     axios.get('/member/specialities').then(({data}) => {
       dispatch(receiveSpeciality(data.data))
       })
+  }
+}
+
+export function updateSpeciality (data) {
+  return (dispatch, getState) => {
+      dispatch(receiveSpeciality(data))
   }
 }
 
