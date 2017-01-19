@@ -10,7 +10,7 @@ const CHAT_HIDE = 'CHAT_HIDE'
 // Actions
 // ------------------------------------
 
-export function chatShow(text) {
+export function chatShowAction(text) {
   // console.log(text)
   return (dispatch, getState) => {
       dispatch({type:CHAT,value:text})

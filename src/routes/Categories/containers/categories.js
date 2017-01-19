@@ -8,10 +8,10 @@ import {asyncConnect} from 'redux-async-connect'
 import Select from '../../../components/Select'
 import PageNavBar from '../../../components/PageNavBar'
 import {pageNavInit} from '../../../components/PageNavBar/modules/pagenavbar'
-import {chatShow} from '../../../components/Chat/modules/chat'
+// import {chatShow} from '../../../components/Chat/modules/chat'
 import {tipShow} from '../../../components/Tips/modules/tips'
 import './categories.scss'
-import Chat from '../../../components/Chat'
+import Chat,{chatShow} from '../../../components/Chat'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState},a}) => {

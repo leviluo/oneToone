@@ -3,10 +3,10 @@ import './index.scss'
 
 export default class Textarea extends Component{
         render() {
-                const{defaultValue,header,handleTextarea} = this.props;
+                const{defaultValue,header,handleTextarea,rows} = this.props;
                 return ( < div className = "textarea-group">
-                    < label > { header }:< /label>
-                        <textarea defaultValue={this.props.defaultValue} onChange={this.props.handleTextarea} cols="30" rows="10"></textarea>
+                    < label > { header }< /label>
+                        <textarea defaultValue={this.props.defaultValue} onChange={this.props.handleTextarea} cols="10" rows={rows}></textarea>
                     < /div >
                 )
             }

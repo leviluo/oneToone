@@ -3,10 +3,9 @@ import Select from '../../../../components/Select'
 import Textarea from '../../../../components/Textarea'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
-import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
-import Modal from '../../../../components/Modal'
+import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
 import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
@@ -30,14 +29,15 @@ import {modifyNickname as modifyname} from '../../../../reducers/auth'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,modalUpdate}
 )
 
 export default class BasicInfo extends Component {
 
   state ={
     content: <div></div>,
-    address: ''
+    address: '',
+    imgs:[]
   }
 
   componentWillMount =()=>{
@@ -208,27 +208,104 @@ export default class BasicInfo extends Component {
     })
   }
 
-  showAddSpciality=()=>{
+    showAddSpciality=()=>{
 
-    let items = [];
+    this.items = [];
 
     this.props.catelogues.text.map((item,index)=>{
-      items.push({key:item.childCatelogue,value:item.childCatelogue})
+      this.items.push({key:item.childCatelogue,value:item.childCatelogue})
     })
     
+    this.setState({
+      imgs:[],
+      // speciality:'',
+      // brief:'',
+      // experience:''
+    })
+
     var content = <div>
       <div>
-      <Select header="选择专业" optionsItems={items} handleChange={this.specialityChange} />
-      </div><div>
-      <Textarea header="简介" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
-      </div><div>
-      <Textarea header="经验" handleTextarea={this.experienceChange} />
+      <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
+      </div>
+      <div>
+      <Textarea header="简介" rows="4" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+      </div>
+      <div>
+      <Textarea header="经验" rows="10" defaultValue="" handleTextarea={this.experienceChange} />
+      </div>
+      <div>
+        <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示</div>
+        <div style={{width:"100px",height:"100px",position:"relative",color:"#666",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
+        +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
+        </div>
       </div>
       </div>;
 
     this.props.modalShow({header:"添加新专业",content:content,submit:this.addSpeciatity});
   }
-// modifyNickname,modifyAddress,modifySpeciality
+
+  showDeleteImg=(e,index)=>{
+    e.target.style.filter = "alpha(opacity=0.6)"
+    e.target.style.opacity = "60"
+    var me = this
+    console.log(this.state.imgs)
+    e.target.onclick=function(){
+      var data = me.state.imgs
+      data.splice(index,1)
+      me.updateContent(data)
+    }
+  }
+
+  hideDeleteImg=(e)=>{
+    e.target.style.filter = "alpha(opacity=0)"
+    e.target.style.opacity = "0"
+  }
+
+  modifyWorks = (e)=>{
+      if (this.state.imgs.length > 7) {
+        this.props.tipShow({type:'error',msg:'只能添加8张图片'})
+        return;
+      };
+      var value = e.target.value
+      var filextension=value.substring(value.lastIndexOf("."),value.length);
+      filextension = filextension.toLowerCase();
+      if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+      {
+      this.props.tipShow({type:'error',msg:'文件类型不正确'})
+      return;
+      }
+
+      var imageUrl = window.URL.createObjectURL(e.target.files[0])
+
+      var items = this.state.imgs
+      items.push(imageUrl)
+      this.updateContent(items)
+  }
+
+  updateContent = (items)=>{
+      var content = <div>
+      <div>
+      <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
+      </div>
+      <div>
+      <Textarea header="简介" rows="4" handleTextarea={this.briefChange} />
+      </div>
+      <div>
+      <Textarea header="经验" rows="10" handleTextarea={this.experienceChange} />
+      </div>
+      <div>
+        <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示(最多8张)</div>
+        {items.map((item,index)=><div key={index} style={{width:"100px",overflow:"hidden",height:"100px",margin:"10px 10px 0 0",float:"left",border:"2px solid #efefef",borderRadius:"5px",backgroundImage:`url(${item})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'cover'}}>
+          <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} style={{width:"100px",height:"100px",textAlign:"center",lineHeight:"100px",cursor:"pointer",background:"rgba(0,0,0,0.3)",filter:"alpha(opacity=0)",fontSize:"200%",color:"white",opacity:"0",margin:"0"}} className="fa fa-trash"></div></div>)}
+        <div style={{width:"100px",float:"left",height:"100px",color:"#666",position:"relative",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
+        +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
+        </div>
+      </div>
+      </div>;
+      this.props.modalUpdate(content)
+  }
+
+
   saveNickname =(e)=>{
     if (!this.refs.nickname.value) {
       this.props.tipShow({type:'error',msg:"昵称不能为空"})
@@ -342,7 +419,10 @@ export default class BasicInfo extends Component {
   }
 
   render () {
-    // console.log(this.props.myspecialities)
+    this.items = [];
+    this.props.catelogues.text.map((item,index)=>{
+      this.items.push({key:item.childCatelogue,value:item.childCatelogue})
+    })
     let nickname = this.props.auth.nickname
     return (
     <div>
@@ -377,8 +457,31 @@ export default class BasicInfo extends Component {
                     </ul>
                   }
                     )}
-                    <button onClick={this.showAddSpciality} className="btn-primary">+添加专业能力</button>
+                    <li>
+                    <button onClick={this.showAddSpciality} className="btn-success">+添加专业能力</button>
+                    </li>
                 </li>
+                  <div className="addSpeciality">
+                  <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
+                  <br/>
+                  <br/>
+                  <Textarea header="简介" rows="4" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+                  <br/>
+                  <Textarea header="经验" rows="10" defaultValue="" handleTextarea={this.experienceChange} />
+                  <br/>
+                  <div>
+                    <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示(最多8张)</div>
+                    {this.state.imgs.map((item,index)=><div key={index} style={{width:"100px",overflow:"hidden",height:"100px",margin:"10px 10px 0 0",float:"left",border:"2px solid #efefef",borderRadius:"5px",backgroundImage:`url(${item})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'cover'}}>
+                      <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} style={{width:"100px",height:"100px",textAlign:"center",lineHeight:"100px",cursor:"pointer",background:"rgba(0,0,0,0.3)",filter:"alpha(opacity=0)",fontSize:"200%",color:"white",opacity:"0",margin:"0"}} className="fa fa-trash"></div></div>)}
+                    <div style={{width:"100px",float:"left",height:"100px",color:"#666",position:"relative",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
+                    +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
+                    </div>
+                  </div>
+                    <div className="addSubmit">
+                      <button onClick={this.showAddSpciality} className="btn-success pull-right">保存</button>
+                      <button onClick={this.showAddSpciality} className="btn-default pull-right">取消</button>
+                    </div>
+                  </div>
               </ul>
           </div>
           <Modal />

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import {connect} from 'react-redux'
-import {chatHide,submitText,submitImg,getHistory} from './modules/chat'
+import {chatHide,submitText,submitImg,getHistory,chatShowAction} from './modules/chat'
 import './chat.scss'
 
 @connect(
@@ -139,7 +139,7 @@ export default class Chat extends Component{
       if (data.status==200) {
             var reader = new FileReader();  
             reader.onload = function(e) {  
-                var src = e.target.result + "";  
+                var src = e.target.result;  
                 var date = new Date() 
                 var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
                 var str = `<p class="sendFrom img"><span class="name">${me.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="${src}"/></p>`
@@ -223,3 +223,4 @@ export default class Chat extends Component{
 }
 
 
+export const chatShow = chatShowAction

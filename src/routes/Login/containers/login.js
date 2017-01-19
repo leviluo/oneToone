@@ -3,11 +3,10 @@ import './login.scss'
 import {login} from '../../../reducers/auth'
 import {connect} from 'react-redux'
 import {tipShow} from '../../../components/Tips/modules/tips'
-import {modalShow} from '../../../components/Modal/modules/modal'
 import Input from '../../../components/Input'
 import Helmet from 'react-helmet'
 import {Link} from 'react-router'
-import Modal from '../../../components/Modal'
+import Modal,{modalShow} from '../../../components/Modal'
 
 @connect(
   state=>({auth:state.auth}),

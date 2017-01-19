@@ -4,6 +4,7 @@
 // ------------------------------------
 const MODAL_SHOW = 'MODAL_SHOW'
 const MODAL_HIDE = 'MODAL_HIDE'
+const MODAL_MODIFY = 'MODAL_MODIFY'
 
 // ------------------------------------
 // Actions
@@ -21,6 +22,12 @@ export function modalHide() {
   }
 }
 
+export function modalUpdate(content) {
+  return (dispatch, getState) => {
+      dispatch({type:MODAL_MODIFY,content:content})
+  }
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -30,6 +37,9 @@ const ACTION_HANDLERS = {
   },
   [MODAL_HIDE]: (state, action) => {
     return ({...state, isShow:false,header:'',content:'',submit:null})
+  },
+  [MODAL_MODIFY]: (state, action) => {
+    return ({...state, content:action.content})
   }
 }
 

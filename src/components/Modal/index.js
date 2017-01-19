@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import {connect} from 'react-redux'
-import {modal} from './modules/modal'
+import * as actions from './modules/modal'
 import './Modal.scss'
 
 @connect(
   state=>({modalStatus:state.modal}),
-{modal})
+{})
 export default class Modal extends Component{
 
   componentWillMount =()=>{
@@ -84,4 +84,6 @@ export default class Modal extends Component{
   }
 }
 
-
+export const modalShow = actions.modalShow
+export const modalHide = actions.modalHide
+export const modalUpdate = actions.modalUpdate
