@@ -170,89 +170,65 @@ export default class BasicInfo extends Component {
 
   addSpeciatity=()=>{
 
-    if (!this.state.speciality) {
+    var speciality = this.refs.speciality.getValue()
+    var brief = this.refs.brief.getValue()
+    var experience = this.refs.experience.getValue()
+
+    if (!speciality) {
       this.props.tipShow({type:"error",msg:"选择一个专业"})
       return
     }
-    if (!this.state.brief || this.state.brief.length < 10 || this.state.brief.length >= 295) {
+    if (!brief || brief.length < 10 || brief.length >= 295) {
       this.props.tipShow({type:"error",msg:"简介在10到300个字符之间"})
       return
     }
-    if (!this.state.experience) {
+    if (!experience) {
       this.props.tipShow({type:"error",msg:"未填写工作经验"})
       return
     }
-    if (this.state.experience.length > 300) {
+    if (experience.length > 300) {
       this.props.tipShow({type:"error",msg:"工作经验不能超过300个字符"})
       return
     }
+    // console.log(this.state.imgs)
+    var file = this.state.imgs[0]
+    var fd = new FormData(); 
+    for (var i = 0; i < this.state.imgs.length; i++) {
+    fd.append("file", this.state.imgs[i]); 
+    }
+    fd.append("speciality",speciality)
+    fd.append("brief",brief)
+    fd.append("experience",experience)
 
-    this.props.addSpeciatity({speciality:this.state.speciality,brief:this.state.brief,experience:this.state.experience})
+    this.props.addSpeciatity(fd)
   }
 
-  specialityChange =(e)=>{
-    this.setState({
-      speciality:e.target.value
-    })
-  }
+  // specialityChange =(e)=>{
+  //   this.setState({
+  //     speciality:e.target.value
+  //   })
+  // }
 
-  briefChange = (e)=>{
-    this.setState({
-      brief:e.target.value
-    })
-  }
+  // briefChange = (e)=>{
+  //   this.setState({
+  //     brief:e.target.value
+  //   })
+  // }
 
-  experienceChange = (e)=>{
-    this.setState({
-      experience:e.target.value
-    })
-  }
-
-    showAddSpciality=()=>{
-
-    this.items = [];
-
-    this.props.catelogues.text.map((item,index)=>{
-      this.items.push({key:item.childCatelogue,value:item.childCatelogue})
-    })
-    
-    this.setState({
-      imgs:[],
-      // speciality:'',
-      // brief:'',
-      // experience:''
-    })
-
-    var content = <div>
-      <div>
-      <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
-      </div>
-      <div>
-      <Textarea header="简介" rows="4" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
-      </div>
-      <div>
-      <Textarea header="经验" rows="10" defaultValue="" handleTextarea={this.experienceChange} />
-      </div>
-      <div>
-        <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示</div>
-        <div style={{width:"100px",height:"100px",position:"relative",color:"#666",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
-        +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
-        </div>
-      </div>
-      </div>;
-
-    this.props.modalShow({header:"添加新专业",content:content,submit:this.addSpeciatity});
-  }
+  // experienceChange = (e)=>{
+  //   this.setState({
+  //     experience:e.target.value
+  //   })
+  // }
 
   showDeleteImg=(e,index)=>{
-    e.target.style.filter = "alpha(opacity=0.6)"
-    e.target.style.opacity = "60"
+    e.target.style.filter = "alpha(opacity=0.8)"
+    e.target.style.opacity = "80"
     var me = this
-    console.log(this.state.imgs)
     e.target.onclick=function(){
-      var data = me.state.imgs
-      data.splice(index,1)
-      me.updateContent(data)
+      window.URL.revokeObjectURL(me.state.imgs[index]); //清空创建的url
+      me.state.imgs.splice(index,1)
+      me.setState({})
     }
   }
 
@@ -275,36 +251,10 @@ export default class BasicInfo extends Component {
       return;
       }
 
-      var imageUrl = window.URL.createObjectURL(e.target.files[0])
-
-      var items = this.state.imgs
-      items.push(imageUrl)
-      this.updateContent(items)
+      // var imageUrl = window.URL.createObjectURL(e.target.files[0])
+      this.state.imgs.push(e.target.files[0])
+      this.setState({})
   }
-
-  updateContent = (items)=>{
-      var content = <div>
-      <div>
-      <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
-      </div>
-      <div>
-      <Textarea header="简介" rows="4" handleTextarea={this.briefChange} />
-      </div>
-      <div>
-      <Textarea header="经验" rows="10" handleTextarea={this.experienceChange} />
-      </div>
-      <div>
-        <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示(最多8张)</div>
-        {items.map((item,index)=><div key={index} style={{width:"100px",overflow:"hidden",height:"100px",margin:"10px 10px 0 0",float:"left",border:"2px solid #efefef",borderRadius:"5px",backgroundImage:`url(${item})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'cover'}}>
-          <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} style={{width:"100px",height:"100px",textAlign:"center",lineHeight:"100px",cursor:"pointer",background:"rgba(0,0,0,0.3)",filter:"alpha(opacity=0)",fontSize:"200%",color:"white",opacity:"0",margin:"0"}} className="fa fa-trash"></div></div>)}
-        <div style={{width:"100px",float:"left",height:"100px",color:"#666",position:"relative",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
-        +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
-        </div>
-      </div>
-      </div>;
-      this.props.modalUpdate(content)
-  }
-
 
   saveNickname =(e)=>{
     if (!this.refs.nickname.value) {
@@ -457,31 +407,30 @@ export default class BasicInfo extends Component {
                     </ul>
                   }
                     )}
-                    <li>
-                    <button onClick={this.showAddSpciality} className="btn-success">+添加专业能力</button>
-                    </li>
+                    <button onClick={()=>this.setState({showAddSpeciality:true})} style={{marginTop:"30px"}} className="btn-success">+添加专业能力</button>
                 </li>
-                  <div className="addSpeciality">
-                  <Select header="选择专业" optionsItems={this.items} handleChange={this.specialityChange} />
+                  {this.state.showAddSpeciality && <div className="addSpeciality">
+                  <Select header="选择专业" optionsItems={this.items} ref="speciality" handleChange={this.specialityChange} />
                   <br/>
                   <br/>
-                  <Textarea header="简介" rows="4" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+                  <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
                   <br/>
-                  <Textarea header="经验" rows="10" defaultValue="" handleTextarea={this.experienceChange} />
+                  <Textarea header="经验" rows="10" ref="experience" defaultValue="" handleTextarea={this.experienceChange} />
                   <br/>
-                  <div>
-                    <div style={{height:"30px",lineHeight:"30px",background:"#ccc",textAlign:"center"}}>作品展示(最多8张)</div>
-                    {this.state.imgs.map((item,index)=><div key={index} style={{width:"100px",overflow:"hidden",height:"100px",margin:"10px 10px 0 0",float:"left",border:"2px solid #efefef",borderRadius:"5px",backgroundImage:`url(${item})`,backgroundPosition:'center',backgroundRepeat:'no-repeat',backgroundSize:'cover'}}>
-                      <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} style={{width:"100px",height:"100px",textAlign:"center",lineHeight:"100px",cursor:"pointer",background:"rgba(0,0,0,0.3)",filter:"alpha(opacity=0)",fontSize:"200%",color:"white",opacity:"0",margin:"0"}} className="fa fa-trash"></div></div>)}
-                    <div style={{width:"100px",float:"left",height:"100px",color:"#666",position:"relative",lineHeight:"100px",fontSize:"200%",textAlign:"center",border:"1px dashed #ccc"}}>
-                    +<input onChange={this.modifyWorks} style={{width:"100px",height:"100px"}} type="file" />
-                    </div>
+                  <div className="works">作品展示(最多8张)</div>
+                  {this.state.imgs.map((item,index)=>{
+                    var img = window.URL.createObjectURL(item)
+                    return <div className="imgList" key={index} style={{backgroundImage:`url(${img})`}}>
+                      <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
+                      })}
+                  <div className="addDiv">
+                    +<input onChange={this.modifyWorks} type="file" />
                   </div>
                     <div className="addSubmit">
-                      <button onClick={this.showAddSpciality} className="btn-success pull-right">保存</button>
-                      <button onClick={this.showAddSpciality} className="btn-default pull-right">取消</button>
+                      <button onClick={this.showAddSpciality} onClick={this.addSpeciatity} className="btn-success pull-right">保存</button>
+                      <button onClick={this.showAddSpciality} onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default pull-right">取消</button>
                     </div>
-                  </div>
+                  </div>}
               </ul>
           </div>
           <Modal />

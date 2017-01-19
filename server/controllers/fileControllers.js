@@ -33,7 +33,7 @@ function form(ob,user,url){
                             var inputFile = files.file[0];
                             var uploadedPath = inputFile.path;
                             var dstPath = url + user + '.jpg';
-                    //       //重命名为真实文件名
+                           //重命名为真实文件名
                             fs.rename(uploadedPath, dstPath, function(err) {
                                 if (err) {
                                     reject({status:500,type:err})
@@ -41,6 +41,34 @@ function form(ob,user,url){
                                     reslove({status:200,msg:fields})
                                 }   
                             })
+                }
+            })
+    })
+}
+
+function uploadImgs(ob,name,url){
+    return new Promise(function(reslove,reject){
+          var form = new multiparty.Form({ uploadDir: url });
+            //上传完成后处理
+            form.parse(ob, function(err, fields, files) {
+                if (err) {
+                    reject(err)
+                } else {    
+                        fields.names=[]
+                        for (var i = 0; i < files.file.length; i++) {
+                            var inputFile = files.file[i]
+                            var uploadedPath = inputFile.path;
+                            var dstPath = url + name + Date.parse(new Date())+ i + '.jpg';
+                            fields.names.push(name + Date.parse(new Date())+ i)
+                           //重命名为真实文件名
+                            fs.rename(uploadedPath, dstPath, function(err) {
+                                if (err) {
+                                    reject({status:500,type:err})
+                                } else {
+                                }   
+                            })
+                        }
+                        reslove({status:200,msg:fields})
                 }
             })
     })
@@ -105,6 +133,26 @@ const fileController = {
         }
         this.request.body.sendTo = result.msg.sendTo[0]
     },
+    uploadSpecialityImg:async function(next){
+        if (!this.session.user) {
+            this.body = { status: "err", msg: "未登录" }
+            return
+        }
+        var name = this.session.user
+        var result = await uploadImgs(this.req,name,config.specialityImgDir)
+
+        // this.request.body.imgUrl = name
+        if (result.status != 200) {
+            this.body = {status:500,msg:'上传失败'}
+            return
+        }
+        // console.log(result.msg)
+        this.request.body.speciality = result.msg.speciality[0]
+        this.request.body.brief = result.msg.brief[0]
+        this.request.body.experience = result.msg.experience[0]
+        this.request.body.names = result.msg.names
+    },
+
     insertImg:async function(next){
         await next
         var result = await sqlStr("insert into message set fromMember = (select id from member where phone = ?),toMember = (select id from member where phone = ?),imgUrl = ?",[this.session.user,this.request.body.sendTo,this.request.body.imgUrl])

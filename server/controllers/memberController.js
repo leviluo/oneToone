@@ -2,10 +2,12 @@ import { sqlStr,getByItems, insert } from '../dbHelps/mysql'
 
 const memberController = {
     addSpeciality:async function(next){
+        await next
         if (!this.session.user) {
             this.body = { status: 500, msg: "未登录" }
             return
         }
+
         if (!this.request.body.speciality || !this.request.body.brief || !this.request.body.experience ) {
         	this.body = { status: 500, msg: "缺少参数" }
             return
@@ -21,14 +23,24 @@ const memberController = {
         }
 
         var resultrepeat = await sqlStr("select * from memberSpeciality where memberId=(select id from member where phone = ?) and specialitiesId=(select id from specialities where name= ?)",[this.session.user,this.request.body.speciality])
-        
+        // console.log('resultrepeat',resultrepeat)
         if(resultrepeat.length > 0){
             this.body = { status: 500, msg: "已经添加了此专业" }
             return
         }
 
+        var str = ''
+
+        console.log('this.request.body',this.request.body)
+        for (var i = 0; i < this.request.body.names.length; i++) {
+            str += "(?),"
+        }
+
+        console.log('str',str)
+
         var result = await sqlStr("insert into memberSpeciality set brief = ?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,this.request.body.experience,this.session.user,this.request.body.speciality])
-    	if (result.affectedRows == 1) {
+        var resultt = await sqlStr(`insert into works(imgUrl) values${str.slice(0,-1)}`,this.request.body.names)
+    	if (result.affectedRows == 1 && resultt.affectedRows > 0) {
             this.body = { status: 200}
             return
         };
