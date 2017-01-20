@@ -50,7 +50,7 @@ export default class myMessage extends Component {
       <div className="messageContent">
         {this.state.items.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
           var headImg = `/public/Headload?member=${item.phone}`
-          var imgUrl = item.imgUrl ? `/img?name=${item.imgUrl}` : ''
+          var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''
           var date = new Date(item.time)
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
           if (item.isSend) {

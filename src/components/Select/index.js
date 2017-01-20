@@ -8,6 +8,10 @@ export default class Select extends Component{
             return this.refs.myValue.value
         } 
 
+        setValue=()=>{
+            this.refs.myValue.value = this.props.defaultValue
+        } 
+
         render() {
                 const{defaultValue,header,handleChange,optionsItems} = this.props;
                 return ( < select onChange = { handleChange } ref="myValue" defaultValue = {defaultValue} ><option>--{header}--</option>

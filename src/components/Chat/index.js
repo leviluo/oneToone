@@ -167,13 +167,13 @@ export default class Chat extends Component{
             if (data[i].text) {
               str += `<p class="sendFrom"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><span class="text">${data[i].text}</span></p>`
             }else{
-              str += `<p class="sendFrom img"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="/img?name=${data[i].imgUrl}"/></p>`
+              str += `<p class="sendFrom img"><span class="name">${this.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="/img?from=chat&name=${data[i].imgUrl}"/></p>`
             }
           }else{
             if (data[i].text) {
               str += `<p class="sendTo"><span class="name">${this.props.chat.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="time">${time}</span><span class="text">${data[i].text}</span></p>`
             }else{
-              str += `<p class="sendTo img"><span class="name">${this.props.chat.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="time">${time}</span><img src="/img?name=${data[i].imgUrl}"/></p>`
+              str += `<p class="sendTo img"><span class="name">${this.props.chat.chatTo}&nbsp;:&nbsp;</span>&nbsp;<span class="time">${time}</span><img src="/img?from=chat&name=${data[i].imgUrl}"/></p>`
             }
           }
         };

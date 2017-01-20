@@ -36,12 +36,19 @@ export function deleteSpeciality(item) {
 	    return axios.post('/member/deleteSpeciality',item)
 }
 
-export function addSpeciatity (items) {
+export function addSpeciatity (that,speciality,brief,experience) {
+  var fd = new FormData(); 
+  for (var i = 0; i < that.state.imgs.length; i++) {
+  fd.append("file", that.state.imgs[i]); 
+  }
+  fd.append("speciality",speciality)
+  fd.append("brief",brief)
+  fd.append("experience",experience)
   return (dispatch, getState) => {
-    axios.post('/member/addSpeciality',items).then(({data}) => {
+    axios.post('/member/addSpeciality',fd).then(({data}) => {
       if (data.status==200) {
-          dispatch({type:"MODAL_HIDE"})
-          dispatch({type:"ADD_SPECIALITIES",value:[items]})
+          that.setState({showAddSpeciality:false})
+          dispatch({type:"ADD_SPECIALITIES",value:[{speciality:speciality,brief:brief,experience:experience}]})
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
       }

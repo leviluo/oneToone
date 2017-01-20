@@ -7,6 +7,10 @@ export default class Textarea extends Component{
             return this.refs.textarea.value
         }
 
+        setValue=()=>{
+            this.refs.myValue.value = this.props.defaultValue
+        } 
+
         render() {
                 const{defaultValue,header,handleTextarea,rows} = this.props;
                 return ( < div className = "textarea-group">

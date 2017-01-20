@@ -29,21 +29,39 @@ const memberController = {
             return
         }
 
-        var str = ''
+        // if (this.request.body.names.length > 0) {
 
-        console.log('this.request.body',this.request.body)
-        for (var i = 0; i < this.request.body.names.length; i++) {
-            str += "(?),"
-        }
+        // var result = await sqlStr("insert into memberSpeciality set brief = ?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,this.request.body.experience,this.session.user,this.request.body.speciality])
+        // if (result.affectedRows == 1 ){
+        // var id = await sqlStr("select id from memberSpeciality where memberId=(select id from member where phone = ?) and specialitiesId=(select id from specialities where name= ?);",[this.session.user,this.request.body.speciality]) 
+        // }else{
+        //     this.body = { status: 500,msg:"插入数据失败"}
+        //     return
+        // }
 
-        console.log('str',str)
+        // var str = ''
+        // for (var i = 0; i < this.request.body.names.length; i++) {
+        //     this.request.body.names.splice(i*2+1, 0, id[0].id); 
+        //     str += "(?,?),"
+        // }
 
-        var result = await sqlStr("insert into memberSpeciality set brief = ?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,this.request.body.experience,this.session.user,this.request.body.speciality])
-        var resultt = await sqlStr(`insert into works(imgUrl) values${str.slice(0,-1)}`,this.request.body.names)
-    	if (result.affectedRows == 1 && resultt.affectedRows > 0) {
+        // var resultt = await sqlStr(`insert into works(imgUrl) values${str.slice(0,-1)}`,this.request.body.names)
+        // if (result.affectedRows == 1 && resultt.affectedRows > 0) {
+        //     this.body = { status: 200}
+        //     return
+        // };
+        
+        // }else{
+        var works = this.request.body.names.join(',')
+        var result = await sqlStr("insert into memberSpeciality set brief = ?,works=?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,works,this.request.body.experience,this.session.user,this.request.body.speciality])
+        if (result.affectedRows == 1 ) {
             this.body = { status: 200}
             return
-        };
+        }else{
+            this.body = { status: 500,msg:"插入数据失败"}
+        }
+
+        // }
     },
     specialities:async function(next){
         var phone = this.request.query.phone ? this.request.query.phone : this.session.user
@@ -51,7 +69,7 @@ const memberController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select m.brief,m.experience,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[phone])
+        var result = await sqlStr("select m.brief,m.experience,m.works,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[phone])
         this.body = {status:200,data:result}
     },
     getMemberInfo:async function(next){

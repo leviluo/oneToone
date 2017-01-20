@@ -55,19 +55,21 @@ function uploadImgs(ob,name,url){
                     reject(err)
                 } else {    
                         fields.names=[]
-                        for (var i = 0; i < files.file.length; i++) {
-                            var inputFile = files.file[i]
-                            var uploadedPath = inputFile.path;
-                            var dstPath = url + name + Date.parse(new Date())+ i + '.jpg';
-                            fields.names.push(name + Date.parse(new Date())+ i)
-                           //重命名为真实文件名
-                            fs.rename(uploadedPath, dstPath, function(err) {
-                                if (err) {
-                                    reject({status:500,type:err})
-                                } else {
-                                }   
-                            })
-                        }
+                        if (files.file) {
+                            for (var i = 0; i < files.file.length; i++) {
+                                var inputFile = files.file[i]
+                                var uploadedPath = inputFile.path;
+                                var dstPath = url + name + Date.parse(new Date())+ i + '.jpg';
+                                fields.names.push(name + Date.parse(new Date())+ i)
+                               //重命名为真实文件名
+                                fs.rename(uploadedPath, dstPath, function(err) {
+                                    if (err) {
+                                        reject({status:500,type:err})
+                                    } else {
+                                    }   
+                                })
+                            }
+                        };
                         reslove({status:200,msg:fields})
                 }
             })
@@ -76,8 +78,13 @@ function uploadImgs(ob,name,url){
 
 const fileController = {
     loadImg:async function(next){
-        var url = config.messageImgDir + this.request.query.name + '.jpg';
-        var result = await getImage(url,config.messageImgDir + 'default.jpg');
+        if (this.request.query.from == 'chat') {
+            var url = config.messageImgDir + this.request.query.name + '.jpg';
+            var result = await getImage(url,config.messageImgDir + 'default.jpg');
+        }else if(this.request.query.from == "speciality"){
+            var url = config.specialityImgDir + this.request.query.name + '.jpg';
+            var result = await getImage(url,config.specialityImgDir + 'default.jpg');
+        }
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
@@ -124,6 +131,7 @@ const fileController = {
             return
         }
         var name = this.session.user + Date.parse(new Date())
+
         var result = await form(this.req,name,config.messageImgDir)
 
         this.request.body.imgUrl = name
@@ -146,7 +154,7 @@ const fileController = {
             this.body = {status:500,msg:'上传失败'}
             return
         }
-        // console.log(result.msg)
+        console.log(result.msg)
         this.request.body.speciality = result.msg.speciality[0]
         this.request.body.brief = result.msg.brief[0]
         this.request.body.experience = result.msg.experience[0]

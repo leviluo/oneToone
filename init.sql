@@ -33,10 +33,18 @@ CREATE TABLE `memberSpeciality` (
   `memberId` mediumint(8) unsigned,
   `specialitiesId` mediumint(8) unsigned,
   `brief` varchar(300) DEFAULT '',
-  `works` varchar(80) default '',
+  `works` varchar(300) default '',
   `experience` text ,
   PRIMARY KEY  (`id`)
 );
+--用户专业表
+-- CREATE TABLE `works` (  
+--   `id` mediumint(8) unsigned auto_increment,
+--   `memberSpecialityId` mediumint(8) unsigned,
+--   `imgUrl` varchar(80) default '',
+--   `time` datetime default NOW(),
+--   PRIMARY KEY  (`id`)
+-- );
 -- 私信
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,

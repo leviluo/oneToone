@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
+import ImageBrowser from '../../../../components/ImageBrowser'
 import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
@@ -37,7 +38,6 @@ export default class BasicInfo extends Component {
   state ={
     content: <div></div>,
     address: '',
-    imgs:[]
   }
 
   componentWillMount =()=>{
@@ -190,36 +190,8 @@ export default class BasicInfo extends Component {
       this.props.tipShow({type:"error",msg:"工作经验不能超过300个字符"})
       return
     }
-    // console.log(this.state.imgs)
-    var file = this.state.imgs[0]
-    var fd = new FormData(); 
-    for (var i = 0; i < this.state.imgs.length; i++) {
-    fd.append("file", this.state.imgs[i]); 
-    }
-    fd.append("speciality",speciality)
-    fd.append("brief",brief)
-    fd.append("experience",experience)
-
-    this.props.addSpeciatity(fd)
+    this.props.addSpeciatity(this,speciality,brief,experience)
   }
-
-  // specialityChange =(e)=>{
-  //   this.setState({
-  //     speciality:e.target.value
-  //   })
-  // }
-
-  // briefChange = (e)=>{
-  //   this.setState({
-  //     brief:e.target.value
-  //   })
-  // }
-
-  // experienceChange = (e)=>{
-  //   this.setState({
-  //     experience:e.target.value
-  //   })
-  // }
 
   showDeleteImg=(e,index)=>{
     e.target.style.filter = "alpha(opacity=0.8)"
@@ -237,7 +209,7 @@ export default class BasicInfo extends Component {
     e.target.style.opacity = "0"
   }
 
-  modifyWorks = (e)=>{
+  addWorks = (e)=>{
       if (this.state.imgs.length > 7) {
         this.props.tipShow({type:'error',msg:'只能添加8张图片'})
         return;
@@ -317,10 +289,12 @@ export default class BasicInfo extends Component {
       this.props.tipShow({type:"error",msg:"专业不为空"})
       return
     }
+
     if (!brief || brief.length < 10 || brief.length >= 295) {
       this.props.tipShow({type:"error",msg:"简介在10到300个字符之间"})
       return
     }
+ 
     if (!experience) {
       this.props.tipShow({type:"error",msg:"未填写工作经验"})
       return
@@ -368,6 +342,26 @@ export default class BasicInfo extends Component {
     })
   }
 
+  showAddSpeciality=()=>{
+
+    if (this.props.myspecialities.text.length > 4) {
+      this.props.tipShow({type:"error",msg:"只能添加5项专业"})
+      return
+    };
+
+    this.setState({
+      showAddSpeciality:true,
+      imgs:[]
+    })
+  }
+
+  showThisImg =(index,works)=>{
+    this.setState({
+      currentChooseImg:index,
+      imgLists:works
+    })
+  }
+
   render () {
     this.items = [];
     this.props.catelogues.text.map((item,index)=>{
@@ -393,21 +387,37 @@ export default class BasicInfo extends Component {
                   {this.props.myspecialities.text.map((item,index)=>{
                     var brief = `${item.speciality}brief`;
                     var experience = `${item.speciality}experience`;
+                    var works = item.works.split(',')
+                    // console.log(works)
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
-                      <li><span>简介&nbsp;:&nbsp;</span>{item.brief}</li>
-                      <li><span>经验&nbsp;:&nbsp;</span>{item.experience}</li>
+                      <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>
+                      <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>
+                      {item.works && <li>
+                      <span>作品展示&nbsp;:&nbsp;</span>
+                        <div className="imgShow">
+                        {works.map((item,index)=>{
+                          if (!item) return;
+                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
+                            })}
+                        </div>
+                      </li>}
                       {this.state[item.speciality] && <li>
                         <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
                         <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>
                         <br/>
                         <br/>
                         <p>经验&nbsp;:&nbsp;</p><textarea ref={experience} defaultValue={item.experience} rows="10"></textarea>
+                        <p>作品展示(最多8张)&nbsp;:&nbsp;</p>{works.map((item,index)=>{
+                        if (!item) return;
+                        return <div className="imgList" key={index} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}>
+                          <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
+                          })}
                       </li>}
                     </ul>
                   }
                     )}
-                    <button onClick={()=>this.setState({showAddSpeciality:true})} style={{marginTop:"30px"}} className="btn-success">+添加专业能力</button>
+                    <button onClick={this.showAddSpeciality} style={{marginTop:"30px"}} className="btn-success">+添加专业能力</button>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
                   <Select header="选择专业" optionsItems={this.items} ref="speciality" handleChange={this.specialityChange} />
@@ -424,7 +434,7 @@ export default class BasicInfo extends Component {
                       <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
                       })}
                   <div className="addDiv">
-                    +<input onChange={this.modifyWorks} type="file" />
+                    +<input onChange={this.addWorks} type="file" />
                   </div>
                     <div className="addSubmit">
                       <button onClick={this.showAddSpciality} onClick={this.addSpeciatity} className="btn-success pull-right">保存</button>
@@ -434,6 +444,7 @@ export default class BasicInfo extends Component {
               </ul>
           </div>
           <Modal />
+          <ImageBrowser currentChoose={this.state.currentChooseImg} imgs={this.state.imgLists}/>
     </div>
     )
   }
