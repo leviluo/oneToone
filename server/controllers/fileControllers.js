@@ -2,6 +2,8 @@ var multiparty = require('multiparty')
 var fs  = require('fs')
 import { sqlStr } from '../dbHelps/mysql'
 import config from '../config'
+// var gm = require('gm');
+// var gm = require('gm').subClass({imageMagick: true});
 
 function getImage(url,defaultImg){
     return new Promise(function(reslove,reject){
@@ -68,6 +70,14 @@ function uploadImgs(ob,name,url){
                                     } else {
                                     }   
                                 })
+                                // gm(dstPath)
+                                // .resize(100, 100)
+                                // .noProfile()
+                                // .write('resize.png', function (err) {
+                                //     console.log('00000000000000000000000')
+                                //     console.log(err)
+                                //   if (!err) console.log('done');
+                                // });
                             }
                         };
                         reslove({status:200,msg:fields})
@@ -89,18 +99,6 @@ const fileController = {
         this.res.write(result, "binary");
         this.res.end();
     },
-    loadHeadImg:async function(next){
-        var phone = this.request.query.phone ? this.request.query.phone : this.session.user
-        if (!phone) {
-            this.body = { status: "err", msg: "未登录" }
-            return
-        }
-        var url = config.headDir + phone + '.jpg';
-        var result = await getImage(url,config.headDir + 'default.jpg');
-        this.res.writeHead(200, { "Content-Type": "image/png" });
-        this.res.write(result, "binary");
-        this.res.end();
-    },
     publicuploadHeadImg:async function(next){
         if (!this.request.query.member) {
             this.body = { status: "err", msg: "缺少参数" }
@@ -110,6 +108,13 @@ const fileController = {
         var result = await getImage(url,config.headDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
+        this.res.end();
+    },
+    qrCode:async function(){
+        
+        var qr_svg = qr.imageSync('https://www.baidu.com/', { type: 'png' });
+        this.res.writeHead(200, { "Content-Type": "image/png" });
+        this.res.write(qr_svg, "binary");
         this.res.end();
     },
     uploadHeadImg:async function(next){

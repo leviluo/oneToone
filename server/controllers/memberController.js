@@ -46,7 +46,7 @@ const memberController = {
             return
         }
         var result = await sqlStr("select m.brief,m.experience,m.works,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[phone])
-        console.log(result)
+
         this.body = {status:200,data:result}
     },
     getMemberInfo:async function(next){

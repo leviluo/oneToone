@@ -8,10 +8,11 @@ import {tipShow} from '../../components/Tips/modules/tips'
 // import Input from '../../../components/Input'
 import Helmet from 'react-helmet'
 // import Modal from '../../../components/Modal'
+import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 
 @connect(
   state=>({auth:state.auth}),
-{tipShow})
+{tipShow,imgbrowserShow})
 export default class MemberBrief extends Component{
   state = {
     specialities:[]
@@ -29,17 +30,22 @@ export default class MemberBrief extends Component{
       })
   }
 
+  showThisImg =(index,works)=>{
+    this.props.imgbrowserShow({currentChoose:index,imgs:works})
+  }
+
   render(){
     const {phone,sex,nickname,address} = this.props.location.query
-    var headImgUrl = `/member/Headload?phone=${phone}`
+    var headImgUrl = `/public/Headload?member=${phone}`
     return(
       <div className="memberBrief">
         <div className="memberBriefTop">
-          <a href="">返回<i className="fa fa-mail-reply"></i></a>
+          <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
           <div className="share">
-           <i className="fa fa-share"></i>分享至:&nbsp;
-            <a></a>&nbsp;&nbsp;
-            <a></a>&nbsp;&nbsp;
+           <i className="fa fa-share"></i>&nbsp;分享至:&nbsp;
+            <a></a>
+            <a></a>
+            <a></a>
             <a></a>
           </div>
         </div>
@@ -56,16 +62,30 @@ export default class MemberBrief extends Component{
                 <li><h3><hr /><span>详细地址</span></h3><p>{address}</p></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
-                  {this.state.specialities.map((item,index)=>
-                        <ul key={index}>
+                  {this.state.specialities.map((item,index)=>{
+                        var works = item.works.split(',')
+                        for (var i = 0; i < works.length; i++) {
+                         if(works[i])works[i] = `/img?from=speciality&name=${works[i]}`
+                        }
+                        return <ul key={index}>
                           <li><b>{item.speciality}</b></li>
-                          <li><span>简介&nbsp;:&nbsp;</span>{item.brief}</li>
-                          <li><span>经验&nbsp;:&nbsp;</span>{item.experience}</li>
+                          <li><p>简介&nbsp;:&nbsp;</p>{item.brief}</li>
+                          <li><p>经验&nbsp;:&nbsp;</p>{item.experience}</li>
+                          {item.works && <li><p>作品展示&nbsp;:&nbsp;</p>
+                          <div className="imgShow">
+                          {works.map((item,index)=>{
+                            if (!item) return;
+                            return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item})`}}></div>
+                              })}
+                          </div>
+                          </li>
+                          }
                         </ul>
-                    )}
+                    })}
                 </li>
               </ul>
             </div>
+            <ImageBrowser />
         </div>
       )
   }

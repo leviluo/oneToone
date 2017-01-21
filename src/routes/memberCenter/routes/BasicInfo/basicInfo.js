@@ -425,7 +425,7 @@ export default class BasicInfo extends Component {
       this.items.push({key:item.childCatelogue,value:item.childCatelogue})
     })
     let nickname = this.props.auth.nickname
-    var headSrc = "/member/Headload?"+Math.random()
+    var headSrc = "/public/Headload?member="+this.props.auth.phone
     return (
     <div>
           <div className="basicInfo">

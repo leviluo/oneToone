@@ -1,16 +1,32 @@
 .menu {
     height: 45px;
     line-height: 45px;
-    background: white;
-    border: 1px solid #ccc;
+    background: #f0f8ff;
+    border-bottom: 1px solid #ccc;
     nav {
         margin: 0 auto;
         max-width:1200px;
+        div:first-of-type{
+            width:50px;
+            height:45px;
+            float:left;
+            background-image:url(./assert/logo.png);
+            background-repeat:no-repeat;
+            background-size: 50px;
+            background-position: center;
+        }
         h1 {
-            padding-left:10px;
             margin: 0;
             color: #1C86EE;
-            display: inline-block
+            display: inline-block;
+            a{
+                background-image:url(./assert/logo.png);
+                background-repeat:no-repeat;
+                background-size: 50px;
+                background-position: center left;
+                padding-left:60px;
+                display:block;
+            }
         }
         h4 {
             margin: 0 10px;
