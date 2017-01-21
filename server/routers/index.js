@@ -27,7 +27,7 @@ export default function routers(router){
 
 	router.post("/member/modifyNickname",memberController.modifyNickname,router.allowedMethods());
 	router.post("/member/modifyAddress",memberController.modifyAddress,router.allowedMethods());
-	router.post("/member/modifySpeciality",memberController.modifySpeciality,router.allowedMethods());
+	router.post("/member/modifySpeciality",memberController.modifySpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")

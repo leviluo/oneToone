@@ -154,11 +154,14 @@ const fileController = {
             this.body = {status:500,msg:'上传失败'}
             return
         }
-        console.log(result.msg)
+
         this.request.body.speciality = result.msg.speciality[0]
         this.request.body.brief = result.msg.brief[0]
         this.request.body.experience = result.msg.experience[0]
         this.request.body.names = result.msg.names
+        if (result.msg.works) {
+            this.request.body.works = result.msg.works[0]
+        }
     },
 
     insertImg:async function(next){

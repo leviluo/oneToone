@@ -4,6 +4,7 @@ import './membercenter.scss'
 import {Link} from 'react-router'
 import {isAuth} from '../../../reducers/auth'
 import { connect } from 'react-redux'
+import ImageBrowser from '../../../components/ImageBrowser'
 
 
 @connect(
@@ -38,6 +39,7 @@ export default class memberCenter extends Component {
             <div className="memberCenterContentRight">
               {this.props.children}
             </div>
+            <ImageBrowser />
           </div>
         )}
   }

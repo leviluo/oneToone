@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
-import ImageBrowser from '../../../../components/ImageBrowser'
+import {imgbrowserShow} from '../../../../components/ImageBrowser'
 import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
@@ -30,7 +30,7 @@ import {modifyNickname as modifyname} from '../../../../reducers/auth'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,modalUpdate}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,fetchSpeciality,modalUpdate,imgbrowserShow}
 )
 
 export default class BasicInfo extends Component {
@@ -198,10 +198,59 @@ export default class BasicInfo extends Component {
     e.target.style.opacity = "80"
     var me = this
     e.target.onclick=function(){
-      window.URL.revokeObjectURL(me.state.imgs[index]); //清空创建的url
       me.state.imgs.splice(index,1)
       me.setState({})
     }
+  }
+
+  modifyDeleteImg=(e)=>{
+    e.target.style.filter = "alpha(opacity=0.8)"
+    e.target.style.opacity = "80"
+    var me = this
+    console.log(me.state.modifyImgs)
+    e.target.onclick=function(e){
+      e.srcElement.parentNode.parentNode.removeChild(e.srcElement.parentNode)
+      for (var i = 0; i < me.state.modifyImgs.length; i++) {
+        if(`/img?from=speciality&name=${me.state.modifyImgs[i].key}` == e.target.getAttribute('name')){
+          me.state.modifyImgs.splice(i,1)
+        }
+      }
+      me.setState({})
+    }
+  }
+
+  modifyAddImg=(e)=>{
+      if (this.state.modifyImgs.length > 7) {
+        this.props.tipShow({type:'error',msg:'只能添加8张图片'})
+        return;
+      };
+      var value = e.target.value
+      var filextension=value.substring(value.lastIndexOf("."),value.length);
+      filextension = filextension.toLowerCase();
+      if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+      {
+      this.props.tipShow({type:'error',msg:'文件类型不正确'})
+      return;
+      }
+
+      var fileUrl = window.URL.createObjectURL(e.target.files[0])
+
+      var div = document.createElement('div')
+      div.className = "imgList"
+      div.style.backgroundImage = `url(${fileUrl})`
+
+      var divDelete = document.createElement('div')
+      divDelete.onmouseout = this.hideDeleteImg
+      divDelete.onmouseover = this.modifyDeleteImg
+      divDelete.className = "fa fa-trash"
+      var key = Date.parse(new Date())
+      divDelete.setAttribute('name',key)
+
+      div.appendChild(divDelete)
+
+      e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
+      this.state.modifyImgs.push({key:key,file:e.target.files[0]})
+      this.setState({})
   }
 
   hideDeleteImg=(e)=>{
@@ -273,7 +322,22 @@ export default class BasicInfo extends Component {
 
   modifySpeciality =(e,name)=>{
     this.state[name] = true
-    this.setState({})
+    var items = []
+    var data = this.props.myspecialities.text
+    for (var i = 0; i < data.length; i++) {
+      if(data[i].speciality == name){
+        if(data[i].works){
+          var arr = data[i].works.split(',')
+          for (var i = 0; i < arr.length; i++) {
+            items.push({key:arr[i]})
+          }
+        }
+        break;
+      }
+    }
+    this.setState({
+      modifyImgs:items
+    })
   }
 
   cancelSpeciality =(e,name)=>{
@@ -282,6 +346,9 @@ export default class BasicInfo extends Component {
   }
 
   saveSpeciality=(e,speciality)=>{
+
+    // console.log(this.state.modifyImgs)
+
     var brief = this.refs[speciality+'brief'].value
     var experience = this.refs[speciality+'experience'].value
 
@@ -300,18 +367,11 @@ export default class BasicInfo extends Component {
       return
     }
 
-    modifySpeciality({speciality:speciality,brief:brief,experience:experience}).then(({data})=>{
+    modifySpeciality(this,speciality,brief,experience).then(({data})=>{
       if (data.status == 200) {
-          var data = this.props.myspecialities.text.concat();
-          for (var i = data.length - 1; i >= 0; i--) {
-            if(data[i].speciality == speciality){
-              data[i].brief = brief;
-              data[i].experience = experience;
-            }
-          };
-          this.props.updateSpeciality(data)
-          this.state[speciality] = false
-          this.setState({})
+        this.state[speciality] = false
+        this.setState({})
+        this.props.fetchSpeciality()
       }else{
         this.props.tipShow({type:'error',msg:data.msg})
       }
@@ -356,10 +416,7 @@ export default class BasicInfo extends Component {
   }
 
   showThisImg =(index,works)=>{
-    this.setState({
-      currentChooseImg:index,
-      imgLists:works
-    })
+    this.props.imgbrowserShow({currentChoose:index,imgs:works})
   }
 
   render () {
@@ -368,12 +425,13 @@ export default class BasicInfo extends Component {
       this.items.push({key:item.childCatelogue,value:item.childCatelogue})
     })
     let nickname = this.props.auth.nickname
+    var headSrc = "/member/Headload?"+Math.random()
     return (
     <div>
           <div className="basicInfo">
             <div>
               <div>
-                <img id="memberinfoHeadImg" src="/member/Headload?Math.random()" />
+                <img id="memberinfoHeadImg" src={headSrc} />
                 <a className="fa fa-image"><input onChange={this.modifyHead} type="file" /></a>
               </div>
             </div>
@@ -388,7 +446,9 @@ export default class BasicInfo extends Component {
                     var brief = `${item.speciality}brief`;
                     var experience = `${item.speciality}experience`;
                     var works = item.works.split(',')
-                    // console.log(works)
+                    for (var i = 0; i < works.length; i++) {
+                         if(works[i])works[i] = `/img?from=speciality&name=${works[i]}`
+                    }
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
                       <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>
@@ -398,7 +458,7 @@ export default class BasicInfo extends Component {
                         <div className="imgShow">
                         {works.map((item,index)=>{
                           if (!item) return;
-                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
+                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item})`}}></div>
                             })}
                         </div>
                       </li>}
@@ -410,14 +470,18 @@ export default class BasicInfo extends Component {
                         <p>经验&nbsp;:&nbsp;</p><textarea ref={experience} defaultValue={item.experience} rows="10"></textarea>
                         <p>作品展示(最多8张)&nbsp;:&nbsp;</p>{works.map((item,index)=>{
                         if (!item) return;
-                        return <div className="imgList" key={index} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}>
-                          <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
+                        return <div className="imgList" key={index} style={{backgroundImage:`url(${item})`}}>
+                          <div onMouseOut={this.hideDeleteImg} onMouseOver={this.modifyDeleteImg} name={item} className="fa fa-trash"></div></div>
                           })}
+                        <div className="addDiv">
+                          +<input onChange={this.modifyAddImg} type="file" />
+                        </div>
                       </li>}
                     </ul>
                   }
                     )}
-                    <button onClick={this.showAddSpeciality} style={{marginTop:"30px"}} className="btn-success">+添加专业能力</button>
+                    <div style={{marginTop:"30px",clear:'both'}} ><button onClick={this.showAddSpeciality} className="btn-success">+添加专业能力</button>
+                    </div>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
                   <Select header="选择专业" optionsItems={this.items} ref="speciality" handleChange={this.specialityChange} />
@@ -444,7 +508,6 @@ export default class BasicInfo extends Component {
               </ul>
           </div>
           <Modal />
-          <ImageBrowser currentChoose={this.state.currentChooseImg} imgs={this.state.imgLists}/>
     </div>
     )
   }

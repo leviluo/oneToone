@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import {connect} from 'react-redux'
 import {chatHide,submitText,submitImg,getHistory,chatShowAction} from './modules/chat'
+import {imgbrowserShow} from '../ImageBrowser'
 import './chat.scss'
 
 @connect(
   state=>({chat:state.chat}),
-{chatHide})
+{chatHide,imgbrowserShow})
 
 export default class Chat extends Component{
 
@@ -58,6 +59,7 @@ export default class Chat extends Component{
     }else{
       this.hidechat()
     }
+    // console.log("0000")
   }
 
   showchat =()=>{
@@ -120,6 +122,7 @@ export default class Chat extends Component{
     },2000)
   }
 
+
   submitImage =(e)=>{
     // 判断文件类型
     var value = e.target.value
@@ -145,6 +148,7 @@ export default class Chat extends Component{
                 var str = `<p class="sendFrom img"><span class="name">${me.props.chat.chatFrom}&nbsp;:&nbsp;</span><span class="time">${time}</span><img src="${src}"/></p>`
                 me.Chat.innerHTML += str; 
                 me.contentBody.scrollTop = me.contentBody.scrollHeight;
+                me.addEvent()
             }  
             reader.readAsDataURL(file);  
       }else{
@@ -183,17 +187,26 @@ export default class Chat extends Component{
           this.Chat.innerHTML = str
         }
 
+        this.addEvent()
+
         var sendDate = new Date(data[data.length-1].time)
         if(data[data.length-1])this.lastUpdate = `${sendDate.getFullYear()}-${sendDate.getMonth()+1}-${sendDate.getDate()} ${sendDate.getHours()}:${sendDate.getMinutes()}:${sendDate.getSeconds()}`;
         if(isTop==true)this.contentBody.scrollTop = this.contentBody.scrollHeight;
     })
   }
 
-  // send =(e)=>{
-  //   if(e.keyCode==13){
-  //     this.submitText()
-  //   }
-  // }
+  addEvent = ()=>{
+    var el = this.contentBody.getElementsByTagName('img');
+    for (var i = 0; i < el.length; i++) {
+      el[i].onclick = this.showThisImg
+    }
+  }
+
+  showThisImg =(e)=>{
+    // console.log(e.target.src)
+    // alert("00")
+    this.props.imgbrowserShow({currentChoose:0,imgs:[e.target.src]})
+  }
 
   render(){
     const{chatTo} = this.props.chat;

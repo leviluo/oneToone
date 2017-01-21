@@ -28,8 +28,21 @@ export function modifyAddress(item) {
 }
 
 
-export function modifySpeciality(item) {
-      return axios.post('/member/modifySpeciality',item)
+export function modifySpeciality(that,speciality,brief,experience) {
+      var fd = new FormData(); 
+      var works = ''
+      for (var i = 0; i < that.state.modifyImgs.length; i++) {
+        if(that.state.modifyImgs[i].file){
+          fd.append("file", that.state.modifyImgs[i].file); 
+        }else{
+          works += that.state.modifyImgs[i].key+','
+        }
+      }
+      fd.append("speciality",speciality)
+      fd.append("brief",brief)
+      fd.append("experience",experience)
+      fd.append("works",works.slice(0,-1))
+      return axios.post('/member/modifySpeciality',fd)
 }
 
 export function deleteSpeciality(item) {
@@ -48,7 +61,8 @@ export function addSpeciatity (that,speciality,brief,experience) {
     axios.post('/member/addSpeciality',fd).then(({data}) => {
       if (data.status==200) {
           that.setState({showAddSpeciality:false})
-          dispatch({type:"ADD_SPECIALITIES",value:[{speciality:speciality,brief:brief,experience:experience}]})
+          // dispatch({type:"ADD_SPECIALITIES",value:[{speciality:speciality,brief:brief,experience:experience}]})
+          that.props.fetchSpeciality()
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
       }
