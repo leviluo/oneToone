@@ -41,12 +41,36 @@ export default class HomeView extends React.Component{
 
         return <div className="home">
         <Helmet title='首页' />
-        <div className="homeContent">
+        <div className="homeTop">
         	<div className="categoryContent">
             	<ul>{this.cateItems.map((item,index)=>item)} 
             	</ul>
             </div>
         	<Banner items={imgItems}/>
+        </div>
+        <div className="homeContent">
+                <div className="shareHot">
+                    <div>热门分享</div>
+                    <ul>
+                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
+                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
+                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
+                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
+                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
+                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
+                    </ul>
+                </div>
+                <div className="organizationHot">
+                    <div>热门社团</div>
+                    <ul>
+                        <li>555</li>
+                        <li>55</li>
+                        <li>55</li>
+                        <li>55</li>
+                        <li>66</li>
+                        <li>66</li>
+                    </ul>
+                </div>
         </div>
       </div>
     }

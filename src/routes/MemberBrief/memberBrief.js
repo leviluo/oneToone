@@ -1,13 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import './memberBrief.scss'
 import {getSpecialities} from './modules/memberBrief'
-
+import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import {tipShow} from '../../components/Tips/modules/tips'
-// import {modalShow} from '../../../components/Modal/modules/modal'
-// import Input from '../../../components/Input'
-import Helmet from 'react-helmet'
-// import Modal from '../../../components/Modal'
 import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 
 @connect(
@@ -47,16 +43,19 @@ export default class MemberBrief extends Component{
     console.log(encodeURIComponent(window.location.href))
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     var headImgUrl = `/public/Headload?member=${phone}`
+    var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
+    var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return(
       <div className="memberBrief">
+      <Helmet title="名片" />
         <div className="memberBriefTop">
           <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
           <div className="share">
            <i className="fa fa-share"></i>&nbsp;分享至:&nbsp;
             <a>
             </a>
-            <a></a>
-            <a></a>
+            <a href={shareZone} target="_blank" title="分享到QQ空间"></a>
+            <a href={shareWeibo} target="_blank" title="分享到微博"></a>
             <a onClick={this.showQrcode}>
                <div><span onClick={this.closeQrcode}>×</span><img src={qrcodeSrc} alt="" /><p>扫描即可分享</p></div>
             </a>

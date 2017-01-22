@@ -1,0 +1,55 @@
+.organization{
+	min-height:900px;
+	background:#fff;
+	margin-bottom:10px;
+	.organizationTop{
+		height:100px;
+		background:#f0f8ff;
+		color:#1c86ee;
+		div:first-of-type{
+			height:100px;
+			line-height:100px;
+			width:20%;
+			float:left;
+			font-size:200%;
+			font-weight:bold;
+			text-align:center;
+			letter-spacing: 5px;
+		}
+		ul{
+			margin:0;
+			height:100px;
+			line-height:100px;
+			width:40%;
+			padding:0;
+			float:left;
+			li{
+				float:left;
+				width:100px;
+				a{
+					padding:5px 10px;
+					color:#1c86ee
+				}
+			}
+		}
+		div:last-of-type{
+			width:40%;
+			float:left;
+			text-align:center;
+			height:100px;
+			line-height:100px;
+			input{
+				width:200px;
+				height:35px;
+				padding:0;
+				box-shadow:0px 0px 5px 1px #ccc;
+			}
+			button{
+				height:36px;
+				line-height:35px;
+				padding:0 10px;
+				box-shadow:2px 0px 5px 1px #ccc;
+			}
+		}
+	}
+}

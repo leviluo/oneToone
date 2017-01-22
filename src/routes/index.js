@@ -8,6 +8,7 @@ import memberCenter from './memberCenter'
 import Login from './Login'
 import Categories from './Categories'
 import MemberBrief from './MemberBrief'
+import organization from './Organizations'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -23,7 +24,8 @@ export const createRoutes = (store) => ({
     memberCenter(store),
     Login(store),
     Categories(store),
-    MemberBrief(store)
+    MemberBrief(store),
+    organization(store),
   ]
 })
 

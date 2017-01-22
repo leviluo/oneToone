@@ -32,12 +32,13 @@ export default class Header extends Component{
           <nav>
             <h1><IndexLink to="/" className="brand">OneToOne</IndexLink></h1>
             <h4>专业一对一服务提供平台(各个身怀绝技)</h4><Location />
-            <span className="headerLeft">
+            <span className="headerRight">
              {!auth.isAuth && <span><Link to='/login'>登录</Link>
              <Link to='/register'>注册</Link>
              </span>}
-             {auth.isAuth && <span>欢迎 {auth.nickname}&nbsp;<Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;个人中心</Link><a onClick={this.loginOut}>退出
-             </a></span>}
+             {auth.isAuth && <span><a onClick={this.loginOut}>退出</a>
+             <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname} 的个人中心</Link></span>}
+              <Link className="item" to="/Organization">社团</Link>
              </span>
           </nav>
         </div>

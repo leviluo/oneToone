@@ -42,16 +42,32 @@
         .brand {
             color: #1C86EE
         }
-        .headerLeft {
+        .headerRight {
             float: right;
+            display:block;
+            height:45px;
+            span{
+                float:right;
+                color: #1C86EE;
+            }
             a {
+                float:right;
                 margin: 0;
-                padding: 10px;
-                color: #1C86EE !important;
+                padding:0 10px;
+                color: #1C86EE;
+                height:44px;
+                line-height:44px;
+                display:block;
             }
             a:hover {
                 cursor: pointer;
                 background: #efefef;
+            }
+            .item{
+                color:#ff7f00;
+                font-weight:bold;
+                font-size:120%;
+                margin-right:10px;
             }
         }
     }
