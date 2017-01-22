@@ -18,6 +18,8 @@ export default function routers(router){
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods()); //上传头像
 
+	router.get("/qrcode",fileController.qrCode,router.allowedMethods());  //获取二维码
+
 	router.get("/img",fileController.loadImg,router.allowedMethods());  
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 	router.post("/member/messageText",memberController.messageText,router.allowedMethods());
@@ -29,6 +31,8 @@ export default function routers(router){
 	router.post("/member/modifyAddress",memberController.modifyAddress,router.allowedMethods());
 	router.post("/member/modifySpeciality",memberController.modifySpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
+
+
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

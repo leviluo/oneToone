@@ -4,6 +4,7 @@ import { sqlStr } from '../dbHelps/mysql'
 import config from '../config'
 // var gm = require('gm');
 // var gm = require('gm').subClass({imageMagick: true});
+var qr = require('qr-image')
 
 function getImage(url,defaultImg){
     return new Promise(function(reslove,reject){
@@ -111,8 +112,9 @@ const fileController = {
         this.res.end();
     },
     qrCode:async function(){
-        
-        var qr_svg = qr.imageSync('https://www.baidu.com/', { type: 'png' });
+        // console.log(this.request.query.text)
+        var qr_svg = qr.imageSync(this.request.query.text, { type: 'png' });
+        // console.log(qr_svg)
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(qr_svg, "binary");
         this.res.end();

@@ -34,8 +34,18 @@ export default class MemberBrief extends Component{
     this.props.imgbrowserShow({currentChoose:index,imgs:works})
   }
 
+  showQrcode =(e)=>{
+    e.target.childNodes[0].style.display = "block"
+  }
+
+  closeQrcode =(e)=>{
+    e.target.parentNode.style.display = "none"
+  }
+
   render(){
     const {phone,sex,nickname,address} = this.props.location.query
+    console.log(encodeURIComponent(window.location.href))
+    var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     var headImgUrl = `/public/Headload?member=${phone}`
     return(
       <div className="memberBrief">
@@ -43,10 +53,13 @@ export default class MemberBrief extends Component{
           <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
           <div className="share">
            <i className="fa fa-share"></i>&nbsp;分享至:&nbsp;
+            <a>
+            </a>
             <a></a>
             <a></a>
-            <a></a>
-            <a></a>
+            <a onClick={this.showQrcode}>
+               <div><span onClick={this.closeQrcode}>×</span><img src={qrcodeSrc} alt="" /><p>扫描即可分享</p></div>
+            </a>
           </div>
         </div>
         <div className="memberBriefContent">

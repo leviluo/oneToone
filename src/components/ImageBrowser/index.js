@@ -30,6 +30,7 @@ export default class ImageBrowser extends Component{
       ele.style.display = "block"
       var element = ele.getElementsByClassName('content')[0]
       element.style.top = scrollTop+'px'
+      document.body.style.width = parseInt(window.getComputedStyle(document.body,null).width.slice(0,-2)) + 'px'
       document.body.style.overflow = "hidden"
   }
 
