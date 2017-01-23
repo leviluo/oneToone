@@ -1,0 +1,40 @@
+.team{
+	h3{
+		color:#555;
+	}
+	hr{
+		border:1px solid #e5e5e5;
+	}
+	.attendTeam{
+
+	}
+	.createTeam{
+		ul{
+			li{
+				border-bottom:1px solid #e5e5e5;
+			}
+		}
+		.addNew{
+			li{
+					canvas{
+						border-radius:75px;
+						border:5px solid #efefef;
+					}
+				div{
+					padding-left:20px;
+					padding-bottom:20px;
+					.modifyHead{
+						position:relative;
+						input{
+							width:100%;
+							height:100%;
+						}
+					}
+					textarea{
+						width:500px;
+					}
+				}
+			}
+		}
+	}
+}

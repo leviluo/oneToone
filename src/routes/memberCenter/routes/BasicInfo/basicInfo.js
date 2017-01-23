@@ -127,7 +127,7 @@ export default class BasicInfo extends Component {
     var fd=new FormData();
     fd.append('file',blob);
     // console.log(fd)
-    this.props.commitHeadImg(fd)
+    this.props.commitHeadImg(fd,this.props.auth.phone)
     this.props.modalHide()
   }
 

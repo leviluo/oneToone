@@ -52,11 +52,11 @@ export default class MemberBrief extends Component{
           <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
           <div className="share">
            <i className="fa fa-share"></i>&nbsp;分享至:&nbsp;
-            <a>
+            <a title="发送给微信好友">
             </a>
             <a href={shareZone} target="_blank" title="分享到QQ空间"></a>
             <a href={shareWeibo} target="_blank" title="分享到微博"></a>
-            <a onClick={this.showQrcode}>
+            <a onClick={this.showQrcode} title="分享到朋友圈">
                <div><span onClick={this.closeQrcode}>×</span><img src={qrcodeSrc} alt="" /><p>扫描即可分享</p></div>
             </a>
           </div>

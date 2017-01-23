@@ -37,14 +37,34 @@ CREATE TABLE `memberSpeciality` (
   `experience` text ,
   PRIMARY KEY  (`id`)
 );
---用户专业表
--- CREATE TABLE `works` (  
---   `id` mediumint(8) unsigned auto_increment,
---   `memberSpecialityId` mediumint(8) unsigned,
---   `imgUrl` varchar(80) default '',
---   `time` datetime default NOW(),
---   PRIMARY KEY  (`id`)
--- );
+--社团表
+CREATE TABLE `organizations` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `categoryId` mediumint(8) unsigned,
+  `name` varchar(80) default '',
+  `brief` varchar(300) default '',
+  `time` datetime default NOW(),
+  `head` varchar(80) default '',
+  `createById` mediumint(8) unsigned,
+  PRIMARY KEY  (`id`)
+);
+-- 用户社团
+CREATE TABLE `memberOrganizations` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `memberId` mediumint(8) unsigned,
+  `organizationsId` mediumint(8) unsigned,
+  PRIMARY KEY  (`id`)
+);
+--社团通知活动等
+CREATE TABLE `article` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `title` varchar(40) DEFAULT '' COMMENT '//标题',
+  `content` text COMMENT '//',
+  `type` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:普通,1:活动,2:公告,3:咨询',
+  `createdAt` datetime DEFAULT now() COMMENT '//',
+  `updatedAt` datetime DEFAULT now() COMMENT '//',
+  PRIMARY KEY  (`id`)
+);
 -- 私信
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,
@@ -56,6 +76,9 @@ CREATE TABLE `message` (
   `time` datetime default NOW(),
   PRIMARY KEY  (`id`)
 );
+
+insert into organizations(`categoryId`,`name`,`brief`,`createById`) values(1,"爱乐动","运动爱好者",20),(1,"爱乐动2","运动爱好者2",20),(2,"爱健康","运动爱好者2",20)
+
 
 insert into specialityCategory set name="运动";
 insert into specialityCategory set name="健康";

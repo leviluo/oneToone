@@ -30,8 +30,8 @@ export default class Header extends Component{
     return(
         <div className='menu'>
           <nav>
-            <h1><IndexLink to="/" className="brand">OneToOne</IndexLink></h1>
-            <h4>专业一对一服务提供平台(各个身怀绝技)</h4><Location />
+            <h1><IndexLink to="/" className="brand">OneOne</IndexLink></h1>
+            <h4>各个身怀绝技</h4><Location />
             <span className="headerRight">
              {!auth.isAuth && <span><Link to='/login'>登录</Link>
              <Link to='/register'>注册</Link>

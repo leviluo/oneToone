@@ -3,18 +3,10 @@
     line-height: 45px;
     background: #f0f8ff;
     border-bottom: 1px solid #ccc;
+        min-width:1200px;
     nav {
         margin: 0 auto;
-        max-width:1200px;
-        div:first-of-type{
-            width:50px;
-            height:45px;
-            float:left;
-            background-image:url(./assert/logo.png);
-            background-repeat:no-repeat;
-            background-size: 50px;
-            background-position: center;
-        }
+        padding:0 20px;
         h1 {
             margin: 0;
             color: #1C86EE;
@@ -61,7 +53,7 @@
             }
             a:hover {
                 cursor: pointer;
-                background: #efefef;
+                background: #fff;
             }
             .item{
                 color:#ff7f00;

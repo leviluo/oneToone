@@ -24,7 +24,14 @@ export default class MemberBrief extends Component{
             </ul>
             <div><input type="text" placeholder="搜索社团" /><button className="btn-primary"><i className="fa fa-search"></i></button></div>
         </div>
-        <div className="organizationContent"></div>
+        <div className="organizationContent">
+            <div className="left">
+                  <h3>最新活动</h3>
+            </div>
+            <div className="right">
+                  <h3>最热社团</h3>
+            </div>
+        </div>
       </div>
       )
   }
