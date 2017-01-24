@@ -3,17 +3,55 @@ import './myTeam.scss'
 import { connect } from 'react-redux'
 // import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
 import { tipShow } from '../../../../components/Tips/modules/tips'
+import Select from '../../../../components/Select'
 // import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
+import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization} from './modules/myTeam'
+// import {fetchCatelogue} from '../../../../reducers/category'
+// import {asyncConnect} from 'redux-async-connect'
+
+// @asyncConnect([{
+//   promise: ({store: {dispatch, getState}}) => {
+//     const promises = [];
+//     if (!getState().catelogues.isloaded) {
+//       promises.push(dispatch(fetchCatelogue()));
+//     }
+//     return Promise.all(promises);
+//   }
+// }])
 
 @connect(
   state => ({
     auth:state.auth,
+    // catelogues:state.catelogues
     }),
-  {modalShow,modalHide,modalUpdate}
+  {modalShow,modalHide,modalUpdate,tipShow}
 )
 
 export default class Myteam extends Component {
+
+    state = {
+      hasImg:false,
+      items:[],
+      OrganizationByMe:[]
+    }
+
+    componentWillMount =()=>{
+      getCatelogy().then(({data})=>{
+        this.setState({
+          items:data.data
+        })
+      })
+     this.updateDate()
+    }
+
+    updateDate = ()=>{
+       getOrganizationByMe().then(({data})=>{
+        this.setState({
+          OrganizationByMe:data.data
+        })
+      })
+    }
 
      modifyHead =(e)=>{
     //判断文件类型
@@ -41,6 +79,12 @@ export default class Myteam extends Component {
       </div>
 
     this.props.modalShow({header:"修改头像",content:content,submit:this.modifyHeadSubmit})
+    console.log(e.target.parentNode)
+    console.log(e.target.parentNode.parentNode)
+    console.log(e.target.parentNode.parentNode.parentNode.getElementsByTagName('canvas')[0])
+    this.setState({
+      canvas:e.target.parentNode.parentNode.parentNode.getElementsByTagName('canvas')[0]
+    })
   }
 
   imgZoom =(e)=>{ //放大缩小图片
@@ -66,28 +110,15 @@ export default class Myteam extends Component {
     var element = document.getElementById('headerEdit')
     var image = document.getElementById('editImg')
     var ratio = image.width*100/(400*parseFloat(element.style.backgroundSize.slice(0,-1)))
-    // var ctx=this.divcenter.getContext("2d");
-    var ctx=document.getElementById('showEdit').getContext("2d");
+    var ctx= this.state.canvas.getContext("2d");
 
     var X = (this.divcenter.offsetLeft - (400-image.width/ratio)/2) * ratio;
     var Y = (this.divcenter.offsetTop - (250-image.height/ratio)/2) * ratio;
 
     ctx.drawImage(image,X,Y,100*ratio,100*ratio,0,0,100,100)
-
-    // var data=this.divcenter.toDataURL();
-    // console.log(data)
-    // dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
-    // data=data.split(',')[1];
-    // data=window.atob(data);
-    // var ia = new Uint8Array(data.length);
-    // for (var i = 0; i < data.length; i++) {
-    //     ia[i] = data.charCodeAt(i);
-    // };
-
-    // var blob=new Blob([ia], {type:"image/png"});
-    // var fd=new FormData();
-    // fd.append('file',blob);
-    // this.props.commitHeadImg(fd)
+    this.setState({
+      hasImg:true
+    })
     this.props.modalHide()
   }
 
@@ -128,9 +159,120 @@ export default class Myteam extends Component {
     document.onmousemove = null;
   }
 
+  modifyOrganization =(e,id,oname)=>{
+
+    var name = this.refs['organizationName'+id].value;
+    var brief = this.refs['organizationBrief'+id].value;
+
+     if (!name || name.length > 38) {
+      this.props.tipShow({type:"error",msg:"名称不为空或者大于30位字符"})
+      return
+    }
+
+    if (!brief || brief.length > 295) {
+      this.props.tipShow({type:"error",msg:"简介不为空或者大于300位字符"})
+      return
+    }
+
+    var img = this.state.canvas
+
+    var fd=new FormData();
+
+    if (this.state.hasImg) {
+    var data=img.toDataURL();
+    data=data.split(',')[1];
+    data=window.atob(data);
+    var ia = new Uint8Array(data.length);
+    for (var i = 0; i < data.length; i++) {
+        ia[i] = data.charCodeAt(i);
+    };
+    var blob=new Blob([ia], {type:"image/png"});
+    fd.append('file',blob);
+    }
+
+    fd.append('name',name)
+    fd.append('brief',brief)
+    fd.append('id',id)
+
+    modifyOrganization(fd).then(({data})=>{
+      if (data.status == 200) {
+        this.state[oname] = false
+        this.setState({})
+        this.updateDate()
+      }else{
+        this.props.tipShow({type:"error",msg:data.msg})
+        return
+      }
+    })
+  }
+
+  verfied =(name,brief,speciality)=>{
+
+    if (!name || name.length > 38) {
+      this.props.tipShow({type:"error",msg:"名称不为空或者大于30位字符"})
+      return
+    }
+
+    if (!brief || brief.length > 295) {
+      this.props.tipShow({type:"error",msg:"简介不为空或者大于300位字符"})
+      return
+    }
+
+    if (!speciality) {
+      this.props.tipShow({type:"error",msg:"选择一个类目"})
+      return
+    }
+
+    var img = this.state.canvas
+
+    if (!this.state.hasImg) {
+      this.props.tipShow({type:"error",msg:"选择一张头像"})
+      return
+    }
+    var data=img.toDataURL();
+    data=data.split(',')[1];
+    data=window.atob(data);
+    var ia = new Uint8Array(data.length);
+    for (var i = 0; i < data.length; i++) {
+        ia[i] = data.charCodeAt(i);
+    };
+
+    var blob=new Blob([ia], {type:"image/png"});
+    var fd=new FormData();
+    fd.append('file',blob);
+    fd.append('name',name)
+    fd.append('brief',brief)
+    fd.append('categoryId',speciality)
+    return fd
+  }
+
+  addOrganization =(e)=>{
+    var name = this.refs.organizationName.value;
+    var brief = this.refs.organizationBrief.value;
+    var speciality = this.refs.speciality.getValue();
+    var fd = this.verfied(name,brief,speciality)
+    addOrganization(fd).then(({data})=>{
+      if (data.status == 200) {
+        this.setState({
+          isShowAdd:false
+        })
+        this.updateDate()
+      }else{
+        this.props.tipShow({type:"error",msg:data.msg})
+        return
+      }
+    })
+  }
+
+  createNew =()=>{
+    if (this.state.OrganizationByMe.length > 4) {
+      this.props.tipShow({type:"error",msg:"最多可创建5个社团"})
+      return
+    }
+    this.setState({isShowAdd:true})
+  }
 
   render () {
-    let nickname = this.props.auth.nickname
     return (
     <div className="team">
         <div className="attendTeam">
@@ -139,30 +281,79 @@ export default class Myteam extends Component {
         </div>
         <div className="createTeam">
           <h3>我创建的社团</h3>
-        <hr />
-            <ul>
-            <li>11</li>
-            <li>22</li>
-            <li>33</li>
-            </ul>
-            <div>
-              <button className="btn-success">创建新社团</button>
+            <hr />
+            {this.state.OrganizationByMe.map((item,index)=>{
+              var headImg = `/img?name=${item.head}&from=organizations`
+              var date = new Date(item.time)
+              var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+              var organizationName = `organizationName${item.id}`
+              var organizationBrief = `organizationBrief${item.id}`
+              return <div className="items" key = {index}>
+                      {!this.state[item.name] && <div>{item.name}</div>}
+                      {!this.state[item.name] && <img src={headImg} />}
+                      <span><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.name] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></span>
+                      <ul>
+                        {!this.state[item.name] && <li><span>所属类别:</span>{item.categoryName}</li>}
+                        {!this.state[item.name] && <li><span>创建时间:</span>{time}</li>}
+                        {!this.state[item.name] && <li><span>社团简介:</span>{item.brief}</li>}
+                        {this.state[item.name] && <li className="editLi">
+                          <canvas style={{background:`url(${headImg})`}} width="100" height="100" ></canvas>
+                          <div>
+                          <button className="btn-default modifyHead">修改社团头像<input onChange={this.modifyHead} type="file" /></button>
+                          </div>
+                          <p>修改名称</p>
+                          <div>
+                          <input defaultValue={item.name} ref={organizationName} type="text"/>
+                          </div>
+                          <p>填写简介</p>
+                          <div>
+                          <textarea defaultValue={item.brief} ref={organizationBrief} cols="30" rows="10" ></textarea>
+                          </div>
+                          <div>
+                          <button onClick={(e)=>{this.state[item.name] = false;this.setState({})}} className="btn-default">取消</button>
+                          <button onClick={(e)=>this.modifyOrganization(e,item.id,item.name)} className="submit btn-success">提交</button>
+                          </div>
+                        </li>}
+                      </ul>
+                    </div>
+            })}
+            <div className="addBtn">
+              <button className="btn-success" onClick={this.createNew}>创建新社团</button>
             </div>
-            <ul className="addNew">
+            {this.state.isShowAdd && <ul className="addNew">
               <li>
                 <p>&lt;1.选择社团头像</p>
-                <canvas id="showEdit" width="100" height="100" ></canvas>
                 <div>
                 <button className="btn-default modifyHead">选择图片<input onChange={this.modifyHead} type="file" /></button>
                 </div>
+                <canvas id="showEdit" width="100" height="100" ></canvas>
               </li>
               <li>
-                <p>&lt;2.填写简介</p>
+                <p>&lt;2.选择类目</p>
                 <div>
-                <textarea name="" id="" cols="30" rows="10"></textarea>
+                    <Select header="选择类目" optionsItems={this.state.items} ref="speciality" />
                 </div>
               </li>
-            </ul>
+              <li>
+                <p>&lt;3.名称</p>
+                <div>
+                <input ref="organizationName" type="text"/>
+                </div>
+              </li>
+              <li>
+                <p>&lt;4.填写简介</p>
+                <div>
+                <textarea ref="organizationBrief" cols="30" rows="10" defaultValue="不超过300个字符"></textarea>
+                </div>
+              </li>
+              <li>
+                <p>&lt;5.提交</p>
+                <div>
+                <button onClick={()=>{this.setState({isShowAdd:false})}} className="btn-default">取消</button>
+                <button onClick={this.addOrganization} className="submit btn-success">提交</button>
+                </div>
+              </li>
+            </ul>}
         </div>
         <Modal />
     </div>

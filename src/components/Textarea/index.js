@@ -23,6 +23,6 @@ export default class Textarea extends Component{
 
 Textarea.PropTypes = {
     header:React.PropTypes.string.isRequired,
-    handleTextarea:React.PropTypes.func.isRequired,
+    // handleTextarea:React.PropTypes.func.isRequired,
     defaultValue:React.PropTypes.string
 }

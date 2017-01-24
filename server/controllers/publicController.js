@@ -16,6 +16,11 @@ const publicController = {
            var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?);",[this.request.body.speciality,this.request.body.address,this.request.body.address+'市'])
         }
     	this.body = {status:200,data:result}
+    },
+    getCatelogy:async function(next){
+        // console.log("whji")
+        var result = await sqlStr("select id as 'key',name as 'value' from specialityCategory")
+        this.body = {status:200,data:result}
     }
 }
 export default publicController;

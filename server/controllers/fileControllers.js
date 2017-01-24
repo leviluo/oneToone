@@ -25,7 +25,7 @@ function getImage(url,defaultImg){
    }) 
 }
 
-function form(ob,user,url){
+function uploadOneImg(ob,user,url){
     return new Promise(function(reslove,reject){
           var form = new multiparty.Form({ uploadDir: url });
             //上传完成后处理
@@ -33,17 +33,17 @@ function form(ob,user,url){
                 if (err) {
                     reject(err)
                 } else {
-                            var inputFile = files.file[0];
-                            var uploadedPath = inputFile.path;
-                            var dstPath = url + user + '.jpg';
-                           //重命名为真实文件名
-                            fs.rename(uploadedPath, dstPath, function(err) {
-                                if (err) {
-                                    reject({status:500,type:err})
-                                } else {
-                                    reslove({status:200,msg:fields})
-                                }   
-                            })
+                        var inputFile = files.file[0];
+                        var uploadedPath = inputFile.path;
+                        var dstPath = url + user + '.jpg';
+                       //重命名为真实文件名
+                        fs.rename(uploadedPath, dstPath, function(err) {
+                            if (err) {
+                                reject({status:500,type:err})
+                            } else {
+                                reslove({status:200,msg:fields})
+                            }   
+                        })
                 }
             })
     })
@@ -95,6 +95,9 @@ const fileController = {
         }else if(this.request.query.from == "speciality"){
             var url = config.specialityImgDir + this.request.query.name + '.jpg';
             var result = await getImage(url,config.specialityImgDir + 'default.jpg');
+        }else if (this.request.query.from == "organizations") {
+            var url = config.organizationImgDir + this.request.query.name + '.jpg';
+            var result = await getImage(url,config.organizationImgDir + 'default.jpg');
         }
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
@@ -125,7 +128,7 @@ const fileController = {
             return
         }
         var user = this.session.user
-        var result = await form(this.req,user,config.headDir)
+        var result = await uploadOneImg(this.req,user,config.headDir)
         if (result.status == 200 ) {
             this.body = {status:200}
             return
@@ -139,7 +142,7 @@ const fileController = {
         }
         var name = this.session.user + Date.parse(new Date())
 
-        var result = await form(this.req,name,config.messageImgDir)
+        var result = await uploadOneImg(this.req,name,config.messageImgDir)
 
         this.request.body.imgUrl = name
         if (result.status != 200) {
@@ -148,7 +151,7 @@ const fileController = {
         }
         this.request.body.sendTo = result.msg.sendTo[0]
     },
-    uploadSpecialityImg:async function(next){
+    uploadSpecialityImg:async function(next){  //可上传多张图片
         if (!this.session.user) {
             this.body = { status: "err", msg: "未登录" }
             return
@@ -161,7 +164,6 @@ const fileController = {
             this.body = {status:500,msg:'上传失败'}
             return
         }
-
         this.request.body.speciality = result.msg.speciality[0]
         this.request.body.brief = result.msg.brief[0]
         this.request.body.experience = result.msg.experience[0]
@@ -169,6 +171,20 @@ const fileController = {
         if (result.msg.works) {
             this.request.body.works = result.msg.works[0]
         }
+    },
+    uploadOrganizationImg:async function(next){
+        if (!this.session.user) {
+            this.body = { status: "err", msg: "未登录" }
+            return
+        }
+        var name = this.session.user
+        var result = await uploadImgs(this.req,name,config.organizationImgDir)
+
+        if (result.status != 200) {
+            this.body = {status:500,msg:'上传失败'}
+            return
+        }
+        this.request.body = result.msg
     },
 
     insertImg:async function(next){

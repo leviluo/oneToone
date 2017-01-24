@@ -116,7 +116,9 @@ export default class BasicInfo extends Component {
     // console.log(data)
     // dataURL 的格式为 “data:image/png;base64,****”,逗号之前都是一些说明性的文字，我们只需要逗号之后的就行了
     data=data.split(',')[1];
+    // console.log(data)
     data=window.atob(data);
+    // console.log(data)
     var ia = new Uint8Array(data.length);
     for (var i = 0; i < data.length; i++) {
         ia[i] = data.charCodeAt(i);
@@ -451,9 +453,9 @@ export default class BasicInfo extends Component {
                     }
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
-                      <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>
-                      <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>
-                      {item.works && <li>
+                      {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
+                      {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
+                      {(item.works && !this.state[item.speciality]) && <li>
                       <span>作品展示&nbsp;:&nbsp;</span>
                         <div className="imgShow">
                         {works.map((item,index)=>{
@@ -462,7 +464,7 @@ export default class BasicInfo extends Component {
                             })}
                         </div>
                       </li>}
-                      {this.state[item.speciality] && <li>
+                      {this.state[item.speciality] && <li className="editLi">
                         <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
                         <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>
                         <br/>
@@ -484,12 +486,12 @@ export default class BasicInfo extends Component {
                     </div>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
-                  <Select header="选择专业" optionsItems={this.items} ref="speciality" handleChange={this.specialityChange} />
+                  <Select header="选择专业" optionsItems={this.items} ref="speciality" />
                   <br/>
                   <br/>
-                  <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" handleTextarea={this.briefChange} />
+                  <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" />
                   <br/>
-                  <Textarea header="经验" rows="10" ref="experience" defaultValue="" handleTextarea={this.experienceChange} />
+                  <Textarea header="经验" rows="10" ref="experience" defaultValue="" />
                   <br/>
                   <div className="works">作品展示(最多8张)</div>
                   {this.state.imgs.map((item,index)=>{
@@ -501,8 +503,8 @@ export default class BasicInfo extends Component {
                     +<input onChange={this.addWorks} type="file" />
                   </div>
                     <div className="addSubmit">
-                      <button onClick={this.showAddSpciality} onClick={this.addSpeciatity} className="btn-success pull-right">保存</button>
-                      <button onClick={this.showAddSpciality} onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default pull-right">取消</button>
+                      <button onClick={this.addSpeciatity} className="btn-success pull-right">保存</button>
+                      <button onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default pull-right">取消</button>
                     </div>
                   </div>}
               </ul>

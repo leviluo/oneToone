@@ -41,7 +41,7 @@ CREATE TABLE `memberSpeciality` (
 CREATE TABLE `organizations` (  
   `id` mediumint(8) unsigned auto_increment,
   `categoryId` mediumint(8) unsigned,
-  `name` varchar(80) default '',
+  `name` varchar(40) default '',
   `brief` varchar(300) default '',
   `time` datetime default NOW(),
   `head` varchar(80) default '',

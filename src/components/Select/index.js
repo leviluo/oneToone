@@ -26,8 +26,8 @@ export default class Select extends Component{
 
 Select.PropTypes = {
     header:React.PropTypes.string.isRequired,
-    handleChange:React.PropTypes.func.isRequired,
-    defaultValue:React.PropTypes.string,
+    // handleChange:React.PropTypes.func.isRequired,
+    // defaultValue:React.PropTypes.string,
     optionsItems:React.PropTypes.array
 }
 

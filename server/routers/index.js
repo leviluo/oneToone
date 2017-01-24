@@ -2,6 +2,7 @@ import publicController from '../controllers/publicController'
 import memberController from '../controllers/memberController'
 import authController from '../controllers/authController'
 import fileController from '../controllers/fileControllers'
+import organizationController from '../controllers/organizationController'
 // import config from '../../config'
 
 // const paths = config.utils_paths
@@ -13,6 +14,7 @@ export default function routers(router){
 	router.get("/loginOut",authController.loginOut,router.allowedMethods());
 	router.get("/public/catelogues",publicController.catelogues,router.allowedMethods());
 	router.post("/public/items",publicController.items,router.allowedMethods());
+	router.get("/public/getCatelogy",publicController.getCatelogy,router.allowedMethods()); //获取类目
 	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods()); //加载头像
 	router.post("/member/addSpeciality",memberController.addSpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
@@ -32,6 +34,12 @@ export default function routers(router){
 	router.post("/member/modifySpeciality",memberController.modifySpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
 
+// 添加新社团
+	router.post("/member/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
+// 修改社团信息
+	router.post("/member/modifyOrganization",organizationController.modifyOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
+// 获取我创建的社团
+	router.get("/member/getOrganizationByMe",organizationController.getOrganizationByMe,router.allowedMethods());
 
 	// router.get('*', async function (next){
 	// console.log("0000")

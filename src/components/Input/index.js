@@ -16,7 +16,7 @@ export default class Input extends Component{
 
 Input.PropTypes = {
     header:React.PropTypes.string.isRequired,
-    handleChange:React.PropTypes.func.isRequired,
+    // handleChange:React.PropTypes.func.isRequired,
     defaultValue:React.PropTypes.string,
     indeed:React.PropTypes.bool,
     palceholder:React.PropTypes.string,
