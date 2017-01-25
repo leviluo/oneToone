@@ -1,0 +1,64 @@
+.organizationHome{
+	min-height:900px;
+	min-width:1200px;
+	background:#fff;
+	margin-bottom:10px;
+	.BasicInfo{
+		padding:20px 10px;
+		.head{
+			height:110px;
+			line-height:110px;
+			width:900px;
+			img{
+				border-radius:75px;
+				border:5px solid #efefef;
+				margin:0 10px;
+				float:left;
+			}
+			span{
+				float:left;
+				font-size:200%;
+				color:#333;
+			}
+		}
+		.content{
+			clear:both;
+			background:#fff4e8;
+			padding:10px;
+			margin-top:10px;
+			line-height:30px;
+			font-size:12px;
+			width:900px;
+			div:first-of-type{
+				span{
+					color:#ff7f00;
+				}
+				a{
+					color:#ff7f00;
+					cursor:pointer;
+					padding:2px;
+				}
+			}
+		}
+		.members{
+			width:260px;
+			float:right;
+			text-align:left;
+			span{
+				font-size:16px;
+			}
+			hr{
+				border:1px solid #e5e5e5;
+			}
+		}
+	}
+	.article{
+		.btn-default{
+			float:left;
+			margin-left:10px;
+			height:35px;
+			line-height:35px;
+		}
+	}
+	
+}

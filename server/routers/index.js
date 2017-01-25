@@ -16,6 +16,9 @@ export default function routers(router){
 	router.post("/public/items",publicController.items,router.allowedMethods());
 	router.get("/public/getCatelogy",publicController.getCatelogy,router.allowedMethods()); //获取类目
 	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods()); //加载头像
+
+	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); //加载会员信息
+	
 	router.post("/member/addSpeciality",memberController.addSpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods()); //上传头像
@@ -40,6 +43,10 @@ export default function routers(router){
 	router.post("/member/modifyOrganization",organizationController.modifyOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
 // 获取我创建的社团
 	router.get("/member/getOrganizationByMe",organizationController.getOrganizationByMe,router.allowedMethods());
+// 删除创建的社团
+	router.post("/member/deleteOrganization",organizationController.deleteOrganization,router.allowedMethods());
+// 获取社团基本信息
+	router.get("/organizations/basicInfo",organizationController.basicInfo,router.allowedMethods());
 
 	// router.get('*', async function (next){
 	// console.log("0000")

@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import './myTeam.scss'
 import { connect } from 'react-redux'
-// import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
+import {Link} from 'react-router'
+
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import Select from '../../../../components/Select'
-// import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
+
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
-import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization} from './modules/myTeam'
+import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization,deleteOrganization} from './modules/myTeam'
 // import {fetchCatelogue} from '../../../../reducers/category'
 // import {asyncConnect} from 'redux-async-connect'
 
@@ -79,9 +80,6 @@ export default class Myteam extends Component {
       </div>
 
     this.props.modalShow({header:"修改头像",content:content,submit:this.modifyHeadSubmit})
-    console.log(e.target.parentNode)
-    console.log(e.target.parentNode.parentNode)
-    console.log(e.target.parentNode.parentNode.parentNode.getElementsByTagName('canvas')[0])
     this.setState({
       canvas:e.target.parentNode.parentNode.parentNode.getElementsByTagName('canvas')[0]
     })
@@ -272,6 +270,27 @@ export default class Myteam extends Component {
     this.setState({isShowAdd:true})
   }
 
+  deleteOrganization =(e,id)=>{
+    if (!id) {
+      this.props.tipShow({type:"error",msg:"未选中条目"})
+      return
+    }
+    deleteOrganization(id).then(({data})=>{
+      // console.log(data)
+      if (data.status == 200) {
+          for (var i = this.state.OrganizationByMe.length - 1; i >= 0; i--) {
+            if(this.state.OrganizationByMe[i].id == id){
+              this.state.OrganizationByMe.splice(i,1)
+              this.setState({})
+              break;
+            }
+          };
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
+    })
+  }
+
   render () {
     return (
     <div className="team">
@@ -288,10 +307,11 @@ export default class Myteam extends Component {
               var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               var organizationName = `organizationName${item.id}`
               var organizationBrief = `organizationBrief${item.id}`
+              var link = `/organizationsHome/${item.id}`
               return <div className="items" key = {index}>
-                      {!this.state[item.name] && <div>{item.name}</div>}
+                      {!this.state[item.name] && <div>{item.name}<span><Link to={link} >去社团主页</Link><a onClick={(e)=>{this.state[item.name] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a><a onClick={(e)=>this.deleteOrganization(e,item.id)}><i className="fa fa-trash"></i>删除</a></span></div>}
                       {!this.state[item.name] && <img src={headImg} />}
-                      <span><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.name] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></span>
+                      
                       <ul>
                         {!this.state[item.name] && <li><span>所属类别:</span>{item.categoryName}</li>}
                         {!this.state[item.name] && <li><span>创建时间:</span>{time}</li>}

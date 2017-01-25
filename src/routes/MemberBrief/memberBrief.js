@@ -1,24 +1,35 @@
 import React, { Component, PropTypes } from 'react'
 import './memberBrief.scss'
-import {getSpecialities} from './modules/memberBrief'
+import {getSpecialities,memberInfo} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import {tipShow} from '../../components/Tips/modules/tips'
 import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
+import Chat,{chatShow} from '../../components/Chat'
 
 @connect(
   state=>({auth:state.auth}),
-{tipShow,imgbrowserShow})
+{tipShow,imgbrowserShow,chatShow})
 export default class MemberBrief extends Component{
   state = {
-    specialities:[]
+    specialities:[],
+    memberInfo:[]
   }
 
   componentWillMount = ()=>{
-      getSpecialities(this.props.location.query.phone).then(({data})=>{
+      getSpecialities(this.props.params.phone).then(({data})=>{
          if (data.status==200) {
               this.setState({
                 specialities:data.data
+              })
+          }else{
+              this.props.tipShow({type:'error',msg:data.msg})
+          }
+      })
+      memberInfo(this.props.params.phone).then(({data})=>{
+        if (data.status==200) {
+              this.setState({
+                memberInfo:data.data[0]
               })
           }else{
               this.props.tipShow({type:'error',msg:data.msg})
@@ -38,9 +49,19 @@ export default class MemberBrief extends Component{
     e.target.parentNode.style.display = "none"
   }
 
+  showChat =(name,phone)=>{
+        if (!this.props.auth.phone) {
+            this.props.tipShow({type:'error',msg:'您还未登录,请先登录'})
+            return
+        }
+        if (phone == this.props.auth.phone) return
+        this.props.chatShow({chatTo:name,chatFrom:this.props.auth.nickname,sendTo:phone})
+    }
+
   render(){
-    const {phone,sex,nickname,address} = this.props.location.query
-    console.log(encodeURIComponent(window.location.href))
+    console
+    const {sex,nickname,address} = this.state.memberInfo
+    var phone = this.props.params.phone
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     var headImgUrl = `/public/Headload?member=${phone}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
@@ -96,8 +117,12 @@ export default class MemberBrief extends Component{
                     })}
                 </li>
               </ul>
+              <div className="message">
+                <button className="btn-success" onClick={()=>this.showChat(nickname,phone)}>私信</button>
+              </div>
             </div>
             <ImageBrowser />
+            <Chat />
         </div>
       )
   }

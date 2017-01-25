@@ -20,31 +20,28 @@
 			}
 		}
 		.items{
+			border-bottom:1px solid #e5e5e5;
 			&>div:first-of-type{
 				background:#efefef;
 				padding:5px;
 				margin-bottom:10px;
 				border-left:2px solid #ff7f00;
+				&>span{
+					float:right;
+					a{
+						color:#ff7f00;
+						margin-left:8px;
+					}
+					i{
+						font-size:12px;
+					}
+				}
 			}
 			padding:15px 0;
-			border-bottom:1px solid #e5e5e5;
 			&>img{
 				border-radius:75px;
 				border:5px solid #efefef;
 				float:left;
-			}
-			&>span{
-				float:right;
-				a{
-					height:31px;
-					line-height:25px;
-					padding:3px;
-					color:#ff7f00;
-					margin-left:5px;
-				}
-				i{
-					font-size:12px;
-				}
 			}
 			ul{
 				margin-left:130px;

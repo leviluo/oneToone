@@ -14,6 +14,7 @@ export default class MemberBrief extends Component{
   render(){
       return(
       <div className="organization">
+        <Helmet title="社团中心" />
         <div className="organizationTop">
             <div>一一社团</div>
             <ul>

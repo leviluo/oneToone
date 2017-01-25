@@ -1,14 +1,13 @@
 // We only need to import the modules necessary for initial render
 import MyCoreLayout from '../layouts/CoreLayout'
 import Home from './Home'
-import CounterRoute from './Counter'
-import Zen from './Zen'
 import Register from './Register'
 import memberCenter from './memberCenter'
 import Login from './Login'
 import Categories from './Categories'
 import MemberBrief from './MemberBrief'
 import organization from './Organizations'
+import OrganizationsHome from './OrganizationsHome'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -18,14 +17,13 @@ export const createRoutes = (store) => ({
   component: MyCoreLayout(store),
   indexRoute: Home(store),
   childRoutes: [
-    CounterRoute(store),
-    Zen(store),
     Register(store),
     memberCenter(store),
     Login(store),
     Categories(store),
     MemberBrief(store),
     organization(store),
+    OrganizationsHome(store)
   ]
 })
 

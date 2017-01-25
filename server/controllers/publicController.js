@@ -21,6 +21,14 @@ const publicController = {
         // console.log("whji")
         var result = await sqlStr("select id as 'key',name as 'value' from specialityCategory")
         this.body = {status:200,data:result}
+    },
+    memberInfo:async function(next){
+        if (!this.request.query.phone) {
+            this.body = {status:500,msg:"缺少参数"}
+            return
+        }
+        var result = await sqlStr("select address,sex,nickname from member where phone = ?",[this.request.query.phone])
+        this.body = {status:200,data:result}
     }
 }
 export default publicController;

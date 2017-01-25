@@ -93,6 +93,13 @@
 		}
 	}
 	.memberBriefContent{
+		.message{
+			text-align:center;
+			background:none;
+			button{
+				width:60px;
+			}
+		}
 		padding:15px;
 		color:#333;
 			&>div{
