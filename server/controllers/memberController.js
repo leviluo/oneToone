@@ -4,7 +4,7 @@ const memberController = {
     addSpeciality:async function(next){
         await next
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
 
@@ -42,7 +42,7 @@ const memberController = {
     specialities:async function(next){
         var phone = this.request.query.phone ? this.request.query.phone : this.session.user
         if (!phone) {
-            this.body = { status: 500, msg: "缺少参数" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var result = await sqlStr("select m.brief,m.experience,m.works,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ? );",[phone])
@@ -51,7 +51,8 @@ const memberController = {
     },
     getMemberInfo:async function(next){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
+            // this.body = { status: 500, msg: "缺少参数" }
             return
         }
         var result = await sqlStr("select address,sex from member where phone = ?",[this.session.user])
@@ -59,7 +60,7 @@ const memberController = {
     },
     messageText:async function(next){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         if(!this.request.body.text || !this.request.body.sendTo){
@@ -93,7 +94,7 @@ const memberController = {
     },
     updateActive:async function(next){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         await next;
@@ -104,7 +105,7 @@ const memberController = {
     },
     getMessageList:async function(next){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var result = await sqlStr("select message.time,message.text,message.imgUrl,message.active,member.nickname,member.phone,if(message.fromMember=(select id from member where phone = ?),1,0) as isSend from message left join member on (member.id = message.fromMember or member.id = message.toMember) and member.phone != ? where message.id in (select max(ms.id) from message as ms left join member as m on (m.id = ms.toMember or m.id = ms.fromMember) and m.phone != ? where ms.fromMember = (select id from member where phone = ?) or ms.toMember = (select id from member where phone = ?) group by m.phone);",[this.session.user,this.session.user,this.session.user,this.session.user,this.session.user])
@@ -120,7 +121,7 @@ const memberController = {
             return
         }
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var result = await sqlStr("update member set nickname = ? where phone = ?",[this.request.body.nickname,this.session.user])
@@ -140,7 +141,7 @@ const memberController = {
             return
         }
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var result = await sqlStr("update member set address = ? where phone = ?",[this.request.body.address,this.session.user])
@@ -154,7 +155,7 @@ const memberController = {
     modifySpeciality:async function(next){
         await next
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         if (!this.request.body.speciality || !this.request.body.brief || !this.request.body.experience ) {
@@ -188,7 +189,7 @@ const memberController = {
     },
     deleteSpeciality:async function(next){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         if (!this.request.body.speciality) {

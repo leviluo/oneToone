@@ -49,7 +49,7 @@ const organizationController = {
     },
     getOrganizationByMe:async function(){
         if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var result = await sqlStr("select o.*,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
@@ -57,7 +57,7 @@ const organizationController = {
     },
     deleteOrganization:async function(){
        if (!this.session.user) {
-            this.body = { status: 500, msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         if (!this.request.body.id) {

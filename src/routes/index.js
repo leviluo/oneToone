@@ -8,6 +8,7 @@ import Categories from './Categories'
 import MemberBrief from './MemberBrief'
 import organization from './Organizations'
 import OrganizationsHome from './OrganizationsHome'
+import PostArticle from './PostArticle'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -23,7 +24,8 @@ export const createRoutes = (store) => ({
     Categories(store),
     MemberBrief(store),
     organization(store),
-    OrganizationsHome(store)
+    OrganizationsHome(store),
+    PostArticle(store),
   ]
 })
 

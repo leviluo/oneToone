@@ -1,21 +1,25 @@
 import React, {Component} from 'react'
 import './myMessage.scss'
 import { connect } from 'react-redux'
-// import {modalShow,modalHide} from '../../../../components/Modal/modules/modal'
-// import { tipShow } from '../../../../components/Tips/modules/tips'
-// import {commitHeadImg,getMemberInfo} from './modules/basicInfo'
-// import {chatShow} from '../../../../components/Chat/modules/chat'
+import { tipShow } from '../../../../components/Tips/modules/tips'
 import {messageList} from './modules/myMessage'
 import Chat,{chatShow} from '../../../../components/Chat'
 import PageNavBar from '../../../../components/PageNavBar'
 import {pageNavInit} from '../../../../components/PageNavBar/modules/pagenavbar'
+import {asyncConnect} from 'redux-async-connect'
+
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    
+  }
+}])
 
 @connect(
   state => ({
     auth:state.auth,
-    pagenavbar:state.pagenavbar,
+    pagenavbar:state.pagenavbar
     }),
-  {chatShow,pageNavInit}
+  {chatShow,pageNavInit,tipShow}
 )
 
 export default class myMessage extends Component {
@@ -25,13 +29,24 @@ export default class myMessage extends Component {
     averagenum:5
   }
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   componentWillMount =()=>{
     messageList().then(({data})=>{
-      var pageNums = Math.ceil(data.data.length/this.state.averagenum)
-      this.props.pageNavInit(pageNums)
-      this.setState({
-        items:data.data
-      })
+      if (data.status == 200) {
+        var pageNums = Math.ceil(data.data.length/this.state.averagenum)
+        this.props.pageNavInit(pageNums)
+        this.setState({
+          items:data.data
+        })
+      }else if (data.status==600) {
+        this.props.dispatch({type:"AUTHOUT"})
+        this.context.router.push('/login')
+      }{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
     })
   }
 

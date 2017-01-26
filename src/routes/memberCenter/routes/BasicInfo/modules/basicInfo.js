@@ -62,7 +62,6 @@ export function addSpeciatity (that,speciality,brief,experience) {
     axios.post('/member/addSpeciality',fd).then(({data}) => {
       if (data.status==200) {
           that.setState({showAddSpeciality:false})
-          // dispatch({type:"ADD_SPECIALITIES",value:[{speciality:speciality,brief:brief,experience:experience}]})
           that.props.fetchSpeciality()
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
@@ -88,14 +87,22 @@ export const receiveSpeciality = (value) => ({
 export function fetchSpeciality () {
   return (dispatch, getState) => {
     axios.get('/member/specialities').then(({data}) => {
-      dispatch(receiveSpeciality(data.data))
+        if (data.status==200) {
+          dispatch(receiveSpeciality(data.data))
+        }else{
+          dispatch(tipResult({type:"error",msg:data.msg}))
+        }
       })
   }
 }
 
 export function updateSpeciality (data) {
   return (dispatch, getState) => {
+    if (data.status==200) {
       dispatch(receiveSpeciality(data))
+    }else{
+          dispatch(tipResult({type:"error",msg:data.msg}))
+      }
   }
 }
 

@@ -124,7 +124,7 @@ const fileController = {
     },
     uploadHeadImg:async function(next){
         if (!this.session.user) {
-            this.body = { status: "err", msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var user = this.session.user
@@ -137,7 +137,7 @@ const fileController = {
     },
     messageImg:async function(next){
         if (!this.session.user) {
-            this.body = { status: "err", msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var name = this.session.user + Date.parse(new Date())
@@ -153,7 +153,7 @@ const fileController = {
     },
     uploadSpecialityImg:async function(next){  //可上传多张图片
         if (!this.session.user) {
-            this.body = { status: "err", msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var name = this.session.user
@@ -174,7 +174,7 @@ const fileController = {
     },
     uploadOrganizationImg:async function(next){
         if (!this.session.user) {
-            this.body = { status: "err", msg: "未登录" }
+            this.body = { status: 600, msg: "尚未登录" }
             return
         }
         var name = this.session.user

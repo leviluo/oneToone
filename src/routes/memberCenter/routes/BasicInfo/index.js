@@ -8,7 +8,6 @@ export default (store) => ({
             injectReducer(store, { key: 'myspecialities', reducer })
             reducer = require('../../../../reducers/category').default
             injectReducer(store, { key: 'catelogues', reducer })
-            
             cb(null, basicInfo)
         })
     },

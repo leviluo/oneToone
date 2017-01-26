@@ -24,7 +24,7 @@ export default class memberCenter extends Component {
   }
 
     render(){
-      if(this.props.location)
+      // console.log(this.props)
       return(
           <div className="memberCentercontent">
             <Helmet title='个人中心' />

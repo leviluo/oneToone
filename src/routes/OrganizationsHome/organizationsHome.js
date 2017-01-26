@@ -23,7 +23,6 @@ export default class OrganizationsHome extends Component{
 	}
 
   render(){
-  	console.log(this.state.BasicInfo)
   	var headImg = `/img?name=${this.state.BasicInfo.head}&from=organizations`
   	var date = new Date(this.state.BasicInfo.time)
     var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
@@ -39,6 +38,7 @@ export default class OrganizationsHome extends Component{
         	<div className="head">
         		<img src={headImg} alt=""/>
         		<span>{this.state.BasicInfo.name}</span>
+            <button className="btn-default">加入社团</button>
         	</div>
         	<div className="content">
         		<div>创建于: <span>{time}</span>&nbsp;团长:&nbsp;<Link to={link}>{this.state.BasicInfo.nickname}</Link></div>
@@ -48,7 +48,7 @@ export default class OrganizationsHome extends Component{
         	</div>
         </div>
         <div className="article">
-			<Link className="btn-default"><i className="fa fa-edit"></i>&nbsp;发布</Link>
+			<Link className="btn-default" to="/postArticle"><i className="fa fa-edit"></i>&nbsp;发布</Link>
         </div>
       </div>
       )

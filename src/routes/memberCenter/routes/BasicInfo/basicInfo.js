@@ -7,9 +7,9 @@ import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
 import {imgbrowserShow} from '../../../../components/ImageBrowser'
-import {asyncConnect} from 'redux-async-connect'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
+import {asyncConnect} from 'redux-async-connect'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -40,6 +40,10 @@ export default class BasicInfo extends Component {
     address: '',
   }
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   componentWillMount =()=>{
     getMemberInfo().then(({data}) => {
         if (data.status==200) {
@@ -47,8 +51,11 @@ export default class BasicInfo extends Component {
               address:data.data[0].address,
               sex:data.data[0].sex
             })
-        }else{
-            this.props.tipShow({type:'error',msg:data.msg})
+        }else if (data.status==600) {
+            this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
         }
       })
   }
@@ -294,9 +301,12 @@ export default class BasicInfo extends Component {
         this.setState({
           showNickname:false
         })
-      }else{
-        this.props.tipShow({type:'error',msg:data.msg})
-      }
+      }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
     })
   }
 
@@ -315,9 +325,12 @@ export default class BasicInfo extends Component {
               showAddress:false,
               address:this.refs.address.value
             })
-      }else{
-        this.props.tipShow({type:'error',msg:data.msg})
-      }
+      }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
     })
 
   }
@@ -374,9 +387,12 @@ export default class BasicInfo extends Component {
         this.state[speciality] = false
         this.setState({})
         this.props.fetchSpeciality()
-      }else{
-        this.props.tipShow({type:'error',msg:data.msg})
-      }
+      }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
     })
   }
 
@@ -398,9 +414,12 @@ export default class BasicInfo extends Component {
           this.props.updateSpeciality(data)
           this.state[speciality] = false
           this.setState({})
-      }else{
-        this.props.tipShow({type:'error',msg:data.msg})
-      }
+      }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
     })
   }
 
@@ -422,6 +441,7 @@ export default class BasicInfo extends Component {
   }
 
   render () {
+    // console.log(this.props)
     this.items = [];
     this.props.catelogues.text.map((item,index)=>{
       this.items.push({key:item.childCatelogue,value:item.childCatelogue})

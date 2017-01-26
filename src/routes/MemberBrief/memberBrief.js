@@ -59,7 +59,6 @@ export default class MemberBrief extends Component{
     }
 
   render(){
-    console
     const {sex,nickname,address} = this.state.memberInfo
     var phone = this.props.params.phone
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`

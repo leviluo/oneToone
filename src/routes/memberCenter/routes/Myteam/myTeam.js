@@ -9,17 +9,17 @@ import Select from '../../../../components/Select'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
 import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization,deleteOrganization} from './modules/myTeam'
 // import {fetchCatelogue} from '../../../../reducers/category'
-// import {asyncConnect} from 'redux-async-connect'
+import {asyncConnect} from 'redux-async-connect'
 
-// @asyncConnect([{
-//   promise: ({store: {dispatch, getState}}) => {
-//     const promises = [];
-//     if (!getState().catelogues.isloaded) {
-//       promises.push(dispatch(fetchCatelogue()));
-//     }
-//     return Promise.all(promises);
-//   }
-// }])
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+    // const promises = [];
+    // if (!getState().catelogues.isloaded) {
+    //   promises.push(dispatch(fetchCatelogue()));
+    // }
+    // return Promise.all(promises);
+  }
+}])
 
 @connect(
   state => ({
@@ -37,6 +37,10 @@ export default class Myteam extends Component {
       OrganizationByMe:[]
     }
 
+    static contextTypes = {
+      router: React.PropTypes.object.isRequired
+    };
+
     componentWillMount =()=>{
       getCatelogy().then(({data})=>{
         this.setState({
@@ -48,9 +52,17 @@ export default class Myteam extends Component {
 
     updateDate = ()=>{
        getOrganizationByMe().then(({data})=>{
-        this.setState({
-          OrganizationByMe:data.data
-        })
+        if (data.status == 200) {
+          this.setState({
+            OrganizationByMe:data.data
+          })
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+        
       })
     }
 
@@ -285,7 +297,10 @@ export default class Myteam extends Component {
               break;
             }
           };
-      }else{
+      }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+      }{
         this.props.tipShow({type:'error',msg:data.msg})
       }
     })

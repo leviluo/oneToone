@@ -26,7 +26,7 @@ export default async() => {
     var CONFIG = {
         key: 'koa:sess',
         /** (string) cookie key (default is koa:sess) */
-        maxAge: 86400000,
+        maxAge: 18640000,
         /** (number) maxAge in ms (default is 1 days) */
         overwrite: true,
         /** (boolean) can overwrite or not (default true) */
