@@ -194,6 +194,22 @@ const fileController = {
             this.body = {status:200}
             return
         }
+    },
+
+    uploadArticleImg:async function(next){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var name = this.session.user
+        var result = await uploadImgs(this.req,name,config.articleImgDir)
+
+        if (result.status != 200) {
+            this.body = {status:500,msg:'上传失败'}
+            return
+        }
+        
+        this.request.body = result.msg
     }
 }
 

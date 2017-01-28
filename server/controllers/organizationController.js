@@ -17,13 +17,15 @@ const organizationController = {
             return
         }
 
-       var result = await sqlStr("insert into organizations set name = ?,brief=?,head=?,createById=(select id from member where phone = ?),categoryId=?",[this.request.body.name[0],this.request.body.brief[0],this.request.body.names[0],this.session.user,this.request.body.categoryId[0]])
-        if (result.affectedRows == 1 ) {
-            this.body = { status: 200}
-            return
-        }else{
-            this.body = { status: 500,msg:"插入数据失败"}
-        }
+      var result = await sqlStr("insert into organizations set name = ?,brief=?,head=?,createById=(select id from member where phone = ?),categoryId=?",[this.request.body.name[0],this.request.body.brief[0],this.request.body.names[0],this.session.user,this.request.body.categoryId[0]])
+      var resultt = await sqlStr("insert into memberOrganizations set memberId = (select id from member where phone = ?),organizationsId=(select id from organizations where name = ? and createById = (select id from member where phone = ?));",[this.session.user,this.request.body.name[0],this.session.user])
+ 
+      if (result.affectedRows == 1 && resultt.affectedRows == 1) {
+          this.body = { status: 200}
+          return
+      }else{
+          this.body = { status: 500,msg:"插入数据失败"}
+      }
     },
     modifyOrganization:async function(next) {
        await next;
@@ -67,8 +69,8 @@ const organizationController = {
         var result = await sqlStr("delete from organizations where id = ?",[this.request.body.id])
         
         if (result.affectedRows == 1) {
-        this.body = {status:200}
-        return
+            this.body = {status:200}
+            return
         }
 
         this.body = {status:500,msg:"删除失败"}
@@ -80,6 +82,45 @@ const organizationController = {
         }
         var result = await sqlStr("select o.*,s.name as categoryName,m.nickname,m.phone from organizations as o left join member as m on m.id = o.createById left join specialitycategory as s on s.id = o.categoryId where o.id = ?",[this.request.query.id])
         this.body = {status:200,data:result}
+    },
+    getMembers: async function(){
+        if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("select m.phone,m.nickname from memberOrganizations as mo left join member as m on mo.memberId = m.id where mo.organizationsId = ?",[this.request.query.id])
+        this.body = {status:200,data:result}
+    },
+    addArticle: async function(next){
+      await next;
+      // console.log(this.request.body)
+      // var result = await sqlStr("insert into")
+    },
+    attendOrganization: async function(next){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var result = await sqlStr("insert into memberOrganizations set memberId = (select id from member where phone = ?),organizationsId=?;",[this.session.user,this.request.query.id])
+      if (result.affectedRows == 1) {
+            this.body = {status:200}
+            return
+      }
+
+      this.body = {status:500,msg:"加入失败"}
+    },
+    quitOrganization: async function(next){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var result = await sqlStr("delete from memberOrganizations where memberId = (select id from member where phone = ?) and organizationsId=?;",[this.session.user,this.request.query.id])
+      if (result.affectedRows == 1) {
+            this.body = {status:200}
+            return
+      }
+
+      this.body = {status:500,msg:"操作失败"}
     }
 }
 export default organizationController;

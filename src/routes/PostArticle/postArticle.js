@@ -6,6 +6,7 @@ import Input from '../../components/Input'
 import Radio from '../../components/Radio'
 import { tipShow } from '../../components/Tips/modules/tips'
 import { findDOMNode } from 'react-dom'
+import {submitArticle} from './modules'
 
 const colorItems = [
                     "#000000",
@@ -313,16 +314,40 @@ export default class PostArticle extends Component{
       }
 
       submitArticle =()=>{
-          console.log(this.state.imgs)
-          console.log(this.refs.header.getValue())
-          console.log(this.refs.type.getValue())
-          console.log(document.getElementById('Content').innerHTML)
+          var imgs = this.state.imgs
+          var header = this.refs.header.getValue()
+          var type = this.refs.type.getValue()
+          var content = document.getElementById('Content').innerHTML
+          if (!header || header.length > 48) {
+            this.props.tipShow({type:"error",msg:"标题不能为空或者大于50个字符"})
+            return
+          }
+          if (!header || content.length < 10) {
+            this.props.tipShow({type:"error",msg:"内容不能为空或者小于10个字符"})
+            return
+          }
+
+          var fd = new FormData(); 
+          for (var i = 0; i < this.state.imgs.length; i++) {
+          fd.append("file", this.state.imgs[i]); 
+          }
+          fd.append("header",header)
+          fd.append("type",type)
+          fd.append("content",content)
+
+          submitArticle(fd).then(({data})=>{
+            
+          })
       }
 
         render() {
             return (
                     <div className="postArticle">
+                    <div className="postArticleTop">
+                        <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
+                    </div>
                       <Helmet title="发布" />
+                        <div className="editor">
                         <h3>发布</h3>
                         <div>
                             <Input placeholder="不超过50个字符" type="text" ref="header" header="标题" />
@@ -408,6 +433,7 @@ export default class PostArticle extends Component{
                               <button onClick={this.submitArticle} className="btn-success">提交</button>
                             </div>
                         </div>
+                      </div>
                 )
             ;
           }

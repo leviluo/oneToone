@@ -216,7 +216,6 @@ export default class BasicInfo extends Component {
     e.target.style.filter = "alpha(opacity=0.8)"
     e.target.style.opacity = "80"
     var me = this
-    console.log(me.state.modifyImgs)
     e.target.onclick=function(e){
       e.srcElement.parentNode.parentNode.removeChild(e.srcElement.parentNode)
       for (var i = 0; i < me.state.modifyImgs.length; i++) {
@@ -411,7 +410,6 @@ export default class BasicInfo extends Component {
               break;
             }
           };
-          console.log("1111")
           this.props.updateSpeciality(data)
           this.state[speciality] = false
           this.setState({})
@@ -442,7 +440,6 @@ export default class BasicInfo extends Component {
   }
 
   render () {
-    // console.log(this.props)
     this.items = [];
     this.props.catelogues.text.map((item,index)=>{
       this.items.push({key:item.childCatelogue,value:item.childCatelogue})

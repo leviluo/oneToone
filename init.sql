@@ -49,19 +49,27 @@ CREATE TABLE `organizations` (
   PRIMARY KEY  (`id`)
 );
 -- 用户社团
--- CREATE TABLE `memberOrganizations` (  
---   `id` mediumint(8) unsigned auto_increment,
---   `memberId` mediumint(8) unsigned,
---   `organizationsId` mediumint(8) unsigned,
---   PRIMARY KEY  (`id`)
--- );
+CREATE TABLE `memberOrganizations` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `memberId` mediumint(8) unsigned,
+  `organizationsId` mediumint(8) unsigned,
+  PRIMARY KEY  (`id`)
+);
+-- 加入社团申请表
+CREATE TABLE `organizationsRequest` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `memberId` mediumint(8) unsigned,
+  `organizationsId` mediumint(8) unsigned,
+  PRIMARY KEY  (`id`)
+);
 --社团通知活动等
 CREATE TABLE `article` (  
   `id` mediumint(8) unsigned auto_increment,
   `organizationsId` mediumint(8) unsigned auto_increment,
-  `title` varchar(40) DEFAULT '' COMMENT '//标题',
+  `title` varchar(50) DEFAULT '' COMMENT '//标题',
   `content` text COMMENT '//',
   `type` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:普通,1:活动,2:公告,3:咨询',
+  `attachedImgs` varchar(300) default '',
   `createdAt` datetime DEFAULT now() COMMENT '//',
   `updatedAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)

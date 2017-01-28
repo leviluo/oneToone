@@ -3,8 +3,18 @@
 	min-width:1200px;
 	background:#fff;
 	margin-bottom:10px;
+	.organizationHomeTop{
+		height:40px;
+		background:#f0f8ff;
+		&>button{
+			margin:5px;
+			height:30px;
+			line-height:30px;
+		}
+	}
 	.BasicInfo{
 		padding:20px 10px;
+		float:left;
 		.head{
 			height:110px;
 			line-height:110px;
@@ -21,7 +31,8 @@
 				color:#333;
 			}
 			button{
-				margin-left:20px
+				float:right;
+				margin-top:35px;
 			}
 		}
 		.content{
@@ -43,15 +54,36 @@
 				}
 			}
 		}
-		.members{
-			width:260px;
-			float:right;
-			text-align:left;
-			span{
-				font-size:16px;
-			}
-			hr{
-				border:1px solid #e5e5e5;
+	}
+	.members{
+		width:260px;
+		float:right;
+		margin:10px;
+		span{
+			font-size:16px;
+		}
+		hr{
+			border:1px solid #e5e5e5;
+		}
+		&>div{
+			border:1px solid #efefef;
+			margin-top:10px;
+			height:500px;
+			a{
+				height:36px;
+				line-height:36px;
+				display:block;
+				color:#333;
+				img{
+					margin:3px;
+					float:left;
+					border-radius:15px;
+					border:2px solid #e5e5e5;
+				}
+				cursor:pointer;
+				&:hover{
+					background:#efefef;
+				}
 			}
 		}
 	}

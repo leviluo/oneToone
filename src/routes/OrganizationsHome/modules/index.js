@@ -4,6 +4,18 @@ export function getBasicInfo(id) {
       return axios.get('/organizations/basicInfo?id='+id)
 }
 
+export function getMembers(id) {
+      return axios.get('/organizations/getMembers?id='+id)
+}
+
+export function attendOrganization(id) {
+      return axios.get('/organizations/attendOrganization?id='+id)
+}
+
+export function quitOrganization(id) {
+      return axios.get('/organizations/quitOrganization?id='+id)
+}
+
 // export function modifyNickname(item) {
 //       return axios.post('/member/modifyNickname',item)
 // }
