@@ -4,6 +4,8 @@ import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import Input from '../../components/Input'
 import Radio from '../../components/Radio'
+import { tipShow } from '../../components/Tips/modules/tips'
+import { findDOMNode } from 'react-dom'
 
 const colorItems = [
                     "#000000",
@@ -80,7 +82,7 @@ for (var i = 2; i <= 10; i++) {
 
 @connect(
   state=>({auth:state.auth}),
-{})
+{tipShow})
 export default class PostArticle extends Component{
  state = {
             isColor:false,
@@ -89,7 +91,8 @@ export default class PostArticle extends Component{
             lastChooseDiv:{},
             focusOffset:0,
             flag:true,
-            imgs:[]
+            imgs:[],
+            type:0
         }
 
         componentDidMount=()=>{
@@ -205,7 +208,6 @@ export default class PostArticle extends Component{
         chooseStyle = (e) =>{
                 e.nativeEvent.stopImmediatePropagation();//react阻止冒泡
                 let selection = this.getSelection();
-            console.log(selection)
                 if (this.state.lastChooseDiv===selection.focusNode && ((this.state.focusOffset+1)==selection.focusOffset || this.state.focusOffset==0)){return}
                 this.setState({
                     lastChooseDiv:selection.focusNode,
@@ -260,14 +262,71 @@ export default class PostArticle extends Component{
             element.style.display = 'none'
         }
 
+        hideDeleteImg=(e)=>{
+          e.target.style.filter = "alpha(opacity=0)"
+          e.target.style.opacity = "0"
+        }
+
+        showDeleteImg=(e,index)=>{
+          e.target.style.filter = "alpha(opacity=0.8)"
+          e.target.style.opacity = "80"
+          var me = this
+          e.target.onclick=function(e){
+            e.srcElement.parentNode.parentNode.removeChild(e.srcElement.parentNode)
+            me.state.imgs.splice(index || e.target.getAttribute('name'),1)
+            me.setState({})
+          }
+        }
+
+        addImages = (e)=>{
+          if (this.state.imgs.length > 7) {
+            this.props.tipShow({type:'error',msg:'只能添加8张图片'})
+            return;
+          };
+          var value = e.target.value
+          var filextension=value.substring(value.lastIndexOf("."),value.length);
+          filextension = filextension.toLowerCase();
+          if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+          {
+          this.props.tipShow({type:'error',msg:'文件类型不正确'})
+          return;
+          }
+
+          var fileUrl = window.URL.createObjectURL(e.target.files[0])
+
+          var div = document.createElement('div')
+          div.className = "imgList"
+          div.style.backgroundImage = `url(${fileUrl})`
+
+          var divDelete = document.createElement('div')
+          divDelete.onmouseout = this.hideDeleteImg
+          divDelete.onmouseover = this.showDeleteImg
+          divDelete.className = "fa fa-trash"
+          divDelete.setAttribute('name',this.state.imgs.length)
+
+          div.appendChild(divDelete)
+
+          e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
+          this.state.imgs.push(e.target.files[0])
+          this.setState({})
+
+      }
+
+      submitArticle =()=>{
+          console.log(this.state.imgs)
+          console.log(this.refs.header.getValue())
+          console.log(this.refs.type.getValue())
+          console.log(document.getElementById('Content').innerHTML)
+      }
+
         render() {
             return (
                     <div className="postArticle">
                       <Helmet title="发布" />
                         <h3>发布</h3>
                         <div>
-                            <Input placeholder="不超过50个字符" type="text" header="标题" />
-                            <Radio header="类型" defaultVale="0" items={[{key:0,value:"活动"},{key:1,value:"咨询"}]} />
+                            <Input placeholder="不超过50个字符" type="text" ref="header" header="标题" />
+                            <Radio header="类型" defaultValue={this.state.type} ref="type" items={[{key:0,value:"活动"},{key:1,value:"咨询"}]} />
                         </div>
                         <div className="toolBar" >
                             <div>
@@ -342,16 +401,11 @@ export default class PostArticle extends Component{
                         
                         </div>
                             <div className="works">附加图片(最多8张)</div>
-                            {this.state.imgs.map((item,index)=>{
-                              var img = window.URL.createObjectURL(item)
-                              return <div className="imgList" key={index} style={{backgroundImage:`url(${img})`}}>
-                                <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
-                                })}
                             <div className="addDiv">
-                              +<input onChange={this.addWorks} type="file" />
+                              +<input onChange={this.addImages} type="file" />
                             </div>
                             <div className="addSubmit">
-                              <button onClick={this.addSpeciatity} className="btn-success">提交</button>
+                              <button onClick={this.submitArticle} className="btn-success">提交</button>
                             </div>
                         </div>
                 )

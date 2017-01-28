@@ -98,11 +98,7 @@ export function fetchSpeciality () {
 
 export function updateSpeciality (data) {
   return (dispatch, getState) => {
-    if (data.status==200) {
       dispatch(receiveSpeciality(data))
-    }else{
-          dispatch(tipResult({type:"error",msg:data.msg}))
-      }
   }
 }
 

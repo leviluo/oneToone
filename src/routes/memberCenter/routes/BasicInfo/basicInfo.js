@@ -411,6 +411,7 @@ export default class BasicInfo extends Component {
               break;
             }
           };
+          console.log("1111")
           this.props.updateSpeciality(data)
           this.state[speciality] = false
           this.setState({})

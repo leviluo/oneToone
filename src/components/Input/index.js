@@ -3,11 +3,15 @@ import './Input.scss'
 
 export default class Input extends Component{
 
+        getValue =()=>{
+            return this.refs.input.value
+        }
+
         render() {
                 const{defaultValue,header,handleChange,indeed,placeholder,type} = this.props;
                 return ( < div className = "input-group">
                     < label > { header }{indeed && <span>*</span>}:< /label>
-                    < input placeholder={placeholder} type={type} onChange = { handleChange } defaultValue = {defaultValue} />
+                    < input placeholder={placeholder} ref="input" type={type} onChange = { handleChange } defaultValue = {defaultValue} />
                     < /div >
                 )
             }

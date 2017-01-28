@@ -176,6 +176,10 @@
 								width:100px;
 								height:100px;
 							}
+							&:hover{
+								border:1px solid #ff7f00;
+								color:#ff7f00
+							}
 						}
 					}
 					li:first-of-type{
@@ -253,6 +257,10 @@
 							input[type="file"]{
 								width:100px;
 								height:100px;
+							}
+							&:hover{
+								border:1px solid #ff7f00;
+								color:#ff7f00
 							}
 					}
 					.addSubmit{
