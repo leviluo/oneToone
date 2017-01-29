@@ -54,17 +54,38 @@
 				}
 			}
 		}
+		.btn-orange{
+				border:none;
+		}
 		.article{
 			margin-top:10px;
 			height:40px;
-			.btn-default{
-				height:35px;
-				line-height:35px;
+			.btn-orange{
 				float:right;
 			}
 			span{
 				height:40px;
 				verticle-align:bottom;
+			}
+		}
+		.articleList{
+			width:100%;
+			color:#444;
+			tr{
+				height:30px;
+				td{
+					border-bottom:2px dotted #e5e5e5;
+					text-align:center;
+				}
+				td:first-of-type{
+					text-align:left;
+				}
+				td:last-of-type{
+					text-align:right;
+				}
+			}
+			thead tr{
+				color:#ff7f00;
 			}
 		}
 	}

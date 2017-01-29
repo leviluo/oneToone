@@ -3,7 +3,7 @@ import './organizationsHome.scss'
 // import {getSpecialities} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
-import {getBasicInfo,attendOrganization,getMembers,quitOrganization} from './modules'
+import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getActivities} from './modules'
 import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
 
@@ -14,7 +14,8 @@ export default class OrganizationsHome extends Component{
 
 	state = {
 		BasicInfo:[],
-    Members:[]
+    Members:[],
+    Activities:[]
 	}
 
   static contextTypes = {
@@ -25,6 +26,11 @@ export default class OrganizationsHome extends Component{
     getBasicInfo(this.props.params.id).then(({data})=>{
       this.setState({
         BasicInfo:data.data[0]
+      })
+    })
+    getActivities(this.props.params.id).then(({data})=>{
+      this.setState({
+        Activities:data.data
       })
     })
 		getMembers(this.props.params.id).then(({data})=>{
@@ -99,12 +105,11 @@ export default class OrganizationsHome extends Component{
         <Helmet title="社团" />
         <div className="BasicInfo">
 
-
           <div className="head">
             <img src={headImg} alt=""/>
             <span>{this.state.BasicInfo.name}</span>
-            {!this.state.isAttended && <button className="btn-success" onClick={this.attendOrganization} >加入社团</button>}
-            {this.state.isAttended && <button className="btn-success" onClick={this.quitOrganization} >退出社团</button>}
+            {!this.state.isAttended && <button className="btn-orange" onClick={this.attendOrganization} >加入社团</button>}
+            {this.state.isAttended && <button className="btn-orange" onClick={this.quitOrganization} >退出社团</button>}
           </div>
 
           <div className="content">
@@ -116,10 +121,30 @@ export default class OrganizationsHome extends Component{
 
           <div className="article">
              <span><a href="">活动</a>&nbsp;/&nbsp;<a href="">咨询</a></span>
-             <button className="btn-default" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
+             <button className="btn-orange" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
           </div>
-
-
+          
+          <table className="articleList">
+            <thead>
+              <tr>
+                <td>标题</td>
+                <td>最后更新时间</td>
+                <td>发布者</td>
+              </tr>
+            </thead>
+            <tbody>
+            {this.state.Activities.map((item,index)=>{
+              var date = new Date(item.updatedAt)
+              var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+              var linkMember = `/memberBrief/${item.phone}`
+                return <tr key={index}>
+                  <td>{item.title}</td>
+                  <td>{time}</td>  
+                  <td><Link to={linkMember}>{item.publisher}</Link></td>
+                </tr>
+            })}
+            </tbody>
+          </table>
 
         </div>
 

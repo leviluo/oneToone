@@ -134,6 +134,18 @@ const organizationController = {
     OrganizationsSortByHot:async function(next){
       var result = await sqlStr("select head,name,id,(select count(*) from memberOrganizations where organizations.id = memberOrganizations.organizationsId) as countt from organizations order by countt limit 20")
       this.body = {status:200,data:result}
+    },
+    getAllActivities:async function(next){
+      var result = await sqlStr("select a.id,a.organizationId,o.name,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationId where a.type = 0")
+      this.body = {status:200,data:result}
+    },
+    getActivities:async function(next){
+      if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+      var result = await sqlStr("select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = 0 and a.organizationId = ?",[this.request.query.id])
+      this.body = {status:200,data:result}
     }
 }
 export default organizationController;

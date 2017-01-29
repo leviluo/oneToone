@@ -1,11 +1,20 @@
 import axios from 'axios'
 
+// 基本信息
 export function getBasicInfo(id) {
       return axios.get('/organizations/basicInfo?id='+id)
 }
-
+// 所有会员
 export function getMembers(id) {
       return axios.get('/organizations/getMembers?id='+id)
+}
+// 获取活动
+export function getActivities(id) {
+      return axios.get('/organizations/getActivities?id='+id)
+}
+// 获取咨询
+export function getConsults() {
+      return axios.get('/organizations/getConsults')
 }
 
 export function attendOrganization(id) {
