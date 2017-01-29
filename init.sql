@@ -78,7 +78,7 @@ CREATE TABLE `article` (
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,
   `fromMember` mediumint(8) unsigned,
-  `toMember` mediumint(8) unsigned,'',
+  `toMember` mediumint(8) unsigned,
   `active` char(1) default 0,
   `text` varchar(300) default '',
   `imgUrl` varchar(80) default '',
@@ -87,7 +87,6 @@ CREATE TABLE `message` (
 );
 
 insert into organizations(`categoryId`,`name`,`brief`,`createById`) values(1,"爱乐动","运动爱好者",20),(1,"爱乐动2","运动爱好者2",20),(2,"爱健康","运动爱好者2",20)
-
 
 insert into specialityCategory set name="运动";
 insert into specialityCategory set name="健康";

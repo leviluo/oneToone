@@ -65,6 +65,8 @@ export default function routers(router){
 	router.get("/organizations/attendOrganization",organizationController.attendOrganization,router.allowedMethods());
 // 退出社团
 	router.get("/organizations/quitOrganization",organizationController.quitOrganization,router.allowedMethods());
+// 获取最热社团
+	router.get("/organizations/OrganizationsSortByHot",organizationController.OrganizationsSortByHot,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

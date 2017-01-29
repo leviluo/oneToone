@@ -54,6 +54,19 @@
 				}
 			}
 		}
+		.article{
+			margin-top:10px;
+			height:40px;
+			.btn-default{
+				height:35px;
+				line-height:35px;
+				float:right;
+			}
+			span{
+				height:40px;
+				verticle-align:bottom;
+			}
+		}
 	}
 	.members{
 		width:260px;
@@ -66,16 +79,16 @@
 			border:1px solid #e5e5e5;
 		}
 		&>div{
-			border:1px solid #efefef;
 			margin-top:10px;
 			height:500px;
 			a{
-				height:36px;
-				line-height:36px;
+				height:40px;
+				line-height:40px;
 				display:block;
 				color:#333;
+				border-top:1px solid #efefef;
 				img{
-					margin:3px;
+					margin:5px;
 					float:left;
 					border-radius:15px;
 					border:2px solid #e5e5e5;
@@ -85,14 +98,6 @@
 					background:#efefef;
 				}
 			}
-		}
-	}
-	.article{
-		.btn-default{
-			float:left;
-			margin-left:10px;
-			height:35px;
-			line-height:35px;
 		}
 	}
 	

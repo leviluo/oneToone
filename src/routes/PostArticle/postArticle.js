@@ -334,9 +334,16 @@ export default class PostArticle extends Component{
           fd.append("header",header)
           fd.append("type",type)
           fd.append("content",content)
+          fd.append("organizationId",this.props.params.id)
 
           submitArticle(fd).then(({data})=>{
-            
+            if (data.status == 200) {
+                this.props.tipShow({type:"success",msg:"发布成功"})
+                return
+            }else{
+                this.props.tipShow({type:"error",msg:data.msg})
+                return
+            }
           })
       }
 

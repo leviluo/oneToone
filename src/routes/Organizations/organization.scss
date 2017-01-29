@@ -62,11 +62,34 @@
 		}
 		.right{
 			float:right;
-			width:400px;
+			width:290px;
+			margin-right:10px;
+			&>div{
+				margin-top:10px;
+				height:500px;
+				padding-left:0;
+				a{
+					height:40px;
+					line-height:40px;
+					display:block;
+					color:#333;
+					border-top:1px solid #efefef;
+					img{
+						margin:5px;
+						float:left;
+						border-radius:15px;
+						border:2px solid #e5e5e5;
+					}
+					cursor:pointer;
+					&:hover{
+						background:#efefef;
+					}
+				}
+			}
 		}
 		.left{
 			float:left;
-			width:800px;
+			width:900px;
 		}
 	}
 }

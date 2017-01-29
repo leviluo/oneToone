@@ -83,7 +83,7 @@ export default class OrganizationsHome extends Component{
       this.props.tipShow({type:"error",msg:"请先加入这个社团才能发帖"})
       return
     }
-    this.context.router.push('/postArticle')
+    this.context.router.push(`/postArticle/${this.props.params.id}`)
   }
 
   render(){
@@ -95,7 +95,6 @@ export default class OrganizationsHome extends Component{
       <div className="organizationHome">
         <div className="organizationHomeTop">
         <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
-
         </div>
         <Helmet title="社团" />
         <div className="BasicInfo">
@@ -115,6 +114,13 @@ export default class OrganizationsHome extends Component{
             </pre>
           </div>
 
+          <div className="article">
+             <span><a href="">活动</a>&nbsp;/&nbsp;<a href="">咨询</a></span>
+             <button className="btn-default" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
+          </div>
+
+
+
         </div>
 
       	<div className="members">
@@ -130,9 +136,7 @@ export default class OrganizationsHome extends Component{
               })}
           </div>
       	</div>
-        <div className="article">
-			       <button className="btn-default" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
-        </div>
+        
       </div>
       )
   }

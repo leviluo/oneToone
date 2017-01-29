@@ -93,8 +93,17 @@ const organizationController = {
     },
     addArticle: async function(next){
       await next;
-      // console.log(this.request.body)
-      // var result = await sqlStr("insert into")
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var data = this.request.body
+      var result = await sqlStr("insert into article set title = ?,type = ?,content =?,organizationId =?,attachedImgs=?,memberId = (select id from member where phone = ?)",[data.header[0],data.type[0],data.content[0],data.organizationId[0],data.names.join(','),this.session.user])
+      if (result.affectedRows == 1) {
+            this.body = {status:200}
+            return
+      }
+      this.body = {status:500,msg:"发布失败"}
     },
     attendOrganization: async function(next){
       if (!this.session.user) {
@@ -121,6 +130,11 @@ const organizationController = {
       }
 
       this.body = {status:500,msg:"操作失败"}
+    },
+    OrganizationsSortByHot:async function(next){
+      var result = await sqlStr("select head,name,id,(select count(*) from memberOrganizations where organizations.id = memberOrganizations.organizationsId) as countt from organizations order by countt limit 20")
+      this.body = {status:200,data:result}
     }
 }
 export default organizationController;
+
