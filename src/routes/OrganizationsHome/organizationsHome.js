@@ -6,16 +6,22 @@ import {connect} from 'react-redux'
 import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getActivities} from './modules'
 import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
+import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
+import PageNavBar from '../../components/PageNavBar'
 
 @connect(
-  state=>({auth:state.auth}),
-{tipShow})
+  state=>({
+    auth:state.auth,
+    pagenavbar:state.pagenavbar
+  }),
+{tipShow,pageNavInit})
 export default class OrganizationsHome extends Component{
 
 	state = {
 		BasicInfo:[],
     Members:[],
-    Activities:[]
+    Activities:[],
+    averagenum:1
 	}
 
   static contextTypes = {
@@ -32,6 +38,8 @@ export default class OrganizationsHome extends Component{
       this.setState({
         Activities:data.data
       })
+      var pageNums = Math.ceil(data.data.length/this.state.averagenum)
+      this.props.pageNavInit(pageNums)
     })
 		getMembers(this.props.params.id).then(({data})=>{
       for (var i = 0; i < data.data.length; i++) {
@@ -99,12 +107,12 @@ export default class OrganizationsHome extends Component{
     var link = `/memberBrief/${this.state.BasicInfo.phone}`
       return(
       <div className="organizationHome">
-        <div className="organizationHomeTop">
-        <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
-        </div>
         <Helmet title="社团" />
         <div className="BasicInfo">
-
+        <div className="BasicInfoTop">
+        <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
+        </div>
+        <div className="BasicInfoContent">
           <div className="head">
             <img src={headImg} alt=""/>
             <span>{this.state.BasicInfo.name}</span>
@@ -119,7 +127,7 @@ export default class OrganizationsHome extends Component{
             </pre>
           </div>
 
-          <div className="article">
+          <div className="articleTop">
              <span><a href="">活动</a>&nbsp;/&nbsp;<a href="">咨询</a></span>
              <button className="btn-orange" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
           </div>
@@ -133,23 +141,25 @@ export default class OrganizationsHome extends Component{
               </tr>
             </thead>
             <tbody>
-            {this.state.Activities.map((item,index)=>{
+            {this.state.Activities.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
               var date = new Date(item.updatedAt)
               var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               var linkMember = `/memberBrief/${item.phone}`
+              var linkArticle = `/article/${item.id}`
                 return <tr key={index}>
-                  <td>{item.title}</td>
+                  <td><Link to={linkArticle}>{item.title}</Link></td>
                   <td>{time}</td>  
                   <td><Link to={linkMember}>{item.publisher}</Link></td>
                 </tr>
             })}
             </tbody>
           </table>
-
+          <PageNavBar />
+         </div>
         </div>
 
       	<div className="members">
-  				<span>加入会员</span>
+  				<div>加入会员</div>
           <div>
               {this.state.Members.map((item,index)=>{
                 var headImg = `/public/Headload?member=${item.phone}`
@@ -161,7 +171,6 @@ export default class OrganizationsHome extends Component{
               })}
           </div>
       	</div>
-        
       </div>
       )
   }

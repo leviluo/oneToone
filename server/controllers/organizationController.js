@@ -146,6 +146,14 @@ const organizationController = {
         }
       var result = await sqlStr("select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = 0 and a.organizationId = ?",[this.request.query.id])
       this.body = {status:200,data:result}
+    },
+    article:async function(){
+      if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+      var result = await sqlStr("select a.*,m.nickname,m.phone from article as a left join member as m on m.id = a.memberId where a.id = ?",[this.request.query.id])
+      this.body = {status:200,data:result[0]}
     }
 }
 export default organizationController;

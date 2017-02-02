@@ -1,24 +1,34 @@
 .organizationHome{
-	min-height:900px;
 	min-width:1200px;
-	background:#fff;
 	margin-bottom:10px;
-	.organizationHomeTop{
-		height:40px;
-		background:#f0f8ff;
-		&>button{
-			margin:5px;
-			height:30px;
-			line-height:30px;
-		}
-	}
 	.BasicInfo{
-		padding:20px 10px;
+		.BasicInfoTop{
+			height:40px;
+			background:#f0f8ff;
+			width:900px;
+			margin-bottom:10px;
+			&>button{
+				margin:5px;
+				height:30px;
+				line-height:30px;
+			}
+		}
 		float:left;
+		background:#fff;
+		min-height:900px;
+		margin-bottom:10px;
+		.BasicInfoContent{
+		 padding:10px 20px;
+		 width:900px;
+		 a{
+		 	color:#333;
+		 	&:hover{
+		 		color:#ff7f00;
+		 	}
+		 }
 		.head{
 			height:110px;
 			line-height:110px;
-			width:900px;
 			img{
 				border-radius:75px;
 				border:5px solid #efefef;
@@ -36,13 +46,11 @@
 			}
 		}
 		.content{
-			clear:both;
 			background:#fff4e8;
 			padding:10px;
 			margin-top:10px;
 			line-height:30px;
 			font-size:12px;
-			width:900px;
 			div:first-of-type{
 				span{
 					color:#ff7f00;
@@ -54,18 +62,20 @@
 				}
 			}
 		}
+				}
 		.btn-orange{
 				border:none;
 		}
-		.article{
+		.articleTop{
 			margin-top:10px;
 			height:40px;
 			.btn-orange{
 				float:right;
+				padding-right:0;
 			}
 			span{
-				height:40px;
-				verticle-align:bottom;
+			position:relative;
+			top:10px;
 			}
 		}
 		.articleList{
@@ -74,7 +84,7 @@
 			tr{
 				height:30px;
 				td{
-					border-bottom:2px dotted #e5e5e5;
+					border-bottom:1px dashed #e5e5e5;
 					text-align:center;
 				}
 				td:first-of-type{
@@ -90,14 +100,17 @@
 		}
 	}
 	.members{
-		width:260px;
+		width:290px;
 		float:right;
-		margin:10px;
-		span{
-			font-size:16px;
-		}
-		hr{
-			border:1px solid #e5e5e5;
+		margin-left:10px;
+		background:#fff;
+		div:first-of-type{
+			height:40px;
+			line-height:40px;
+			background:#f0f8ff;
+			margin:0 0 10px 0;
+			text-align:center;
+			font-size:110%;
 		}
 		&>div{
 			margin-top:10px;
@@ -116,7 +129,8 @@
 				}
 				cursor:pointer;
 				&:hover{
-					background:#efefef;
+					color:#ff7f00;
+					background:#e5e5e5;
 				}
 			}
 		}
