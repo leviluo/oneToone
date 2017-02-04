@@ -74,6 +74,14 @@ CREATE TABLE `article` (
   `updatedAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
+--评论列表
+CREATE TABLE `comments` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `articleId` mediumint(8) unsigned,
+  `memberId` mediumint(8) unsigned,
+  `comment` varchar(1000) default '',
+  PRIMARY KEY  (`id`)
+);
 -- 私信
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,

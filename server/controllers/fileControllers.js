@@ -89,15 +89,34 @@ function uploadImgs(ob,name,url){
 
 const fileController = {
     loadImg:async function(next){
-        if (this.request.query.from == 'chat') {
-            var url = config.messageImgDir + this.request.query.name + '.jpg';
-            var result = await getImage(url,config.messageImgDir + 'default.jpg');
-        }else if(this.request.query.from == "speciality"){
-            var url = config.specialityImgDir + this.request.query.name + '.jpg';
+        // if (this.request.query.from == 'chat') {
+        //     var url = config.messageImgDir + this.request.query.name + '.jpg';
+        //     var result = await getImage(url,config.messageImgDir + 'default.jpg');
+        // }else if(this.request.query.from == "speciality"){
+        //     var url = config.specialityImgDir + this.request.query.name + '.jpg';
+        //     var result = await getImage(url,config.specialityImgDir + 'default.jpg');
+        // }else if (this.request.query.from == "organizations") {
+        //     var url = config.organizationImgDir + this.request.query.name + '.jpg';
+        //     var result = await getImage(url,config.organizationImgDir + 'default.jpg');
+        // }
+
+        switch(this.request.query.from){
+        case 'chat':
+        var url = config.messageImgDir + this.request.query.name + '.jpg';
+        var result = await getImage(url,config.messageImgDir + 'default.jpg');
+        break
+        case 'speciality':
+        var url = config.specialityImgDir + this.request.query.name + '.jpg';
             var result = await getImage(url,config.specialityImgDir + 'default.jpg');
-        }else if (this.request.query.from == "organizations") {
-            var url = config.organizationImgDir + this.request.query.name + '.jpg';
-            var result = await getImage(url,config.organizationImgDir + 'default.jpg');
+        break
+        case 'organizations':
+        var url = config.organizationImgDir + this.request.query.name + '.jpg';
+        var result = await getImage(url,config.organizationImgDir + 'default.jpg');
+        break
+        case 'article':
+        var url = config.articleImgDir + this.request.query.name + '.jpg';
+        var result = await getImage(url,config.articleImgDir + 'default.jpg');
+        break
         }
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");

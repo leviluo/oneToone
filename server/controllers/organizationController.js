@@ -154,6 +154,31 @@ const organizationController = {
         }
       var result = await sqlStr("select a.*,m.nickname,m.phone from article as a left join member as m on m.id = a.memberId where a.id = ?",[this.request.query.id])
       this.body = {status:200,data:result[0]}
+    },
+    reply:async function(){
+      if (!this.request.body.comment || !this.request.body.articleId) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        if (!this.session.user) {
+          this.body = { status: 600, msg: "尚未登录" }
+          return
+        }
+      var result = await sqlStr("insert into comments set memberId = (select id from member where phone = ?),articleId=?,comment=?;",[this.session.user,this.request.body.articleId,this.request.body.comment])
+      if (result.affectedRows == 1) {
+            this.body = {status:200}
+            return
+      }
+
+      this.body = {status:500,msg:"插入失败"}
+    },
+    ArticleReply:async function(){
+      if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+      var result = await sqlStr("select c.comment,m.nickname,m.phone from comments as c left join member as m on m.id = c.memberId where c.articleId=?",[this.request.query.id])
+      this.body = {status:200,data:result}
     }
 }
 export default organizationController;

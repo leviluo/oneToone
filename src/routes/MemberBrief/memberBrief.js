@@ -47,6 +47,7 @@ export default class MemberBrief extends Component{
 
   closeQrcode =(e)=>{
     e.target.parentNode.style.display = "none"
+    e.stopPropagation()
   }
 
   showChat =(name,phone)=>{

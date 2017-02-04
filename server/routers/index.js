@@ -73,6 +73,10 @@ export default function routers(router){
 	// router.get("/organizations/getConsults",organizationController.getConsults,router.allowedMethods());
 // 获取文章详情
 	router.get("/organizations/article",organizationController.article,router.allowedMethods());
+// 获取文章回复
+	router.get("/organizations/ArticleReply",organizationController.ArticleReply,router.allowedMethods());
+// 评价文章
+	router.post("/organizations/reply",organizationController.reply,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

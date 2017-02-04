@@ -14,6 +14,7 @@
         background: #f0f0f0;
         font-size: 14px;
         font-family: "Hiragino Sans GB","Microsoft Yahei",SimSun,Arial,"Helvetica Neue",Helvetica;
+        color:#333;
         a {
             text-decoration: none;
             &:hover {
@@ -44,7 +45,6 @@
         }
         .btn-default{
            padding: 0 5px;
-            height: 40px;
             line-height: 40px;
             background: #efefef;
             border-radius: 5px;

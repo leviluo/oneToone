@@ -4,3 +4,11 @@ import axios from 'axios'
 export function getArticle(id) {
       return axios.get('/organizations/article?id='+id)
 }
+
+export function submitReply(text) {
+      return axios.post('/organizations/reply',text)
+}
+
+export function getArticleReply(id) {
+      return axios.get('/organizations/ArticleReply?id='+id)
+}
