@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import './myTeam.scss'
+import './myCreateTeam.scss'
 import { connect } from 'react-redux'
 import {Link} from 'react-router'
 
@@ -7,7 +7,7 @@ import { tipShow } from '../../../../components/Tips/modules/tips'
 import Select from '../../../../components/Select'
 
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
-import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization,deleteOrganization} from './modules/myTeam'
+import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization,deleteOrganization,getMyOrganization} from './modules'
 // import {fetchCatelogue} from '../../../../reducers/category'
 import {asyncConnect} from 'redux-async-connect'
 
@@ -29,7 +29,7 @@ import {asyncConnect} from 'redux-async-connect'
   {modalShow,modalHide,modalUpdate,tipShow}
 )
 
-export default class Myteam extends Component {
+export default class myCreateTeam extends Component {
 
     state = {
       hasImg:false,
@@ -51,7 +51,7 @@ export default class Myteam extends Component {
     }
 
     updateDate = ()=>{
-       getOrganizationByMe().then(({data})=>{
+      getOrganizationByMe().then(({data})=>{
         if (data.status == 200) {
           this.setState({
             OrganizationByMe:data.data
@@ -62,7 +62,6 @@ export default class Myteam extends Component {
         }{
           this.props.tipShow({type:'error',msg:data.msg})
         }
-        
       })
     }
 
@@ -179,8 +178,8 @@ export default class Myteam extends Component {
       return
     }
 
-    if (!brief || brief.length > 295) {
-      this.props.tipShow({type:"error",msg:"简介不为空或者大于300位字符"})
+    if (!brief || brief.length > 995) {
+      this.props.tipShow({type:"error",msg:"简介不为空或者大于1000位字符"})
       return
     }
 
@@ -309,13 +308,8 @@ export default class Myteam extends Component {
   render () {
     return (
     <div className="team">
-        <div className="attendTeam">
-          <h3>我加入的社团</h3>
-        <hr />
-        </div>
         <div className="createTeam">
-          <h3>我创建的社团</h3>
-            <hr />
+            {this.state.OrganizationByMe.length == 0 && <div className="noData">您还没有创建社团耶~</div>}
             {this.state.OrganizationByMe.map((item,index)=>{
               var headImg = `/img?name=${item.head}&from=organizations`
               var date = new Date(item.time)
@@ -396,6 +390,6 @@ export default class Myteam extends Component {
   }
 }
 
-Myteam.propTypes = {
+myCreateTeam.propTypes = {
   auth: React.PropTypes.object
 }

@@ -42,7 +42,7 @@ CREATE TABLE `organizations` (
   `id` mediumint(8) unsigned auto_increment,
   `categoryId` mediumint(8) unsigned,
   `name` varchar(40) default '',
-  `brief` varchar(300) default '',
+  `brief` varchar(1000) default '',
   `time` datetime default NOW(),
   `head` varchar(80) default '',
   `createById` mediumint(8) unsigned,
@@ -75,7 +75,7 @@ CREATE TABLE `article` (
   PRIMARY KEY  (`id`)
 );
 --评论列表
-CREATE TABLE `comments` (  
+CREATE TABLE `  ` (  
   `id` mediumint(8) unsigned auto_increment,
   `articleId` mediumint(8) unsigned,
   `memberId` mediumint(8) unsigned,

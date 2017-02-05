@@ -124,9 +124,7 @@ export default class OrganizationsHome extends Component{
 
           <div className="content">
             <div>创建于: <span>{time}</span>&nbsp;团长:&nbsp;<Link to={link}>{this.state.BasicInfo.nickname}</Link></div>
-            <pre>
             {this.state.BasicInfo.brief}
-            </pre>
           </div>
 
           <div className="articleTop">

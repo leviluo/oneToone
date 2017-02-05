@@ -10,12 +10,23 @@ const organizationController = {
             return
         }
 
+      if (!this.request.body.name[0] || this.request.body.name[0].length > 38) {
+        this.body = { status: 500, msg: "名称不为空或者大于30位字符" }
+        return
+      }
+
+      if (!this.request.body.brief[0] || this.request.body.brief[0].length > 995) {
+        this.body = { status: 500, msg: "简介不为空或者大于1000位字符" }
+        return
+      }
+
         var resultrepeat = await sqlStr("select * from organizations where createById=(select id from member where phone = ?) and name=?",[this.session.user,this.request.body.name[0]])
 
         if(resultrepeat.length > 0){
             this.body = { status: 500, msg: "社团名称不能重复" }
             return
         }
+
 
       var result = await sqlStr("insert into organizations set name = ?,brief=?,head=?,createById=(select id from member where phone = ?),categoryId=?",[this.request.body.name[0],this.request.body.brief[0],this.request.body.names[0],this.session.user,this.request.body.categoryId[0]])
       var resultt = await sqlStr("insert into memberOrganizations set memberId = (select id from member where phone = ?),organizationsId=(select id from organizations where name = ? and createById = (select id from member where phone = ?));",[this.session.user,this.request.body.name[0],this.session.user])
@@ -55,6 +66,14 @@ const organizationController = {
             return
         }
         var result = await sqlStr("select o.*,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
+        this.body = {status:200,data:result}
+    },
+    getMyOrganization: async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select o.*,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId left join memberOrganizations as mo on mo.organizationsId = o.id where mo.memberId = (select id from member where phone=?) and o.createById != (select id from member where phone = ?);",[this.session.user,this.session.user])
         this.body = {status:200,data:result}
     },
     deleteOrganization:async function(){
@@ -99,6 +118,11 @@ const organizationController = {
         }
 
       var data = this.request.body
+
+      if (!data.header[0] || data.header[0].length > 48) {
+            this.body = { status: 500, msg: "标题不能为空或者大于50个字符" }
+            return
+        }
 
       if (!data.articleId) {
       var result = await sqlStr("insert into article set title = ?,type = ?,content =?,organizationId =?,attachedImgs=?,memberId = (select id from member where phone = ?)",[data.header[0],data.type[0],data.content[0],data.organizationId[0],data.names.join(','),this.session.user])
@@ -234,7 +258,7 @@ const organizationController = {
       }
 
       this.body = {status:500,msg:"操作失败"}
-    }
+    },
 }
 export default organizationController;
 

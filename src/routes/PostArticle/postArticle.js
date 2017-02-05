@@ -346,7 +346,7 @@ export default class PostArticle extends Component{
             this.props.tipShow({type:"error",msg:"标题不能为空或者大于50个字符"})
             return
           }
-          if (!header || content.length < 10) {
+          if (content.length < 10) {
             this.props.tipShow({type:"error",msg:"内容不能为空或者小于10个字符"})
             return
           }

@@ -48,13 +48,15 @@ export default function routers(router){
 // 删除专业
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
 // 添加新社团
-	router.post("/member/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
+	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
 // 修改社团信息
-	router.post("/member/modifyOrganization",organizationController.modifyOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
+	router.post("/organizations/modifyOrganization",organizationController.modifyOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
 // 获取我创建的社团
-	router.get("/member/getOrganizationByMe",organizationController.getOrganizationByMe,router.allowedMethods());
+	router.get("/organizations/getOrganizationByMe",organizationController.getOrganizationByMe,router.allowedMethods());
+// 获取我加入的社团
+	router.get("/organizations/getMyOrganization",organizationController.getMyOrganization,router.allowedMethods());
 // 删除创建的社团
-	router.post("/member/deleteOrganization",organizationController.deleteOrganization,router.allowedMethods());
+	router.post("/organizations/deleteOrganization",organizationController.deleteOrganization,router.allowedMethods());
 // 获取社团基本信息
 	router.get("/organizations/basicInfo",organizationController.basicInfo,router.allowedMethods());
 // 获取所有的会员信息

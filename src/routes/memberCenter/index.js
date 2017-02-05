@@ -1,6 +1,7 @@
 // import { injectReducer } from '../../store/reducers'
 import basic from './routes/BasicInfo'
-import myteam from './routes/Myteam'
+import myCreateTeam from './routes/MyCreateTeam'
+import myAttendTeam from './routes/MyAttendTeam'
 import mymessage from './routes/Mymessage'
 
 
@@ -14,7 +15,8 @@ export default (store) => ({
         })
     },
     childRoutes:[
-        myteam(store),
+        myAttendTeam(store),
+        myCreateTeam(store),
         mymessage(store),
     ]
 })

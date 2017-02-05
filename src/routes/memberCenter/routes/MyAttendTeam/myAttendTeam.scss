@@ -3,14 +3,23 @@
 	background:#fff;
 	h3{
 		color:#555;
+		border-bottom:1px dashed #ccc;
+		padding-bottom:20px;
 	}
 	hr{
 		border:1px solid #e5e5e5;
 	}
-	.attendTeam{
-
+	.noData{
+		text-align:center;
 	}
-	.createTeam{
+	a{
+	 	color:#ff7f00;
+	 	padding:3px 4px 4px 4px;
+	 	&:hover{
+	 		background:#e5e5e5;
+	 	}
+	 }
+	.attendTeam{
 		ul{
 			padding:0;
 			margin:0;
