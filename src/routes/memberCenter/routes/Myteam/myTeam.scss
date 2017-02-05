@@ -20,7 +20,7 @@
 			}
 		}
 		.items{
-			border-bottom:1px solid #e5e5e5;
+			border-bottom:1px dashed #e5e5e5;
 			&>div:first-of-type{
 				background:#efefef;
 				padding:5px;
@@ -86,7 +86,6 @@
 		}
 		.addBtn{
 			clear:both;
-			border-top:1px solid #e5e5e5;
 			padding:10px 0;
 		}
 		.addNew{
