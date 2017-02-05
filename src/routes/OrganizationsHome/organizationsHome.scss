@@ -69,9 +69,11 @@
 		.articleTop{
 			margin-top:10px;
 			height:40px;
-			.btn-orange{
+			button{
+				height:35px;
+				line-height:35px;
 				float:right;
-				padding-right:0;
+				
 			}
 			span{
 			position:relative;

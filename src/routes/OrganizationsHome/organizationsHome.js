@@ -21,7 +21,7 @@ export default class OrganizationsHome extends Component{
 		BasicInfo:[],
     Members:[],
     Activities:[],
-    averagenum:1
+    averagenum:4
 	}
 
   static contextTypes = {
@@ -97,7 +97,9 @@ export default class OrganizationsHome extends Component{
       this.props.tipShow({type:"error",msg:"请先加入这个社团才能发帖"})
       return
     }
-    this.context.router.push(`/postArticle/${this.props.params.id}`)
+    console.log(this.context.router)
+    console.log(this.context.router.push)
+    this.context.router.push(`/postArticle/${this.props.params.id}/post`)
   }
 
   render(){
@@ -129,7 +131,7 @@ export default class OrganizationsHome extends Component{
 
           <div className="articleTop">
              <span><a href="">活动</a>&nbsp;/&nbsp;<a href="">咨询</a></span>
-             <button className="btn-orange" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
+             <button className="btn-default" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
           </div>
           
           <table className="articleList">

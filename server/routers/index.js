@@ -73,8 +73,12 @@ export default function routers(router){
 	// router.get("/organizations/getConsults",organizationController.getConsults,router.allowedMethods());
 // 获取文章详情
 	router.get("/organizations/article",organizationController.article,router.allowedMethods());
+// 删除文章
+	router.get("/organizations/deleteArticle",organizationController.deleteArticle,router.allowedMethods());
 // 获取文章回复
 	router.get("/organizations/ArticleReply",organizationController.ArticleReply,router.allowedMethods());
+// 删除文章回复
+	router.get("/organizations/deleteReply",organizationController.deleteReply,router.allowedMethods());
 // 评价文章
 	router.post("/organizations/reply",organizationController.reply,router.allowedMethods());
 	// router.get('*', async function (next){

@@ -80,6 +80,15 @@ CREATE TABLE `comments` (
   `articleId` mediumint(8) unsigned,
   `memberId` mediumint(8) unsigned,
   `comment` varchar(1000) default '',
+  `replyTo` mediumint(8) unsigned,
+  `createdAt` datetime DEFAULT now() COMMENT '//',
+  PRIMARY KEY  (`id`)
+);
+-- 回复通知 commentsId和replyTo相同
+CREATE TABLE `notice` (  
+  `id` mediumint(8) unsigned auto_increment,
+  `commentsId` mediumint(8) unsigned,
+  `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   PRIMARY KEY  (`id`)
 );
 -- 私信

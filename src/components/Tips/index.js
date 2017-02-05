@@ -36,7 +36,8 @@ export default class Tip extends Component {
             }else{
                 this.showTip("#FF7F00")
             }
-            setTimeout(()=>{
+            if(this.setIn)clearInterval(this.setIn)
+            this.setIn = setTimeout(()=>{
             that.hideTip();
             }, 2000)
         }else{

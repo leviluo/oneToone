@@ -7,6 +7,16 @@ export default class Input extends Component{
             return this.refs.input.value
         }
 
+        setValue =(value)=>{
+            this.refs.input.value = value
+        }
+
+        shouldComponentUpdate=(nextProps)=>{
+            return false
+        }
+
+
+
         render() {
                 const{defaultValue,header,handleChange,indeed,placeholder,type} = this.props;
                 return ( < div className = "input-group">

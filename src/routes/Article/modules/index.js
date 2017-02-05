@@ -12,3 +12,11 @@ export function submitReply(text) {
 export function getArticleReply(id) {
       return axios.get('/organizations/ArticleReply?id='+id)
 }
+
+export function deleteReply(id) {
+      return axios.get('/organizations/deleteReply?id='+id)
+}
+
+export function deleteArticle(id) {
+      return axios.get('/organizations/deleteArticle?id='+id)
+}

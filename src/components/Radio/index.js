@@ -17,6 +17,10 @@ export default class radioBox extends Component{
             })
         }
 
+        shouldComponentUpdate=(nextProps)=>{
+            return false
+        }
+
         render() {
             const {items,header} = this.props;
             let itemss = [];
@@ -25,7 +29,6 @@ export default class radioBox extends Component{
                 let flag = this.props.defaultValue == items[i].key ? true : false;
                 itemss.push(<span key={i}><input type="radio" name={name} ref="radios" defaultChecked={flag} value={items[i].key} onChange={this.handleRadio}/>{items[i].value}</span>)
                 }
-                console.log(itemss)
                 return ( <div className="radio">
                             <label>{header}{this.props.indeed && <span className="pull-left" style={{color:'red'}}>*</span>}:</label>
                             {itemss}

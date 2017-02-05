@@ -1,7 +1,7 @@
 // import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: '/postArticle/:id',
+  path: '/postArticle/:id/:type',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
       const postArticle = require('./postArticle').default

@@ -85,31 +85,46 @@ for (var i = 2; i <= 10; i++) {
   state=>({auth:state.auth}),
 {tipShow})
 export default class PostArticle extends Component{
- state = {
+        state = {
             isColor:false,
             isFontFamily:false,
             isFontSize:false,
             lastChooseDiv:{},
             focusOffset:0,
-            flag:true,
             imgs:[],
             type:0
         }
 
         componentDidMount=()=>{
             document.addEventListener('click',this.resetState,false)
+            if (this.props.params.type == "edit") {
+                var query = this.props.location.query
+                this.refs.header.setValue(query.title)
+
+                var items = []
+                var arr = query.attachedImgs.split(',')
+                for (var i = 0; i < arr.length; i++) {
+                    items.push({key:arr[i]})
+                }
+
+                this.setState({
+                    type:query.type,
+                    defaultContent:{__html:query.content},
+                    imgs:items
+                })
+            }
         }
 
         componentDidUpdate=()=>{
-            if (this.props.setContent) { //在修改时,更新内容和state
-                if (this.props.setContent && this.props.articleDetailData && this.state.flag) {
-                    this.setState({
-                        defaultContent:{__html:this.props.articleDetailData.content},
-                        flag:false
-                    })
-                }; 
-                this.props.setContent();
-            }
+            // if (this.props.setContent) { //在修改时,更新内容和state
+            //     if (this.props.setContent && this.props.articleDetailData && this.state.flag) {
+            //         this.setState({
+            //             defaultContent:{__html:this.props.articleDetailData.content},
+            //             flag:false
+            //         })
+            //     }; 
+            //     this.props.setContent();
+            // }
         }
 
         resetState = ()=>{
@@ -124,7 +139,7 @@ export default class PostArticle extends Component{
         }
 
         search =(lastnode)=>{
-            if (lastnode==document.getElementById('Content')) {
+            if (lastnode==this.refs.content) {
                 return true
             }else if(lastnode==document){
                 return false
@@ -154,7 +169,7 @@ export default class PostArticle extends Component{
                 return
             }
 
-            document.getElementById("Content").focus();
+            this.refs.content.focus();
             document.execCommand(action, false, value);
 
             // if (!isIE()) {
@@ -197,7 +212,7 @@ export default class PostArticle extends Component{
         }
 
         searchStyle =(lastnode,items)=>{
-            if (lastnode==document.getElementById('Content')) {
+            if (lastnode==this.refs.content) {
                 return items
             }else{
                 let item = items
@@ -274,7 +289,12 @@ export default class PostArticle extends Component{
           var me = this
           e.target.onclick=function(e){
             e.srcElement.parentNode.parentNode.removeChild(e.srcElement.parentNode)
-            me.state.imgs.splice(index || e.target.getAttribute('name'),1)
+            for (var i = 0; i < me.state.imgs.length; i++) {
+                if(me.state.imgs[i].key == e.target.getAttribute('name')){
+                    me.state.imgs.splice(i,1)
+                    break
+                }
+            }
             me.setState({})
           }
         }
@@ -303,21 +323,25 @@ export default class PostArticle extends Component{
           divDelete.onmouseout = this.hideDeleteImg
           divDelete.onmouseover = this.showDeleteImg
           divDelete.className = "fa fa-trash"
-          divDelete.setAttribute('name',this.state.imgs.length)
+          var key = Date.parse(new Date())
+          divDelete.setAttribute('name',key)
 
           div.appendChild(divDelete)
 
           e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
-          this.state.imgs.push(e.target.files[0])
+          this.state.imgs.push({key:key,file:e.target.files[0]})
           this.setState({})
 
       }
 
+      static contextTypes = {
+        router: React.PropTypes.object.isRequired
+      };
+
       submitArticle =()=>{
-          var imgs = this.state.imgs
           var header = this.refs.header.getValue()
           var type = this.refs.type.getValue()
-          var content = document.getElementById('Content').innerHTML
+          var content = this.refs.content.innerHTML
           if (!header || header.length > 48) {
             this.props.tipShow({type:"error",msg:"标题不能为空或者大于50个字符"})
             return
@@ -328,9 +352,20 @@ export default class PostArticle extends Component{
           }
 
           var fd = new FormData(); 
+          var attachs = ''
           for (var i = 0; i < this.state.imgs.length; i++) {
-          fd.append("file", this.state.imgs[i]); 
+            if(this.state.imgs[i].file){
+                fd.append("file", this.state.imgs[i].file)
+            }else{
+                attachs += this.state.imgs[i].key+','
+            }
           }
+          console.log(this.state.imgs)
+          console.log(attachs)
+          if (this.props.params.type=='edit') {
+          fd.append("articleId",this.props.params.id)
+          }
+          fd.append("attachs",attachs.slice(0,-1))
           fd.append("header",header)
           fd.append("type",type)
           fd.append("content",content)
@@ -338,7 +373,11 @@ export default class PostArticle extends Component{
 
           submitArticle(fd).then(({data})=>{
             if (data.status == 200) {
-                this.props.tipShow({type:"success",msg:"发布成功"})
+                this.props.tipShow({type:"success",msg:"发布成功,2S后跳回上一页"})
+                setTimeout(()=>{
+                    window.history.go(-1)
+                // this.context.router.push(`/organizationsHome/${this.props.params.id}`)
+                },2000)
                 return
             }else{
                 this.props.tipShow({type:"error",msg:data.msg})
@@ -429,10 +468,19 @@ export default class PostArticle extends Component{
                                         )}
                             </div>}
                         </div>
-                        <div id='Content' className="content" dangerouslySetInnerHTML={this.state.defaultContent} onClick={this.chooseStyle} contentEditable onKeyDown={this.recordOffset} onBlur={this.props.editorChange}>
+                        <div ref="content" className="content" dangerouslySetInnerHTML={this.state.defaultContent} onClick={this.chooseStyle} contentEditable onKeyDown={this.recordOffset} onBlur={this.props.editorChange}>
                         
                         </div>
                             <div className="works">附加图片(最多8张)</div>
+                            {this.props.location.query.attachedImgs && <div>
+                                {this.props.location.query.attachedImgs.split(',').map((item,index)=>{
+                                if (!item) return;
+                                var link = `/img?from=article&name=${item}`
+                                return <div className="imgList" key={index} style={{backgroundImage:`url(${link})`}}>
+                                  <div onMouseOut={this.hideDeleteImg} name={item} onMouseOver={this.showDeleteImg} className="fa fa-trash"></div></div>
+                                  })}
+                                </div>
+                            }
                             <div className="addDiv">
                               +<input onChange={this.addImages} type="file" />
                             </div>

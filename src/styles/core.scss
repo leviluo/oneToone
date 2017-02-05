@@ -108,9 +108,10 @@
             list-style: none;
         }
         textarea{
-            border:none;
+            border:1px solid #ccc;
             background:#efefef;
             padding:5px;
+
         }
         input,button,textarea,select{
             outline:none; /* 去除蓝色边框 */
