@@ -75,6 +75,7 @@ CREATE TABLE `article`(
   `updatedAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
+select count(a.id) as count from article as a left join comments as c on c.articleId = a.id where c.status = 0 and a.memberId = (select id from member where phone = "15601912385")
 --评论列表
 CREATE TABLE `comments` (  
   `id` mediumint(8) unsigned auto_increment,
@@ -93,6 +94,7 @@ CREATE TABLE `reReply` (
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   PRIMARY KEY  (`id`)
 );
+select count(*) as count from reReply where replyTo = ()
 -- 私信
 CREATE TABLE `message` (  
   `id` mediumint(8) unsigned auto_increment,
@@ -104,6 +106,7 @@ CREATE TABLE `message` (
   `time` datetime default NOW(),
   PRIMARY KEY  (`id`)
 );
+
 --article修改了organizationsId,comments删除了replyTo,comments增加了status,notice增加了replyTo,notice改为reReply
 insert into organizations(`categoryId`,`name`,`brief`,`createById`) values(1,"爱乐动","运动爱好者",20),(1,"爱乐动2","运动爱好者2",20),(2,"爱健康","运动爱好者2",20)
 

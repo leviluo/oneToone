@@ -205,6 +205,30 @@ const memberController = {
 
         this.body = {status:500,msg:"删除失败"}
         next
+    },
+    countMessage:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select count(id) as count from message where toMember = (select id from member where phone = ?) and active = 0",[this.session.user])
+        this.body = {status:200,data:result}
+    },
+    countNotice:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select count(*) as count from reReply where replyTo in (select id from comments where memberId = (select id from member where phone = ?)) and status = 0",[this.session.user])
+        this.body = {status:200,data:result}
+    },
+    countReply:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select count(DISTINCT a.id) as count from article as a left join comments as c on c.articleId = a.id where c.status = 0 and a.memberId = (select id from member where phone = ?);",[this.session.user])
+        this.body = {status:200,data:result}
     }
 }
 export default memberController;

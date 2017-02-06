@@ -5,6 +5,7 @@ import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {getmyNotice} from './modules'
+import {countNotice} from '../../containers/modules'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -21,7 +22,7 @@ import {getmyNotice} from './modules'
     auth:state.auth,
 
     }),
-  {tipShow}
+  {tipShow,countNotice}
 )
 
 export default class myNotice extends Component {
@@ -36,6 +37,11 @@ export default class myNotice extends Component {
 
     componentWillMount =()=>{
      this.updateDate()
+
+    }
+
+    componentWillUnmount =()=>{
+     this.props.countNotice()
     }
 
     updateDate = ()=>{
@@ -44,6 +50,7 @@ export default class myNotice extends Component {
           this.setState({
             myNoticeData:data.data
           })
+          
         }else if (data.status==600) {
           this.props.dispatch({type:"AUTHOUT"})
           this.context.router.push('/login')

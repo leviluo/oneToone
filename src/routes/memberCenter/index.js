@@ -1,4 +1,4 @@
-// import { injectReducer } from '../../store/reducers'
+import { injectReducer } from '../../store/reducers'
 import basic from './routes/BasicInfo'
 import myCreateTeam from './routes/MyCreateTeam'
 import myAttendTeam from './routes/MyAttendTeam'
@@ -13,6 +13,8 @@ export default (store) => ({
     getComponent(nextState, cb) {
         require.ensure([], (require) => {
             const memberCenter = require('./containers/memberCenter').default
+            const reducer = require('./containers/modules').default
+            injectReducer(store, { key: 'memberCenter', reducer })
             cb(null, memberCenter)
         })
     },

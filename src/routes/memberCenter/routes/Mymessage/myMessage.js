@@ -8,6 +8,7 @@ import PageNavBar from '../../../../components/PageNavBar'
 import {pageNavInit} from '../../../../components/PageNavBar/modules/pagenavbar'
 import {asyncConnect} from 'redux-async-connect'
 import {Link} from 'react-router'
+import {countMessage} from '../../containers/modules'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -20,7 +21,7 @@ import {Link} from 'react-router'
     auth:state.auth,
     pagenavbar:state.pagenavbar
     }),
-  {chatShow,pageNavInit,tipShow}
+  {chatShow,pageNavInit,tipShow,countMessage}
 )
 
 export default class myMessage extends Component {
@@ -57,6 +58,10 @@ export default class myMessage extends Component {
     //     sendTo:phone
     // })
     this.props.chatShow({chatTo:nickname,chatFrom:this.props.auth.nickname,sendTo:phone})
+  }
+
+  componentWillUnmount =()=>{
+    this.props.countMessage()
   }
 
   render () {

@@ -47,6 +47,14 @@ export default function routers(router){
 	router.post("/member/modifySpeciality",memberController.modifySpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 // 删除专业
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
+
+// 计算多少未读消息
+	router.get("/member/countMessage",memberController.countMessage,router.allowedMethods());
+// 计算多少未读通知
+	router.get("/member/countNotice",memberController.countNotice,router.allowedMethods());
+// 计算多少回复
+	router.get("/member/countReply",memberController.countReply,router.allowedMethods());
+
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
 // 修改社团信息
