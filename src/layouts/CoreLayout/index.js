@@ -7,6 +7,8 @@ export default function MyCoreLayout(store){
 	injectReducer(store, { key: 'mytips', reducer })
 	reducer = require('../../components/Modal/modules/modal').default  
 	injectReducer(store, { key: 'modal', reducer })
+	reducer = require('../../components/Confirm/modules').default  
+	injectReducer(store, { key: 'confirm', reducer })
 	reducer = require('../../components/Location/modules/location').default  
 	injectReducer(store, { key: 'mylocation', reducer })
 	reducer = require('../../reducers/auth').default  

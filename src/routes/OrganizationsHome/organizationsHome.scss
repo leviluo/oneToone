@@ -21,9 +21,10 @@
 		 padding:10px 20px;
 		 width:900px;
 		 a{
-		 	color:#333;
+		 	color:#37a;
+		 	padding:3px;
 		 	&:hover{
-		 		color:#ff7f00;
+		 		background:#efefef
 		 	}
 		 }
 		.head{
@@ -97,7 +98,7 @@
 				}
 			}
 			thead tr{
-				color:#ff7f00;
+				color:#999;
 			}
 		}
 	}

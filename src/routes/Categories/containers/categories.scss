@@ -62,7 +62,13 @@
 		height:150px;
 		border-top:2px solid #F0F8FF;
 		border-bottom:2px solid #F0F8FF;
-		
+		a{
+		 	color:#37a;
+		 	padding:3px;
+		 	&:hover{
+		 		background:#efefef
+		 	}
+		 }
 		div:first-of-type{
 			height:110px;
 			width:110px;

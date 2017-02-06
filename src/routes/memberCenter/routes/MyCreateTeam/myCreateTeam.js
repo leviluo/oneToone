@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import Select from '../../../../components/Select'
-
+import Confirm,{confirmShow} from '../../../../components/Confirm'
 import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
 import {addOrganization,getCatelogy,getOrganizationByMe,modifyOrganization,deleteOrganization,getMyOrganization} from './modules'
 // import {fetchCatelogue} from '../../../../reducers/category'
@@ -26,7 +26,7 @@ import {asyncConnect} from 'redux-async-connect'
     auth:state.auth,
     // catelogues:state.catelogues
     }),
-  {modalShow,modalHide,modalUpdate,tipShow}
+  {modalShow,modalHide,modalUpdate,tipShow,confirmShow}
 )
 
 export default class myCreateTeam extends Component {
@@ -281,16 +281,16 @@ export default class myCreateTeam extends Component {
     this.setState({isShowAdd:true})
   }
 
-  deleteOrganization =(e,id)=>{
-    if (!id) {
+  confirmDelete =()=>{
+    if (!this.state.deleteId) {
       this.props.tipShow({type:"error",msg:"未选中条目"})
       return
     }
-    deleteOrganization(id).then(({data})=>{
+    deleteOrganization(this.state.deleteId).then(({data})=>{
       // console.log(data)
       if (data.status == 200) {
           for (var i = this.state.OrganizationByMe.length - 1; i >= 0; i--) {
-            if(this.state.OrganizationByMe[i].id == id){
+            if(this.state.OrganizationByMe[i].id == this.state.deleteId){
               this.state.OrganizationByMe.splice(i,1)
               this.setState({})
               break;
@@ -305,11 +305,18 @@ export default class myCreateTeam extends Component {
     })
   }
 
+  deleteOrganization =(e,id)=>{
+    this.setState({
+      deleteId:id
+    })
+    this.props.confirmShow({submit:this.confirmDelete})
+  }
+
   render () {
     return (
     <div className="team">
         <div className="createTeam">
-            {this.state.OrganizationByMe.length == 0 && <div className="noData">您还没有创建社团耶~</div>}
+            {this.state.OrganizationByMe.length == 0 && <div className="text-center">您还没有创建社团耶~</div>}
             {this.state.OrganizationByMe.map((item,index)=>{
               var headImg = `/img?name=${item.head}&from=organizations`
               var date = new Date(item.time)
@@ -385,6 +392,7 @@ export default class myCreateTeam extends Component {
             </ul>}
         </div>
         <Modal />
+        <Confirm />
     </div>
     )
   }

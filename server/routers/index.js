@@ -83,6 +83,10 @@ export default function routers(router){
 	router.get("/organizations/deleteReply",organizationController.deleteReply,router.allowedMethods());
 // 评价文章
 	router.post("/organizations/reply",organizationController.reply,router.allowedMethods());
+// 发布的文章
+	router.get("/organizations/getMyPost",organizationController.getMyPost,router.allowedMethods());
+// 获取通知
+	router.get("/organizations/getmyNotice",organizationController.getmyNotice,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

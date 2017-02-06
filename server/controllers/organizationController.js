@@ -123,9 +123,9 @@ const organizationController = {
             this.body = { status: 500, msg: "标题不能为空或者大于50个字符" }
             return
         }
-
+        console.log(data)
       if (!data.articleId) {
-      var result = await sqlStr("insert into article set title = ?,type = ?,content =?,organizationId =?,attachedImgs=?,memberId = (select id from member where phone = ?)",[data.header[0],data.type[0],data.content[0],data.organizationId[0],data.names.join(','),this.session.user])
+      var result = await sqlStr("insert into article set title = ?,type = ?,content =?,organizationsId =?,attachedImgs=?,memberId = (select id from member where phone = ?)",[data.header[0],data.type[0],data.content[0],data.organizationId[0],data.names.join(','),this.session.user])
       }else{
         // console.log(data)
         if(data.attachs[0]){
@@ -177,7 +177,7 @@ const organizationController = {
       this.body = {status:200,data:result}
     },
     getAllActivities:async function(next){
-      var result = await sqlStr("select a.id,a.organizationId,o.name,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationId where a.type = 0")
+      var result = await sqlStr("select a.id,a.organizationsId,o.name,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.type = 0")
       this.body = {status:200,data:result}
     },
     getActivities:async function(next){
@@ -185,7 +185,7 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr("select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = 0 and a.organizationId = ?",[this.request.query.id])
+      var result = await sqlStr("select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = 0 and a.organizationsId = ?",[this.request.query.id])
       this.body = {status:200,data:result}
     },
     article:async function(){
@@ -194,6 +194,9 @@ const organizationController = {
             return
         }
       var result = await sqlStr("select a.*,m.nickname,m.phone from article as a left join member as m on m.id = a.memberId where a.id = ?",[this.request.query.id])
+      if (result[0].phone == this.session.user) {
+        var resultt = await sqlStr("update comments set status = 1 where articleId = ?",[result[0].id]) //所有回复清空为已读
+      };
       this.body = {status:200,data:result[0]}
     },
     reply:async function(){
@@ -205,9 +208,10 @@ const organizationController = {
           this.body = { status: 600, msg: "尚未登录" }
           return
         }
-      var result = await sqlStr("insert into comments set memberId = (select id from member where phone = ?),articleId=?,comment=?,replyTo=?;",[this.session.user,this.request.body.articleId,this.request.body.comment,this.request.body.replyToId])
+      var result = await sqlStr("insert into comments set memberId = (select id from member where phone = ?),articleId=?,comment=?",[this.session.user,this.request.body.articleId,this.request.body.comment])
+
       if (this.request.body.replyToId) { 
-        var resultt = await sqlStr("insert into notice set commentsId = ?",[this.request.body.replyToId])
+        var resultt = await sqlStr("insert into reReply set commentsId = (select id from comments where memberId = (select id from member where phone = ?) and articleId=? order by id desc limit 1),replyTo = ?",[this.session.user,this.request.body.articleId,this.request.body.replyToId])
         if (result.affectedRows == 1 && resultt.affectedRows == 1) {
               this.body = {status:200}
               return
@@ -226,7 +230,7 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr("select c.comment,c.id,c.replyTo,c.createdAt,m.nickname,m.phone from comments as c left join member as m on m.id = c.memberId where c.articleId=?",[this.request.query.id])
+      var result = await sqlStr("select c.comment,c.id,r.replyTo,c.createdAt,m.nickname,m.phone from comments as c left join reReply as r on r.commentsId = c.id left join member as m on m.id = c.memberId where c.articleId=? order by c.id",[this.request.query.id])
       this.body = {status:200,data:result}
     },
     deleteReply:async function(){
@@ -234,7 +238,7 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr("delete c.*,n.* from comments as c left join notice as n on n.commentsId = c.replyTo where c.id = ?",[this.request.query.id])
+      var result = await sqlStr("delete c.*,r.* from comments as c left join reReply as r on r.commentsId = c.id where c.id = ?",[this.request.query.id])
       if (result.affectedRows > 0) {
             this.body = {status:200}
             return
@@ -251,7 +255,7 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-      var result = await sqlStr("delete a.*,c.*,n.* from article as a left join comments as c on c.articleId = a.id left join notice as n on n.commentsId = c.id where a.id = ? and a.memberId = (select id from member where phone =?)",[this.request.query.id,this.session.user])
+      var result = await sqlStr("delete a.*,c.*,r.* from article as a left join comments as c on c.articleId = a.id left join reReply as r on r.commentsId = c.id where a.id = ? and a.memberId = (select id from member where phone =?)",[this.request.query.id,this.session.user])
       if (result.affectedRows > 0) {
             this.body = {status:200}
             return
@@ -259,6 +263,23 @@ const organizationController = {
 
       this.body = {status:500,msg:"操作失败"}
     },
+    getMyPost:async function(){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var result = await sqlStr("select a.title,a.id,a.organizationsId,a.type,a.updatedAt,o.name,(select count(*) from comments where comments.articleId = a.id) as count,(select count(*) from comments where comments.articleId = a.id and comments.status = 0) as noRead from article as a left join organizations as o on o.id = a.organizationsId where a.memberId = (select id from member where phone =?)",[this.session.user])
+      this.body = {status:200,data:result}
+    },
+    getmyNotice:async function(){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var result = await sqlStr("select m.phone,m.nickname,c.createdAt,c.comment,a.id as articleId,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?) and r.status = 0",[this.session.user])
+      var resultt = await sqlStr("update reReply set status = 1 where replyTo in (select id from comments where memberId = (select id from member where phone = ?))",[this.session.user])
+      this.body = {status:200,data:result}
+    }
 }
 export default organizationController;
 

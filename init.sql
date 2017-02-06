@@ -63,9 +63,10 @@ CREATE TABLE `organizationsRequest` (
   PRIMARY KEY  (`id`)
 );
 --社团通知活动等
-CREATE TABLE `article` (  
+CREATE TABLE `article`(  
   `id` mediumint(8) unsigned auto_increment,
-  `organizationsId` mediumint(8) unsigned auto_increment,
+  `organizationsId` mediumint(8) unsigned,
+  `memberId` mediumint(8) unsigned,
   `title` varchar(50) DEFAULT '' COMMENT '//标题',
   `content` text COMMENT '//',
   `type` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:普通,1:活动,2:公告,3:咨询',
@@ -75,18 +76,19 @@ CREATE TABLE `article` (
   PRIMARY KEY  (`id`)
 );
 --评论列表
-CREATE TABLE `  ` (  
+CREATE TABLE `comments` (  
   `id` mediumint(8) unsigned auto_increment,
   `articleId` mediumint(8) unsigned,
   `memberId` mediumint(8) unsigned,
   `comment` varchar(1000) default '',
-  `replyTo` mediumint(8) unsigned,
+  `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   `createdAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
 -- 回复通知 commentsId和replyTo相同
-CREATE TABLE `notice` (  
+CREATE TABLE `reReply` (  
   `id` mediumint(8) unsigned auto_increment,
+  `replyTo` mediumint(8) unsigned,
   `commentsId` mediumint(8) unsigned,
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   PRIMARY KEY  (`id`)
@@ -102,7 +104,7 @@ CREATE TABLE `message` (
   `time` datetime default NOW(),
   PRIMARY KEY  (`id`)
 );
-
+--article修改了organizationsId,comments删除了replyTo,comments增加了status,notice增加了replyTo,notice改为reReply
 insert into organizations(`categoryId`,`name`,`brief`,`createById`) values(1,"爱乐动","运动爱好者",20),(1,"爱乐动2","运动爱好者2",20),(2,"爱健康","运动爱好者2",20)
 
 insert into specialityCategory set name="运动";

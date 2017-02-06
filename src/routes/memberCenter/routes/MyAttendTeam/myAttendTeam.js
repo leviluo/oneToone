@@ -57,7 +57,7 @@ export default class myAttendTeam extends Component {
     return (
     <div className="team">
         <div className="attendTeam">
-        {this.state.getMyOrganization.length == 0 && <div className="noData">您还没加入创建社团耶~<Link to="/Organization">去发现一个</Link></div>}
+        {this.state.getMyOrganization.length == 0 && <div className="text-center">您还没加入任何社团耶~<Link to="/Organization">去发现一个</Link></div>}
             {this.state.getMyOrganization.map((item,index)=>{
               var headImg = `/img?name=${item.head}&from=organizations`
               var date = new Date(item.time)

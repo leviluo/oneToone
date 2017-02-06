@@ -5,13 +5,12 @@
 	margin-bottom:10px;
 	line-height:20px;
 	a{
-		color:#ff7f00;
-		padding:2px;
-		&:hover{
-			background:#ff7f00;
-			color:white
-		}
-	}
+		 	color:#37a;
+		 	padding:3px;
+		 	&:hover{
+		 		background:#efefef
+		 	}
+		 }
 	&>div:first-of-type{
 		height:40px;
 		background:#f0f8ff;

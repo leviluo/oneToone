@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 // import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getActivities} from './modules'
 import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
+import Confirm,{confirmShow} from '../../components/Confirm'
 import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
 import PageNavBar from '../../components/PageNavBar'
 import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
@@ -21,7 +22,7 @@ import {asyncConnect} from 'redux-async-connect'
     auth:state.auth,
     pagenavbar:state.pagenavbar
   }),
-{tipShow,pageNavInit,imgbrowserShow})
+{tipShow,pageNavInit,imgbrowserShow,confirmShow})
 export default class Article extends Component{
 
 	state = {
@@ -133,8 +134,8 @@ export default class Article extends Component{
     })
   }
 
-  deleteArticle =()=>{
-     deleteArticle(this.props.params.id).then(({data})=>{
+  confirmDelete =()=>{
+    deleteArticle(this.props.params.id).then(({data})=>{
       if (data.status==200) {
         this.props.tipShow({type:"error",msg:"删除成功，2s后自动跳回上一页面"})
         setTimeout(()=>{
@@ -147,6 +148,10 @@ export default class Article extends Component{
             this.props.tipShow({type:"error",msg:data.msg})
       }
     })
+  }
+
+  deleteArticle =()=>{
+     this.props.confirmShow({submit:this.confirmDelete})
   }
 
   render(){
@@ -225,6 +230,7 @@ export default class Article extends Component{
           </div>
         </div>
         <ImageBrowser />
+        <Confirm />
       </div>
       )
   }

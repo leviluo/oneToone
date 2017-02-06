@@ -3,6 +3,8 @@ import basic from './routes/BasicInfo'
 import myCreateTeam from './routes/MyCreateTeam'
 import myAttendTeam from './routes/MyAttendTeam'
 import mymessage from './routes/Mymessage'
+import myPost from './routes/MyPost'
+import myNotice from './routes/MyNotice'
 
 
 export default (store) => ({
@@ -15,8 +17,10 @@ export default (store) => ({
         })
     },
     childRoutes:[
+        myPost(store),
         myAttendTeam(store),
         myCreateTeam(store),
+        myNotice(store),
         mymessage(store),
     ]
 })

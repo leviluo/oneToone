@@ -7,6 +7,7 @@ import Chat,{chatShow} from '../../../../components/Chat'
 import PageNavBar from '../../../../components/PageNavBar'
 import {pageNavInit} from '../../../../components/PageNavBar/modules/pagenavbar'
 import {asyncConnect} from 'redux-async-connect'
+import {Link} from 'react-router'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -68,11 +69,12 @@ export default class myMessage extends Component {
           var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''
           var date = new Date(item.time)
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+          var link = `/memberBrief/${item.phone}`
           if (item.isSend) {
-            var head = <span>你发送给 <b>{item.nickname}</b> 的消息:</span>
+            var head = <span>你发送给 <Link to={link}>{item.nickname}</Link> 的消息:</span>
             var isRead = item.active == '0'?'对方未读':'对方已读'
           }else{
-            var head = <span><b>{item.nickname}</b> 发送给你的消息:</span> 
+            var head = <span><Link to={link}>{item.nickname}</Link> 发送给你的消息:</span> 
             var isRead = item.active == '0'?'未读':'已读'
           }
           return <div key = {index}>

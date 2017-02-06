@@ -7,6 +7,7 @@ import { ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from 'r
 const initialReducers = {
   mytips: (state = require('../components/Tips/modules/tips').initialState) => state,
   modal: (state = require('../components/Modal/modules/modal').initialState) => state,
+  confirm: (state = require('../components/Confirm/modules').initialState) => state,
   chat: (state = require('../components/Chat/modules/chat').initialState) => state,
   imageBrowser: (state = require('../components/ImageBrowser/modules').initialState) => state,
   mylocation: (state = require('../components/Location/modules/location').initialState) => state,

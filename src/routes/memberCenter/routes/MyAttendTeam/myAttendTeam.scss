@@ -1,6 +1,7 @@
 .team{
-	min-height:850px;
+	min-height:900px;
 	background:#fff;
+	padding-top:20px;
 	h3{
 		color:#555;
 		border-bottom:1px dashed #ccc;
@@ -9,16 +10,13 @@
 	hr{
 		border:1px solid #e5e5e5;
 	}
-	.noData{
-		text-align:center;
-	}
 	a{
-	 	color:#ff7f00;
-	 	padding:3px 4px 4px 4px;
-	 	&:hover{
-	 		background:#e5e5e5;
-	 	}
-	 }
+		 	color:#37a;
+		 	padding:3px;
+		 	&:hover{
+		 		background:#efefef
+		 	}
+		 }
 	.attendTeam{
 		ul{
 			padding:0;
@@ -38,7 +36,6 @@
 				&>span{
 					float:right;
 					a{
-						color:#ff7f00;
 						margin-left:8px;
 					}
 					i{

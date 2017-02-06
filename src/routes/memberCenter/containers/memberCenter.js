@@ -33,13 +33,13 @@ export default class memberCenter extends Component {
             <ul>
               <li><Link to="/memberCenter" className={this.props.location.pathname == '/memberCenter' ? 'active' : ''}>我的名片</Link></li>
               <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/myMessage' ? 'active' : ''}>消息</Link></li>
-              <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/notice' ? 'active' : ''}>通知</Link></li>
+              <li><Link to="/memberCenter/myNotice" className={this.props.location.pathname == '/memberCenter/myNotice' ? 'active' : ''}>通知</Link></li>
             </ul>
             <h3>社团</h3>
             <ul>
               <li><Link to="/memberCenter/myCreateTeam" className={this.props.location.pathname == '/memberCenter/myCreateTeam' ? 'active' : ''}>我创建的</Link></li>
               <li><Link to="/memberCenter/myAttendTeam" className={this.props.location.pathname == '/memberCenter/myAttendTeam' ? 'active' : ''}>我加入的</Link></li>
-              <li><Link to="/memberCenter/myTeam" className={this.props.location.pathname == '/memberCenter/myPost' ? 'active' : ''}>我发布的</Link></li>
+              <li><Link to="/memberCenter/myPost" className={this.props.location.pathname == '/memberCenter/myPost' ? 'active' : ''}>我发布的</Link></li>
             </ul>
             </div>
             <div className="memberCenterContentRight">

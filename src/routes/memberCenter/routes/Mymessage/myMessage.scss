@@ -1,8 +1,16 @@
 .messageContent{
+	padding-top:20px;
 	div{
 		height:140px;
 		padding:15px 0;
-		border-bottom:1px solid #e5e5e5;
+		border-bottom:1px dashed #e5e5e5;
+		a{
+		 	color:#37a;
+		 	padding:3px;
+		 	&:hover{
+		 		background:#efefef
+		 	}
+		 }
 		&>img{
 			border-radius:75px;
 			border:5px solid #efefef;

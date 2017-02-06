@@ -1,5 +1,12 @@
 .basicInfo{
-		padding:15px 0;
+		padding:20px 0;
+		a{
+		 	color:#37a;
+		 	padding:3px;
+		 	&:hover{
+		 		background:#efefef
+		 	}
+		 }
 		&>div{
 			background:#f0f8ff;
 			margin-bottom:50px;
@@ -82,7 +89,6 @@
 					}
 				}
 				.btn-normal{
-    				color: #ff7f00;
     				border-radius:5px;
     				padding:0 10px;
     				width:70px;
@@ -196,8 +202,9 @@
 							color:#444;
 						}
 						a{
+							height:35px;
+							line-height:35px;
 							float:right;
-    						color: #ff7f00;
     						width:60px;
     						text-align:center;
     						text-indent:0;
