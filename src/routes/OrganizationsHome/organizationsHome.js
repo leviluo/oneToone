@@ -118,8 +118,8 @@ export default class OrganizationsHome extends Component{
           <div className="head">
             <img src={headImg} alt=""/>
             <span>{this.state.BasicInfo.name}</span>
-            {!this.state.isAttended && <button className="btn-orange" onClick={this.attendOrganization} >加入社团</button>}
-            {this.state.isAttended && <button className="btn-orange" onClick={this.quitOrganization} >退出社团</button>}
+            {!this.state.isAttended && <button className="btn-default" onClick={this.attendOrganization} >加入社团</button>}
+            {this.state.isAttended && <button className="btn-default" onClick={this.quitOrganization} >退出社团</button>}
           </div>
 
           <div className="content">
@@ -143,7 +143,7 @@ export default class OrganizationsHome extends Component{
             <tbody>
             {this.state.Activities.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
               var date = new Date(item.updatedAt)
-              var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+              var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               var linkMember = `/memberBrief/${item.phone}`
               var linkArticle = `/article/${item.id}`
                 return <tr key={index}>

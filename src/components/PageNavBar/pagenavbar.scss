@@ -7,7 +7,7 @@
     a{
         width: 30px;
         height: 30px;
-        line-height: 30px;
+        line-height: 24px;
         display: block;
         text-align: center;
         margin-left: 5px;
@@ -15,9 +15,10 @@
         text-decoration:none;
         cursor:pointer;
         background: #ccc;
+        border:1px solid #efefef;
         &:hover{
-            background: #FF8C00; 
-            color:white
+            color:white;
+            border:1px solid #FF8C00;
         }
     }
      button {
