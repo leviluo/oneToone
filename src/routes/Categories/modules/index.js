@@ -1,46 +1,51 @@
 import axios from 'axios'
-// ------------------------------------
-// Constants
-// ------------------------------------
-const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
-// ------------------------------------
-// Actions
-// ------------------------------------
 
-export const receiveItems = (value) => ({
-  type: RECEIVE_ITEMS,
-  value: value,
-})
-
-export function fetchItems (items) {
-  return (dispatch, getState) => {
-    axios.post('/public/Items',items).then(({data}) => {
-        dispatch({type:'PAGERESET'})   //请求数据重置reset
-        dispatch(receiveItems(data.data))
-      })
-  }
+export function fetchItems(items){
+  return axios.post('/public/Items',items)
 }
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const ACTION_HANDLERS = {
-  [RECEIVE_ITEMS]: (state, action) => {
-    return ({...state, text: action.value,isloaded:true})
-  }
-}
+// // ------------------------------------
+// // Constants
+// // ------------------------------------
+// const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
+// // ------------------------------------
+// // Actions
+// // ------------------------------------
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
-export const initialState = {
-  text: [],
-  isloaded:false
-}
+// export const receiveItems = (value) => ({
+//   type: RECEIVE_ITEMS,
+//   value: value,
+// })
 
-export default function (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type]
+// export function fetchItems (items) {
+//   return (dispatch, getState) => {
+//     axios.post('/public/Items',items).then(({data}) => {
+//         dispatch({type:'PAGERESET'})   //请求数据重置reset
+//         dispatch(receiveItems(data.data))
+//       })
+//   }
+// }
 
-  return handler ? handler(state, action) : state
-}
+// // ------------------------------------
+// // Action Handlers
+// // ------------------------------------
+// const ACTION_HANDLERS = {
+//   [RECEIVE_ITEMS]: (state, action) => {
+//     return ({...state, text: action.value,isloaded:true})
+//   }
+// }
+
+// // ------------------------------------
+// // Reducer
+// // ------------------------------------
+// export const initialState = {
+//   text: [],
+//   isloaded:false
+// }
+
+// export default function (state = initialState, action) {
+//   const handler = ACTION_HANDLERS[action.type]
+
+//   return handler ? handler(state, action) : state
+// }
 

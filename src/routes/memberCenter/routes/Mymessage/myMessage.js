@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {messageList} from './modules/myMessage'
 import Chat,{chatShow} from '../../../../components/Chat'
-import PageNavBar from '../../../../components/PageNavBar'
+import PageNavBar,{pageNavInit} from '../../../../components/PageNavBar'
 import {asyncConnect} from 'redux-async-connect'
 import {Link} from 'react-router'
 import {countMessage} from '../../containers/modules'
@@ -20,7 +20,7 @@ import {countMessage} from '../../containers/modules'
     auth:state.auth,
     pagenavbar:state.pagenavbar
     }),
-  {chatShow,tipShow,countMessage}
+  {chatShow,tipShow,countMessage,pageNavInit}
 )
 
 export default class myMessage extends Component {
@@ -35,7 +35,7 @@ export default class myMessage extends Component {
   };
 
   componentWillMount =()=>{
-
+    this.props.pageNavInit(this.messageListData)
   }
 
   messageListData = (currentPage)=>{
@@ -92,7 +92,7 @@ export default class myMessage extends Component {
               </ul>
           </div>
         })}
-      <PageNavBar update={this.messageListData} />
+      <PageNavBar />
       </div>
       <Chat />
     </div>

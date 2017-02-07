@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import './pagenavbar.scss'
+import {pageNavInitiation} from './modules'
+import {connect} from 'react-redux'
 
+@connect(
+  state=>({
+    pagenavbar:state.pagenavbar
+  }),
+{})
 export default class PageNavBar extends Component {
 
     state={
@@ -16,7 +23,9 @@ export default class PageNavBar extends Component {
     }
 
     componentWillMount=()=>{
-        this.props.update(1).then((nums)=>{
+        console.log(this.props.pagenavbar)
+        if (typeof this.props.pagenavbar.update != 'function') return
+        this.props.pagenavbar.update(1).then((nums)=>{
             this.setState({
                 pageNums:nums,
             })
@@ -24,14 +33,13 @@ export default class PageNavBar extends Component {
     }
 
     componentWillReceiveProps =(nextprops)=>{     //当有多个数据源，更新数据源时，更新
-        if(nextprops.update != this.props.update){
-            nextprops.update(1).then((nums)=>{
+        if (typeof nextprops.pagenavbar.update != 'function') return
+            nextprops.pagenavbar.update(1).then((nums)=>{
             this.setState({
                 pageNums:nums,
                 currentPage:1
             })
         })
-        }
     }
 
     SetStyle = (currentPage)=>{
@@ -56,7 +64,7 @@ export default class PageNavBar extends Component {
         this.setState({
             currentPage:currentPage
         })
-        this.props.update(currentPage)
+        this.props.pagenavbar.update(currentPage)
     }
 
     pagedown = (e,pageNums)=>{
@@ -65,7 +73,7 @@ export default class PageNavBar extends Component {
         this.setState({
             currentPage:currentPage
         })
-        this.props.update(currentPage)
+        this.props.pagenavbar.update(currentPage)
     }
 
     firstpage = () =>{
@@ -73,7 +81,7 @@ export default class PageNavBar extends Component {
         this.setState({
             currentPage:1
         })
-        this.props.update(1)
+        this.props.pagenavbar.update(1)
     }
 
     lastpage = (e,pageNums) =>{
@@ -81,7 +89,7 @@ export default class PageNavBar extends Component {
         this.setState({
             currentPage:pageNums
         })
-        this.props.update(pageNums)
+        this.props.pagenavbar.update(pageNums)
     }
 
     pagego = (e,currentPage) =>{
@@ -89,7 +97,7 @@ export default class PageNavBar extends Component {
         this.setState({
             currentPage:currentPage
         })
-        this.props.update(currentPage)
+        this.props.pagenavbar.update(currentPage)
     }
 
 
@@ -149,3 +157,5 @@ PageNavBar.PropTypes = {
     update:React.PropTypes.function,
     // currentPage:React.PropTypes.number
 }
+
+export const pageNavInit = pageNavInitiation

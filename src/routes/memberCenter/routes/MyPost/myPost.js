@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {getMyPost} from './modules'
-import PageNavBar from '../../../../components/PageNavBar'
+import PageNavBar,{pageNavInit} from '../../../../components/PageNavBar'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -21,7 +21,7 @@ import PageNavBar from '../../../../components/PageNavBar'
   state => ({
     auth:state.auth,
     }),
-  {tipShow}
+  {tipShow,pageNavInit}
 )
 
 export default class myPost extends Component {
@@ -36,7 +36,7 @@ export default class myPost extends Component {
     };
 
     componentWillMount =()=>{
-     // this.updateDate()
+     this.props.pageNavInit(this.getMyPostData)
     }
 
     getMyPostData = (currentPage)=>{
@@ -78,7 +78,7 @@ export default class myPost extends Component {
         })}
         </tbody>
       </table>
-      <PageNavBar update={this.getMyPostData} />
+      <PageNavBar />
     </div>
     )
   }

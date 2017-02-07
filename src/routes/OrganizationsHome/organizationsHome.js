@@ -7,14 +7,14 @@ import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getArticleLi
 import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
 // import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
-import PageNavBar from '../../components/PageNavBar'
+import PageNavBar,{pageNavInit} from '../../components/PageNavBar'
 
 @connect(
   state=>({
     auth:state.auth,
     pagenavbar:state.pagenavbar
   }),
-{tipShow})
+{tipShow,pageNavInit})
 export default class OrganizationsHome extends Component{
 
 
@@ -28,6 +28,7 @@ export default class OrganizationsHome extends Component{
         BasicInfo:data.data[0]
       })
     })
+    this.props.pageNavInit(this.activityData)
     getMembers(this.props.params.id).then(({data})=>{
       for (var i = 0; i < data.data.length; i++) {
         if(data.data[i].phone == this.props.auth.phone){
@@ -46,16 +47,7 @@ export default class OrganizationsHome extends Component{
   }
 
   activityData = (currentPage)=>{
-    return getArticleList(this.props.params.id,0,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
-      this.setState({
-          Activities:data.data
-        })
-      return Math.ceil(data.count/this.state.averagenum)
-    })
-  }
-
-  quoteData = (currentPage)=>{
-    return getArticleList(this.props.params.id,1,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+    return getArticleList(this.props.params.id,this.state.type,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
       this.setState({
           Activities:data.data
         })
@@ -68,7 +60,6 @@ export default class OrganizationsHome extends Component{
     Members:[],
     Activities:[],
     averagenum:5,
-    updatePageNav:this.activityData,
     type:0 //文章类型
 	}
 
@@ -125,8 +116,8 @@ export default class OrganizationsHome extends Component{
     e.target.style.background = "#37a"
     this.setState({
       type:type,
-      updatePageNav:this.state.updatePageNav == this.activityData ? this.quoteData : this.activityData,
     })
+    this.props.pageNavInit(this.activityData)
   }
 
   render(){
@@ -181,8 +172,8 @@ export default class OrganizationsHome extends Component{
             })}
             </tbody>
           </table>
-          {this.state.Activities.length = 0 && <span>还没有发布任何东西耶~</span>}
-          <PageNavBar update={this.state.updatePageNav} />
+          {this.state.Activities.length == 0 && <span>还没有发布任何东西耶~</span>}
+          <PageNavBar />
          </div>
         </div>
 

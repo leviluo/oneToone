@@ -6,16 +6,18 @@ const publicController = {
         this.body = {status:200,data:result}
     },
     items:async function(next){
-    	if (!this.request.body.address) {
-    		this.body = {status:500,msg:"缺少参数"}
-    		return
-    	}
-        if (this.request.body.parentSpeciality) {
-    	   var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.categoryId = (select id from specialityCategory where name = ? ) and (m.location = ? or m.location = ?);",[this.request.body.parentSpeciality,this.request.body.address,this.request.body.address+'市'])
-        }else if(this.request.body.speciality){
-           var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?);",[this.request.body.speciality,this.request.body.address,this.request.body.address+'市'])
+        if (!this.request.body.address || !this.request.body.limit) {
+            this.body = {status:500,msg:"È±ÉÙ²ÎÊý"}
+            return
         }
-    	this.body = {status:200,data:result}
+        if (this.request.body.parentSpeciality) {
+           var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.categoryId = (select id from specialityCategory where name = ? ) and (m.location = ? or m.location = ?) limit "+this.request.body.limit,[this.request.body.parentSpeciality,this.request.body.address,this.request.body.address+'ÊÐ'])
+            var count = await sqlStr("select count(m.id) as count from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.categoryId = (select id from specialityCategory where name = ? ) and (m.location = ? or m.location = ?)",[this.request.body.parentSpeciality,this.request.body.address,this.request.body.address+'ÊÐ'])
+        }else if(this.request.body.speciality){
+           var result = await sqlStr("select m.nickname,m.address,m.sex,m.phone,s.name,ms.brief from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?) limit "+this.request.body.limit,[this.request.body.speciality,this.request.body.address,this.request.body.address+'ÊÐ'])
+           var count = await sqlStr("select count(m.id) as count from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where s.name = ? and (m.location = ? or m.location = ?)",[this.request.body.speciality,this.request.body.address,this.request.body.address+'ÊÐ'])
+        }
+        this.body = {status:200,data:result,count:count[0].count}
     },
     getCatelogy:async function(next){
         // console.log("whji")
@@ -24,7 +26,7 @@ const publicController = {
     },
     memberInfo:async function(next){
         if (!this.request.query.phone) {
-            this.body = {status:500,msg:"缺少参数"}
+            this.body = {status:500,msg:"È±ÉÙ²ÎÊý"}
             return
         }
         var result = await sqlStr("select address,sex,nickname from member where phone = ?",[this.request.query.phone])

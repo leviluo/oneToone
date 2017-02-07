@@ -6,10 +6,10 @@ export default (store) => ({
     require.ensure([], (require) => {
       const categories = require('./containers/categories').default
       
-      var reducer = require('./modules').default
-      injectReducer(store, { key: 'items', reducer })
+      // var reducer = require('./modules').default
+      // injectReducer(store, { key: 'items', reducer })
 
-      reducer = require('../../reducers/category').default
+      var reducer = require('../../reducers/category').default
       injectReducer(store, { key: 'catelogues', reducer })
 
       // reducer = require('../../components/Chat/modules/chat').default

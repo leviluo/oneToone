@@ -40,10 +40,10 @@ export default class Categories extends React.Component{
 
     componentDidMount=()=>{
         // console.log("componentDidMount")
-        if (this.props.catelogues.isloaded) {  //ä»é¦–é¡µè·³è½¬
+        if (this.props.catelogues.isloaded) {  //´ÓÊ×Ò³Ìø×ª
             this.setStyle(this.props.location.query.childCatelogue?this.props.location.query.childCatelogue:this.props.location.query.parentCatelogue);
         }
-        if (this.props.mylocation.isloaded) {  //åŠ è½½æ•°æ®
+        if (this.props.mylocation.isloaded) {  //¼ÓÔØÊı¾İ
             this.initItems(this.props)
         }
     }
@@ -52,20 +52,19 @@ export default class Categories extends React.Component{
     initItems =(props)=>{
         let speciality = props.location.query.childCatelogue ? props.location.query.childCatelogue :props.location.query.parentCatelogue
         let address = props.mylocation.text.content ? props.mylocation.text.content.address :'';
-        if (props.location.query.childCatelogue) {   //ä»å­æ¡ç›®è¿›å…¥
+        if (props.location.query.childCatelogue) {   //´Ó×ÓÌõÄ¿½øÈë
             this.setState({
                 speciality:speciality,
                 address:address,
                 childCatelogue:props.location.query.childCatelogue
             })
             this.props.pageNavInit(this.updateSpecialityData)
-        }else{                                      //ä»çˆ¶æ¡ç›®è¿›å…¥
+        }else{                                      //´Ó¸¸ÌõÄ¿½øÈë
             this.setState({
                 speciality:speciality,
                 address:address,
                 childCatelogue:props.location.query.childCatelogue
             })    
-            console.log(this.updateParentSpecialityData)
             this.props.pageNavInit(this.updateParentSpecialityData)                             
         }
     }
@@ -100,15 +99,15 @@ export default class Categories extends React.Component{
 
     componentWillReceiveProps =(nextProps)=>{
             if (this.props.catelogues.isloaded) {
-                this.setStyle(nextProps.location.query.childCatelogue?nextProps.location.query.childCatelogue:nextProps.location.query.parentCatelogue);   //åˆ·æ–°é¡µé¢
+                this.setStyle(nextProps.location.query.childCatelogue?nextProps.location.query.childCatelogue:nextProps.location.query.parentCatelogue);   //Ë¢ĞÂÒ³Ãæ
             }
-            if (nextProps.mylocation.isloaded) {  //åŠ è½½æ•°æ®
+            if (nextProps.mylocation.isloaded) {  //¼ÓÔØÊı¾İ
                 this.initItems(nextProps)
             }
     }
 
     state = {
-        averagenum:5,
+        averagenum:3,
         childCatelogue:'',
         chatTo:'',
         sendTo:'',
@@ -143,7 +142,7 @@ export default class Categories extends React.Component{
 
     showChat =(name,phone)=>{
         if (!this.props.auth.phone) {
-            this.props.tipShow({type:'error',msg:'æ‚¨è¿˜æœªç™»å½•,è¯·å…ˆç™»å½•'})
+            this.props.tipShow({type:'error',msg:'Äú»¹Î´µÇÂ¼,ÇëÏÈµÇÂ¼'})
             return
         }
         if (phone == this.props.auth.phone) return
@@ -160,13 +159,13 @@ export default class Categories extends React.Component{
         return <div className="category">
         <Helmet title={this.props.location.query.parentCatelogue} />
         <div className="categoryTop">
-            <nav><Link to="/">é¦–é¡µ</Link> &gt; <a onClick={this.allCategory}>{this.props.location.query.parentCatelogue}</a>{this.state.childCatelogue && <span> &gt; {this.state.childCatelogue}</span>}</nav>
+            <nav><Link to="/">Ê×Ò³</Link> &gt; <a onClick={this.allCategory}>{this.props.location.query.parentCatelogue}</a>{this.state.childCatelogue && <span> &gt; {this.state.childCatelogue}</span>}</nav>
             <div>
                 <table >
                     <tbody>
                         <tr>
-                            <td>ç±»åˆ«:</td>
-                            <td><ul id="categoryItems"><li><a onClick={this.allCategory} name={this.props.location.query.parentCatelogue}>å…¨éƒ¨</a></li>{catelogues.text.map((item,index)=>{
+                            <td>Àà±ğ:</td>
+                            <td><ul id="categoryItems"><li><a onClick={this.allCategory} name={this.props.location.query.parentCatelogue}>È«²¿</a></li>{catelogues.text.map((item,index)=>{
                                 if (item.parentCatelogue == location.query.parentCatelogue) {
                                     return <li key={index}><a onClick={()=>this.getoneCategory(item.childCatelogue)} name={item.childCatelogue}>{item.childCatelogue}</a></li>
                                 }
@@ -182,9 +181,9 @@ export default class Categories extends React.Component{
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 let link = `/memberBrief/${item.phone}`
                 return <div key={index} className="itemContent">
-                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>ç§ä¿¡</a>&nbsp;&nbsp;<Link to={link}>æŸ¥çœ‹åç‰‡</Link></span>
+                     <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>Ë½ĞÅ</a>&nbsp;&nbsp;<Link to={link}>²é¿´ÃûÆ¬</Link></span>
                     <div><img src={src} alt=""/></div>
-                    <div><ul><li><Link to={link}>{item.nickname}</Link>(<span className="title">æ€§åˆ«:</span>{item.sex==0 && <span>ç”·</span>}{item.sex==1 && <span>å¥³</span>})</li><li><span className="title">ç®€ä»‹:</span>{brief}</li><li><span className="title">èƒ½åŠ›:</span>{item.name}</li><li><span className="title">ç°å±…ä½åœ°:</span>{item.address}</li></ul></div>
+                    <div><ul><li><Link to={link}>{item.nickname}</Link>(<span className="title">ĞÔ±ğ:</span>{item.sex==0 && <span>ÄĞ</span>}{item.sex==1 && <span>Å®</span>})</li><li><span className="title">¼ò½é:</span>{brief}</li><li><span className="title">ÄÜÁ¦:</span>{item.name}</li><li><span className="title">ÏÖ¾Ó×¡µØ:</span>{item.address}</li></ul></div>
                 </div>
             }
             )}
