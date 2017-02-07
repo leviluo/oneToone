@@ -13,7 +13,7 @@ const initialReducers = {
   mylocation: (state = require('../components/Location/modules/location').initialState) => state,
   auth: (state = require('../reducers/auth').initialState) => state,
   catelogues:(state = require('../reducers/category').initialState) => state,
-  pagenavbar:(state = require('../components/PageNavBar/modules/pagenavbar').initialState) => state,
+  // pagenavbar:(state = require('../components/PageNavBar/modules/pagenavbar').initialState) => state,
   memberCenter:(state = require('../routes/memberCenter/containers/modules').initialState) => state,
   myspecialities:(state = {text:[],isloaded:false}) => state,
   items:(state = {text:[],isloaded:false}) => state,

@@ -86,7 +86,7 @@ CREATE TABLE `comments` (
   `createdAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
--- 回复通知 commentsId和replyTo相同
+-- 回复通知 
 CREATE TABLE `reReply` (  
   `id` mediumint(8) unsigned auto_increment,
   `replyTo` mediumint(8) unsigned,

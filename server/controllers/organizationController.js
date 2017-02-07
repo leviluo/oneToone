@@ -180,13 +180,15 @@ const organizationController = {
       var result = await sqlStr("select a.id,a.organizationsId,o.name,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.type = 0")
       this.body = {status:200,data:result}
     },
-    getActivities:async function(next){
-      if (!this.request.query.id) {
+    getArticleList:async function(next){
+      if (!this.request.query.id || !this.request.query.limit || !this.request.query.type) {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr("select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = 0 and a.organizationsId = ?",[this.request.query.id])
-      this.body = {status:200,data:result}
+      var result = await sqlStr(`select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = ? and a.organizationsId = ? limit ${this.request.query.limit}`,[this.request.query.type,this.request.query.id])
+      var count = await sqlStr("select count(id) as count from article where type = ? and organizationsId = ?",[this.request.query.type,this.request.query.id])
+
+      this.body = {status:200,data:result,count:count[0].count}
     },
     article:async function(){
       if (!this.request.query.id) {
@@ -264,12 +266,13 @@ const organizationController = {
       this.body = {status:500,msg:"操作失败"}
     },
     getMyPost:async function(){
-      if (!this.session.user) {
+      if (!this.session.user || !this.request.query.limit) {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-      var result = await sqlStr("select a.title,a.id,a.organizationsId,a.type,a.updatedAt,o.name,(select count(*) from comments where comments.articleId = a.id) as count,(select count(*) from comments where comments.articleId = a.id and comments.status = 0) as noRead from article as a left join organizations as o on o.id = a.organizationsId where a.memberId = (select id from member where phone =?)",[this.session.user])
-      this.body = {status:200,data:result}
+      var result = await sqlStr("select a.title,a.id,a.organizationsId,a.type,a.updatedAt,o.name,(select count(*) from comments where comments.articleId = a.id) as count,(select count(*) from comments where comments.articleId = a.id and comments.status = 0) as noRead from article as a left join organizations as o on o.id = a.organizationsId where a.memberId = (select id from member where phone =?) order by noRead desc limit "+this.request.query.limit,[this.session.user])
+      var count = await sqlStr("select count(id) as count from article where memberId = (select id from member where phone = ?)",[this.session.user])
+      this.body = {status:200,data:result,count:count[0].count}
     },
     getmyNotice:async function(){
       if (!this.session.user) {

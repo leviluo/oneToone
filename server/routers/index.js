@@ -78,7 +78,7 @@ export default function routers(router){
 // 按照会员数获取最热社团
 	router.get("/organizations/OrganizationsSortByHot",organizationController.OrganizationsSortByHot,router.allowedMethods());
 // 获取所有活动信息
-	router.get("/organizations/getActivities",organizationController.getActivities,router.allowedMethods());
+	router.get("/organizations/getArticleList",organizationController.getArticleList,router.allowedMethods());
 // 获取所有咨询信息
 	// router.get("/organizations/getConsults",organizationController.getConsults,router.allowedMethods());
 // 获取文章详情

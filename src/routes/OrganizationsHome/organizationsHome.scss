@@ -22,7 +22,7 @@
 		 width:900px;
 		 a{
 		 	color:#37a;
-		 	padding:3px;
+		 	padding:3px 5px;
 		 	&:hover{
 		 		background:#efefef
 		 	}
@@ -77,8 +77,12 @@
 				
 			}
 			span{
-			position:relative;
-			top:10px;
+				position:relative;
+				top:10px;
+				a:first-of-type{
+					color:white;
+					background:#37a
+				}
 			}
 		}
 		.articleList{

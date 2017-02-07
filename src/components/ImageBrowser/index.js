@@ -38,6 +38,7 @@ export default class ImageBrowser extends Component{
     var ele = findDOMNode(this)
     ele.style.display = "none"
     document.body.style.overflow = "auto"
+    document.body.style.width = 'auto'   //在打开modal之后，关闭了modal，得改为自动，网页才会自动调整大小
   }
 
   componentWillReceiveProps=(nextProps)=>{

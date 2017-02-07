@@ -5,6 +5,7 @@ import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {getMyPost} from './modules'
+import PageNavBar from '../../../../components/PageNavBar'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -19,7 +20,6 @@ import {getMyPost} from './modules'
 @connect(
   state => ({
     auth:state.auth,
-
     }),
   {tipShow}
 )
@@ -27,7 +27,8 @@ import {getMyPost} from './modules'
 export default class myPost extends Component {
 
     state = {
-      myPostData:[]
+      myPostData:[],
+      averagenum:5
     }
 
     static contextTypes = {
@@ -35,15 +36,16 @@ export default class myPost extends Component {
     };
 
     componentWillMount =()=>{
-     this.updateDate()
+     // this.updateDate()
     }
 
-    updateDate = ()=>{
-      getMyPost().then(({data})=>{
+    getMyPostData = (currentPage)=>{
+    return getMyPost(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
         if (data.status == 200) {
           this.setState({
             myPostData:data.data
           })
+          return Math.ceil(data.count/this.state.averagenum)
         }else if (data.status==600) {
           this.props.dispatch({type:"AUTHOUT"})
           this.context.router.push('/login')
@@ -51,7 +53,7 @@ export default class myPost extends Component {
           this.props.tipShow({type:'error',msg:data.msg})
         }
       })
-    }
+  }
 
   render () {
     return (
@@ -76,6 +78,7 @@ export default class myPost extends Component {
         })}
         </tbody>
       </table>
+      <PageNavBar update={this.getMyPostData} />
     </div>
     )
   }

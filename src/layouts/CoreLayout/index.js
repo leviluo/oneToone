@@ -17,8 +17,8 @@ export default function MyCoreLayout(store){
     injectReducer(store, { key: 'chat', reducer })
 	reducer = require('../../components/ImageBrowser/modules').default
     injectReducer(store, { key: 'imageBrowser', reducer })
-	reducer = require('../../components/PageNavBar/modules/pagenavbar').default
-    injectReducer(store, { key: 'pagenavbar', reducer })
+	// reducer = require('../../components/PageNavBar/modules/pagenavbar').default
+ //    injectReducer(store, { key: 'pagenavbar', reducer })
 	return CoreLayout
 }
 

@@ -9,8 +9,8 @@ export function getMembers(id) {
       return axios.get('/organizations/getMembers?id='+id)
 }
 // 获取活动
-export function getActivities(id) {
-      return axios.get('/organizations/getActivities?id='+id)
+export function getArticleList(id,type,limit) {
+      return axios.get(`/organizations/getArticleList?id=${id}&limit=${limit}&type=${type}`)
 }
 // 获取咨询
 export function getConsults() {

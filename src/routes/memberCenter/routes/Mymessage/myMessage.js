@@ -5,7 +5,6 @@ import { tipShow } from '../../../../components/Tips/modules/tips'
 import {messageList} from './modules/myMessage'
 import Chat,{chatShow} from '../../../../components/Chat'
 import PageNavBar from '../../../../components/PageNavBar'
-import {pageNavInit} from '../../../../components/PageNavBar/modules/pagenavbar'
 import {asyncConnect} from 'redux-async-connect'
 import {Link} from 'react-router'
 import {countMessage} from '../../containers/modules'
@@ -21,7 +20,7 @@ import {countMessage} from '../../containers/modules'
     auth:state.auth,
     pagenavbar:state.pagenavbar
     }),
-  {chatShow,pageNavInit,tipShow,countMessage}
+  {chatShow,tipShow,countMessage}
 )
 
 export default class myMessage extends Component {
@@ -36,13 +35,16 @@ export default class myMessage extends Component {
   };
 
   componentWillMount =()=>{
-    messageList().then(({data})=>{
+
+  }
+
+  messageListData = (currentPage)=>{
+    return messageList(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
       if (data.status == 200) {
-        var pageNums = Math.ceil(data.data.length/this.state.averagenum)
-        this.props.pageNavInit(pageNums)
         this.setState({
           items:data.data
         })
+        return Math.ceil(data.count/this.state.averagenum)
       }else if (data.status==600) {
         this.props.dispatch({type:"AUTHOUT"})
         this.context.router.push('/login')
@@ -69,7 +71,7 @@ export default class myMessage extends Component {
     return (
     <div>
       <div className="messageContent">
-        {this.state.items.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
+        {this.state.items.map((item,index)=>{
           var headImg = `/public/Headload?member=${item.phone}`
           var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''
           var date = new Date(item.time)
@@ -90,7 +92,7 @@ export default class myMessage extends Component {
               </ul>
           </div>
         })}
-      <PageNavBar />
+      <PageNavBar update={this.messageListData} />
       </div>
       <Chat />
     </div>

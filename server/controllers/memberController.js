@@ -104,12 +104,13 @@ const memberController = {
         // this.body = this.body
     },
     getMessageList:async function(next){
-        if (!this.session.user) {
+        if (!this.session.user || !this.request.query.limit) {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-        var result = await sqlStr("select message.time,message.text,message.imgUrl,message.active,member.nickname,member.phone,if(message.fromMember=(select id from member where phone = ?),1,0) as isSend from message left join member on (member.id = message.fromMember or member.id = message.toMember) and member.phone != ? where message.id in (select max(ms.id) from message as ms left join member as m on (m.id = ms.toMember or m.id = ms.fromMember) and m.phone != ? where ms.fromMember = (select id from member where phone = ?) or ms.toMember = (select id from member where phone = ?) group by m.phone);",[this.session.user,this.session.user,this.session.user,this.session.user,this.session.user])
-        this.body = {status:200,data:result}
+        var result = await sqlStr(`select message.time,message.text,message.imgUrl,message.active,member.nickname,member.phone,if(message.fromMember=(select id from member where phone = ?),1,0) as isSend from message left join member on (member.id = message.fromMember or member.id = message.toMember) and member.phone != ? where message.id in (select max(ms.id) from message as ms left join member as m on (m.id = ms.toMember or m.id = ms.fromMember) and m.phone != ? where ms.fromMember = (select id from member where phone = ?) or ms.toMember = (select id from member where phone = ?) group by m.phone) limit ${this.request.query.limit};`,[this.session.user,this.session.user,this.session.user,this.session.user,this.session.user])
+        var count = await sqlStr("select ms.id from message as ms left join member as m on (m.id = ms.toMember or m.id = ms.fromMember) and m.phone != ? where ms.fromMember = (select id from member where phone = ?) or ms.toMember = (select id from member where phone = ?) group by m.phone;",[this.session.user,this.session.user,this.session.user])
+        this.body = {status:200,data:result,count:count.length}
     },
     modifyNickname:async function(next){
         if (!this.request.body.nickname) {
@@ -211,7 +212,7 @@ const memberController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-        var result = await sqlStr("select count(id) as count from message where toMember = (select id from member where phone = ?) and active = 0",[this.session.user])
+        var result = await sqlStr("select count(DISTINCT fromMember) as count from message where toMember = (select id from member where phone = ?) and active = 0",[this.session.user])
         this.body = {status:200,data:result}
     },
     countNotice:async function(){

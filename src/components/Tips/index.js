@@ -15,7 +15,6 @@ export default class Tip extends Component {
 
     componentWillMount = () => {
         // console.log("componentWillMount")
-        
     }
     
     componentDidUpdate = (e) => {
@@ -65,8 +64,6 @@ export default class Tip extends Component {
     }
 
     render() {
-        console.log("tips")
-        console.log(this.props)
         return ( 
             < div id = "tips" > {this.props.result.msg} </div >
         )

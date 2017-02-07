@@ -3,10 +3,10 @@ import './organizationsHome.scss'
 // import {getSpecialities} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
-import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getActivities} from './modules'
+import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getArticleList} from './modules'
 import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
-import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
+// import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
 import PageNavBar from '../../components/PageNavBar'
 
 @connect(
@@ -14,34 +14,21 @@ import PageNavBar from '../../components/PageNavBar'
     auth:state.auth,
     pagenavbar:state.pagenavbar
   }),
-{tipShow,pageNavInit})
+{tipShow})
 export default class OrganizationsHome extends Component{
 
-	state = {
-		BasicInfo:[],
-    Members:[],
-    Activities:[],
-    averagenum:4
-	}
 
   static contextTypes = {
     router: React.PropTypes.object.isRequired
   };
 
-	componentWillMount =()=>{
+  componentWillMount =()=>{
     getBasicInfo(this.props.params.id).then(({data})=>{
       this.setState({
         BasicInfo:data.data[0]
       })
     })
-    getActivities(this.props.params.id).then(({data})=>{
-      this.setState({
-        Activities:data.data
-      })
-      var pageNums = Math.ceil(data.data.length/this.state.averagenum)
-      this.props.pageNavInit(pageNums)
-    })
-		getMembers(this.props.params.id).then(({data})=>{
+    getMembers(this.props.params.id).then(({data})=>{
       for (var i = 0; i < data.data.length; i++) {
         if(data.data[i].phone == this.props.auth.phone){
           this.setState({
@@ -51,11 +38,38 @@ export default class OrganizationsHome extends Component{
           return
         }
       }
-			this.setState({
-				isAttended:false,
+      this.setState({
+        isAttended:false,
         Members:data.data
-			})
-		})
+      })
+    })
+  }
+
+  activityData = (currentPage)=>{
+    return getArticleList(this.props.params.id,0,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+      this.setState({
+          Activities:data.data
+        })
+      return Math.ceil(data.count/this.state.averagenum)
+    })
+  }
+
+  quoteData = (currentPage)=>{
+    return getArticleList(this.props.params.id,1,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+      this.setState({
+          Activities:data.data
+        })
+      return Math.ceil(data.count/this.state.averagenum)
+    })
+  }
+
+	state = {
+		BasicInfo:[],
+    Members:[],
+    Activities:[],
+    averagenum:5,
+    updatePageNav:this.activityData,
+    type:0 //文章类型
 	}
 
   attendOrganization =()=>{
@@ -97,9 +111,22 @@ export default class OrganizationsHome extends Component{
       this.props.tipShow({type:"error",msg:"请先加入这个社团才能发帖"})
       return
     }
-    console.log(this.context.router)
-    console.log(this.context.router.push)
     this.context.router.push(`/postArticle/${this.props.params.id}/post`)
+  }
+
+  changeType =(e,type) =>{
+    if (type == this.state.type)return;
+    var elm = e.target.parentNode.getElementsByTagName('a');
+    for (var i = elm.length - 1; i >= 0; i--) {
+      elm[i].style.color = "#37a"
+      elm[i].style.background = "#fff"
+    };
+    e.target.style.color = "#fff"
+    e.target.style.background = "#37a"
+    this.setState({
+      type:type,
+      updatePageNav:this.state.updatePageNav == this.activityData ? this.quoteData : this.activityData,
+    })
   }
 
   render(){
@@ -128,7 +155,7 @@ export default class OrganizationsHome extends Component{
           </div>
 
           <div className="articleTop">
-             <span><a href="">活动</a>&nbsp;/&nbsp;<a href="">咨询</a></span>
+             <span><a onClick={(e)=>this.changeType(e,0)}>活动</a>&nbsp;/&nbsp;<a onClick={(e)=>this.changeType(e,1)}>咨询</a></span>
              <button className="btn-default" onClick={this.postArticle}><i className="fa fa-edit"></i>&nbsp;发布</button>
           </div>
           
@@ -141,7 +168,7 @@ export default class OrganizationsHome extends Component{
               </tr>
             </thead>
             <tbody>
-            {this.state.Activities.slice(this.state.averagenum*(this.props.pagenavbar.currentPage-1),this.state.averagenum*this.props.pagenavbar.currentPage).map((item,index)=>{
+            {this.state.Activities.map((item,index)=>{
               var date = new Date(item.updatedAt)
               var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               var linkMember = `/memberBrief/${item.phone}`
@@ -154,7 +181,8 @@ export default class OrganizationsHome extends Component{
             })}
             </tbody>
           </table>
-          <PageNavBar />
+          {this.state.Activities.length = 0 && <span>还没有发布任何东西耶~</span>}
+          <PageNavBar update={this.state.updatePageNav} />
          </div>
         </div>
 
