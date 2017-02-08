@@ -40,7 +40,7 @@ export default class requestApproval extends Component {
     }
 
   //   getrequestData = (currentPage)=>{
-  //   return getMyPost(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+  //   return getMyPost(this.props.params.id,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
   //       if (data.status == 200) {
   //         this.setState({
   //           requestData:data.data

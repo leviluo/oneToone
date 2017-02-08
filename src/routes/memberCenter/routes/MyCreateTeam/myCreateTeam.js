@@ -324,7 +324,7 @@ export default class myCreateTeam extends Component {
               var organizationName = `organizationName${item.id}`
               var organizationBrief = `organizationBrief${item.id}`
               var link = `/organizationsHome/${item.id}`
-              var linkApproval = `/memberCenter/requestApproval`
+              var linkApproval = `/memberCenter/requestApproval/${item.id}`
               return <div className="items" key = {index}>
                       {!this.state[item.name] && <div>{item.name}<span><Link to={linkApproval} >入社申请</Link><Link to={link} >去社团主页</Link><a onClick={(e)=>{this.state[item.name] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a><a onClick={(e)=>this.deleteOrganization(e,item.id)}><i className="fa fa-trash"></i>删除</a></span></div>}
                       {!this.state[item.name] && <img src={headImg} />}

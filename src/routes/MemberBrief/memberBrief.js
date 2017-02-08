@@ -17,7 +17,7 @@ export default class MemberBrief extends Component{
   }
 
   componentWillMount = ()=>{
-      getSpecialities(this.props.params.phone).then(({data})=>{
+      getSpecialities(this.props.params.id).then(({data})=>{
          if (data.status==200) {
               this.setState({
                 specialities:data.data
@@ -26,11 +26,12 @@ export default class MemberBrief extends Component{
               this.props.tipShow({type:'error',msg:data.msg})
           }
       })
-      memberInfo(this.props.params.phone).then(({data})=>{
+      memberInfo(this.props.params.id).then(({data})=>{
         if (data.status==200) {
               this.setState({
                 memberInfo:data.data[0]
               })
+              this.refs.headImgUrl.src = `/originImg?from=member&name=${data.data[0].phone}`
           }else{
               this.props.tipShow({type:'error',msg:data.msg})
           }
@@ -60,10 +61,10 @@ export default class MemberBrief extends Component{
     }
 
   render(){
-    const {sex,nickname,address} = this.state.memberInfo
-    var phone = this.props.params.phone
+    const {sex,nickname,address,phone} = this.state.memberInfo
+    // var phone = this.props.params.phone
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
-    var headImgUrl = `/originImg?from=member&name=${phone}`
+    // var headImgUrl = `/originImg?from=member&name=${phone}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return(
@@ -85,11 +86,10 @@ export default class MemberBrief extends Component{
         <div className="memberBriefContent">
             <div>
               <div>
-                <img id="memberinfoHeadImg" src={headImgUrl} />
+                <img id="memberinfoHeadImg" ref="headImgUrl" />
               </div>
             </div>
               <ul>
-                <li><h3><hr /><span>电话</span></h3><p>{phone}</p></li>
                 <li><h3><hr /><span>性别</span></h3><p>{sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p></li>
                 <li><h3><hr /><span>详细地址</span></h3><p>{address}</p></li>

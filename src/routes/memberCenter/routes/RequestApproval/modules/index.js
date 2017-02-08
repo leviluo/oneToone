@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-export function getrequestData(limit){
-	return axios.get(`/organizations/getrequestData?limit=${limit}`)
+export function getrequestData(id,limit){
+	return axios.get(`/organizations/getrequestData?id=${id}&limit=${limit}`)
 }
 

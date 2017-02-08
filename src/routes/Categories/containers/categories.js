@@ -180,7 +180,7 @@ export default class Categories extends React.Component{
             {this.state.allItems.map((item,index)=> {
                 let src = `/originImg?from=member&name=${item.phone}`
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
-                let link = `/memberBrief/${item.phone}`
+                let link = `/memberBrief/${item.memberId}`
                 return <div key={index} className="itemContent">
                      <span><a onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<Link to={link}>查看名片</Link></span>
                     <div><img src={src} alt=""/></div>

@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-export function getSpecialities(phone) {
-	return axios.get('/member/specialities?phone='+phone)
+export function getSpecialities(id) {
+	return axios.get('/member/specialities?id='+id)
 }
 
-export function memberInfo(phone) {
-	return axios.get('/public/memberInfo?phone='+phone)
+export function memberInfo(id) {
+	return axios.get('/public/memberInfo?id='+id)
 }

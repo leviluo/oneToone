@@ -1,7 +1,7 @@
 // import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: '/MemberBrief/:phone',
+  path: '/MemberBrief/:id',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
       const memberbrief = require('./memberBrief').default

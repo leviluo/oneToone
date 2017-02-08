@@ -58,7 +58,7 @@ export default class memberCenter extends Component {
             </ul>
             <h3>社团</h3>
             <ul>
-              <li><Link to="/memberCenter/myCreateTeam" className={this.props.location.pathname == '/memberCenter/myCreateTeam' || this.props.location.pathname =='/memberCenter/requestApproval' ? 'active' : ''}>我创建的</Link></li>
+              <li><Link to="/memberCenter/myCreateTeam" className={this.props.location.pathname == '/memberCenter/myCreateTeam' || this.props.location.pathname == '/memberCenter/requestApproval' ? 'active' : ''}>我创建的</Link></li>
               <li><Link to="/memberCenter/myAttendTeam" className={this.props.location.pathname == '/memberCenter/myAttendTeam' ? 'active' : ''}>我加入的</Link></li>
               <li><Link to="/memberCenter/myPost" className={this.props.location.pathname == '/memberCenter/myPost' ? 'active' : ''}>我发布的{this.props.status.countReply > 0 && <span className="noRead">{this.props.status.countReply}</span>}</Link></li>
             </ul>

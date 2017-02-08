@@ -282,6 +282,19 @@ const organizationController = {
       var result = await sqlStr("select m.phone,m.nickname,c.createdAt,c.comment,a.id as articleId,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?) and r.status = 0",[this.session.user])
       var resultt = await sqlStr("update reReply set status = 1 where replyTo in (select id from comments where memberId = (select id from member where phone = ?))",[this.session.user])
       this.body = {status:200,data:result}
+    },
+    getrequestData:async function(){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      if (!this.request.query.id) {
+          this.body = { status: 600, msg: "缺少参数" }
+          return
+      };
+      var result = await sqlStr("select m.phone,m.nickname,c.createdAt,c.comment,a.id as articleId,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?) and r.status = 0",[this.session.user])
+      var resultt = await sqlStr("update reReply set status = 1 where replyTo in (select id from comments where memberId = (select id from member where phone = ?))",[this.session.user])
+      this.body = {status:200,data:result}
     }
 }
 export default organizationController;

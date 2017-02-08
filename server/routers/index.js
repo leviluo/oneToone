@@ -99,6 +99,8 @@ export default function routers(router){
 	router.get("/organizations/getMyPost",organizationController.getMyPost,router.allowedMethods());
 // 获取通知
 	router.get("/organizations/getmyNotice",organizationController.getmyNotice,router.allowedMethods());
+// 获取入社申请
+	router.get("/organizations/getrequestData",organizationController.getrequestData,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next
