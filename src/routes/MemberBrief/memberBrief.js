@@ -63,7 +63,7 @@ export default class MemberBrief extends Component{
     const {sex,nickname,address} = this.state.memberInfo
     var phone = this.props.params.phone
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
-    var headImgUrl = `/public/Headload?member=${phone}`
+    var headImgUrl = `/originImg?from=member&name=${phone}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return(
@@ -108,7 +108,7 @@ export default class MemberBrief extends Component{
                           <div className="imgShow">
                           {works.map((item,index)=>{
                             if (!item) return;
-                            return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item})`}}></div>
+                            return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item.replace(/\/originImg\?/,"/img?")})`}}></div>
                               })}
                           </div>
                           </li>

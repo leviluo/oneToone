@@ -3,6 +3,8 @@ import { findDOMNode } from 'react-dom';
 import './ImageBrowser.scss'
 import {imgbrowser} from './modules'
 import {connect} from 'react-redux'
+// import {loading} from './assert/loading.gif'
+import loading from './assets/loading.gif'
 
 export const imgbrowserShow = imgbrowser
 
@@ -11,12 +13,7 @@ export const imgbrowserShow = imgbrowser
 {})
 export default class ImageBrowser extends Component{
 
-  state={
-    src:''
-  }
-
   componentDidUpdate =()=>{
-    // console.log(this.props.ImageBrowser)
     if(this.props.ImageBrowser.isShow){
       this.show()
     }
@@ -39,29 +36,30 @@ export default class ImageBrowser extends Component{
     ele.style.display = "none"
     document.body.style.overflow = "auto"
     document.body.style.width = 'auto'   //在打开modal之后，关闭了modal，得改为自动，网页才会自动调整大小
+    this.refs.src.src = loading
   }
 
   componentWillReceiveProps=(nextProps)=>{
     this.setState({
-      src:nextProps.ImageBrowser.imgs[nextProps.ImageBrowser.currentChoose],
       currentChoose:nextProps.ImageBrowser.currentChoose
     })
+    this.refs.src.src = nextProps.ImageBrowser.imgs[nextProps.ImageBrowser.currentChoose]
   }
 
   up=()=>{
     if (this.state.currentChoose == 0) {return};
     this.setState({
-      src:this.props.ImageBrowser.imgs[this.state.currentChoose-1],
       currentChoose:this.state.currentChoose - 1
     })
+    this.refs.src.src = this.props.ImageBrowser.imgs[this.state.currentChoose-1]
   }
 
   next=()=>{
     if (this.state.currentChoose == this.props.ImageBrowser.imgs.length-1) {return};
     this.setState({
-      src:this.props.ImageBrowser.imgs[this.state.currentChoose+1],
       currentChoose:this.state.currentChoose + 1
     })
+    this.refs.src.src = this.props.ImageBrowser.imgs[this.state.currentChoose+1]
   }
 
   render(){
@@ -74,7 +72,7 @@ export default class ImageBrowser extends Component{
               <button onClick={this.next} >&gt;</button>
             </div>
             <div>
-              <img src={this.state.src} alt=""/>
+              <img ref="src" alt=""/>
               <button className="close" onClick={this.close} >×</button>
             </div>
           </div>

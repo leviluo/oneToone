@@ -453,7 +453,7 @@ export default class BasicInfo extends Component {
       this.items.push({key:item.childCatelogue,value:item.childCatelogue})
     })
     let nickname = this.props.auth.nickname
-    var headSrc = "/public/Headload?member="+this.props.auth.phone
+    var headSrc = "/originImg?from=member&name="+this.props.auth.phone
     return (
     <div>
           <div className="basicInfo">
@@ -475,7 +475,7 @@ export default class BasicInfo extends Component {
                     var experience = `${item.speciality}experience`;
                     var works = item.works.split(',')
                     for (var i = 0; i < works.length; i++) {
-                         if(works[i])works[i] = `/img?from=speciality&name=${works[i]}`
+                         if(works[i])works[i] = `/originImg?from=speciality&name=${works[i]}`
                     }
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
@@ -486,7 +486,7 @@ export default class BasicInfo extends Component {
                         <div className="imgShow">
                         {works.map((item,index)=>{
                           if (!item) return;
-                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item})`}}></div>
+                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item.replace(/\/originImg\?/,"/img?")})`}}></div>
                             })}
                         </div>
                       </li>}

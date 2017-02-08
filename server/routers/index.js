@@ -15,10 +15,12 @@ export default function routers(router){
 	router.get("/public/catelogues",publicController.catelogues,router.allowedMethods());
 // 获取所有的专业信息在category页面
 	router.post("/public/items",publicController.items,router.allowedMethods());
-	router.get("/public/getCatelogy",publicController.getCatelogy,router.allowedMethods()); //获取类目
-	router.get("/public/Headload",fileController.publicuploadHeadImg,router.allowedMethods()); //加载头像
+//获取类目
+	router.get("/public/getCatelogy",publicController.getCatelogy,router.allowedMethods()); 
+//加载头像
+	// router.get("/public/Headload",fileController.loadImg,router.allowedMethods()); 
 // 公共会员信息
-	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); //加载会员信息
+	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); 
 // 新增专业
 	router.post("/member/addSpeciality",memberController.addSpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
 // 获取所有的专业信息
@@ -29,6 +31,8 @@ export default function routers(router){
 	router.get("/qrcode",fileController.qrCode,router.allowedMethods());  
 // 获取图片
 	router.get("/img",fileController.loadImg,router.allowedMethods());  
+// 获取图片
+	router.get("/originImg",fileController.loadOriginImg,router.allowedMethods());  
 // 获取会员信息
 	router.get("/member/getMemberInfo",memberController.getMemberInfo,router.allowedMethods());
 // 发送文本消息

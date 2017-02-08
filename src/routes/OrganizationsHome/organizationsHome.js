@@ -121,7 +121,7 @@ export default class OrganizationsHome extends Component{
   }
 
   render(){
-  	var headImg = this.state.BasicInfo.head ? `/img?name=${this.state.BasicInfo.head}&from=organizations` : ''
+  	var headImg = this.state.BasicInfo.head ? `/originImg?name=${this.state.BasicInfo.head}&from=organizations` : ''
   	var date = new Date(this.state.BasicInfo.time)
     var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
     var link = `/memberBrief/${this.state.BasicInfo.phone}`
@@ -181,7 +181,7 @@ export default class OrganizationsHome extends Component{
   				<div>加入会员</div>
           <div>
               {this.state.Members.map((item,index)=>{
-                var headImg = `/public/Headload?member=${item.phone}`
+                var headImg = `/originImg?from=member&name=${item.phone}`
                 var link = `/memberBrief/${item.phone}`
                 return <Link to={link} key={index}>
                           <img src={headImg} width="30" alt="" />

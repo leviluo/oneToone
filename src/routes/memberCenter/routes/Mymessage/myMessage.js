@@ -72,7 +72,7 @@ export default class myMessage extends Component {
     <div>
       <div className="messageContent">
         {this.state.items.map((item,index)=>{
-          var headImg = `/public/Headload?member=${item.phone}`
+          var headImg = `/originImg?from=member&name=${item.phone}`
           var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''
           var date = new Date(item.time)
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
@@ -87,7 +87,7 @@ export default class myMessage extends Component {
           return <div key = {index}>
               <img src={headImg} /><span><a onClick={()=>this.showChat(item.nickname,item.phone)}>查看</a></span>
               <ul>
-                <li><span style={{color:item.active == '0' ? 'green' : '#666'}}>●</span><span>({isRead})</span><span>{time}</span>{head} </li>
+                <li><span style={{color:item.active == '0' ? 'green' : '#666'}}>●</span><span className="lightColor">({isRead})</span><span>{time}</span>{head} </li>
                 <li>{item.text}{item.imgUrl && <img src={imgUrl} />}</li>
               </ul>
           </div>

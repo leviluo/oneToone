@@ -52,12 +52,6 @@ export default class HomeView extends React.Component{
                 <div className="shareHot">
                     <div>热门分享</div>
                     <ul>
-                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
-                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
-                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
-                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
-                        <li><img src="/public/Headload?member=15601912380" alt="" /></li>
-                        <li><img src="/public/Headload?member=15601912385" alt="" /></li>
                     </ul>
                 </div>
                 <div className="organizationHot">

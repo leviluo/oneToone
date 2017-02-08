@@ -203,9 +203,9 @@ export default class Chat extends Component{
   }
 
   showThisImg =(e)=>{
-    // console.log(e.target.src)
+    console.log(e.target.src)
     // alert("00")
-    this.props.imgbrowserShow({currentChoose:0,imgs:[e.target.src]})
+    this.props.imgbrowserShow({currentChoose:0,imgs:[e.target.src.replace(/\/img\?/,'/originImg?')]})
   }
 
   render(){

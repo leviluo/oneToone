@@ -2,25 +2,74 @@ var multiparty = require('multiparty')
 var fs  = require('fs')
 import { sqlStr } from '../dbHelps/mysql'
 import config from '../config'
-// var gm = require('gm');
-// var gm = require('gm').subClass({imageMagick: true});
+
+var gm = require('gm').subClass({imageMagick: true});
 var qr = require('qr-image')
 
-function getImage(url,defaultImg){
+function getOriginImage(name,url){
     return new Promise(function(reslove,reject){
-        fs.exists(url, function (exists) {
+        fs.exists(`${url}${name}.jpg`, function (exists) {
                     if (exists) {
-                        var file = url
+                        var file = `${url}${name}.jpg`
                     }else{
-                        var file = defaultImg
+                        var file = `${url}default.jpg`
                     }
-         fs.readFile(file, "binary", function(error, file) {
+        fs.readFile(file, "binary", function(error, file) {
                 if (error) {
                     reject(error)
                 } else {
                     reslove(file)
                 }
             });
+        })
+   }) 
+}
+
+function getThumbImage(name,url){
+    return new Promise(function(reslove,reject){
+        fs.exists(`${url}thumbs/${name}.jpg`, function (exists) {
+                    if (exists) {
+                        var file = `${url}thumbs/${name}.jpg` 
+                        fs.readFile(file, "binary", function(error, file) {
+                        // console.log("0000")
+                            if (error) {
+                                reject(error)
+                            } else {
+                                reslove(file)
+                            }
+                        });
+                    }else{
+                        fs.exists(`${url}${name}.jpg`, function (exists) {
+                            if (exists) {
+                                gm(`${url}${name}.jpg`)
+                                .resize(200, 200)
+                                .write(`${url}thumbs/${name}.jpg`, function(err){
+                                  if (err) {
+                                    reject(err);
+                                  }
+                                  var file = `${url}thumbs/${name}.jpg`
+                                  fs.readFile(file, "binary", function(error, file) {
+                                    // console.log("11111")
+                                        if (error) {
+                                            reject(error)
+                                        } else {
+                                            reslove(file)
+                                        }
+                                   });
+                                });
+                            }else{
+                                var file = `${url}default.jpg`
+                                fs.readFile(file, "binary", function(error, file) {
+                                    // console.log("22222")
+                                    if (error) {
+                                        reject(error)
+                                    } else {
+                                        reslove(file)
+                                    }
+                                });
+                            }
+                        })
+                    }    
         })
    }) 
 }
@@ -71,14 +120,6 @@ function uploadImgs(ob,name,url){
                                     } else {
                                     }   
                                 })
-                                // gm(dstPath)
-                                // .resize(100, 100)
-                                // .noProfile()
-                                // .write('resize.png', function (err) {
-                                //     console.log('00000000000000000000000')
-                                //     console.log(err)
-                                //   if (!err) console.log('done');
-                                // });
                             }
                         };
                         reslove({status:200,msg:fields})
@@ -89,54 +130,45 @@ function uploadImgs(ob,name,url){
 
 const fileController = {
     loadImg:async function(next){
-        // if (this.request.query.from == 'chat') {
-        //     var url = config.messageImgDir + this.request.query.name + '.jpg';
-        //     var result = await getImage(url,config.messageImgDir + 'default.jpg');
-        // }else if(this.request.query.from == "speciality"){
-        //     var url = config.specialityImgDir + this.request.query.name + '.jpg';
-        //     var result = await getImage(url,config.specialityImgDir + 'default.jpg');
-        // }else if (this.request.query.from == "organizations") {
-        //     var url = config.organizationImgDir + this.request.query.name + '.jpg';
-        //     var result = await getImage(url,config.organizationImgDir + 'default.jpg');
-        // }
-
         switch(this.request.query.from){
         case 'chat':
-        var url = config.messageImgDir + this.request.query.name + '.jpg';
-        var result = await getImage(url,config.messageImgDir + 'default.jpg');
-        break
+            var result = await getThumbImage(this.request.query.name,config.messageImgDir);
+            break
         case 'speciality':
-        var url = config.specialityImgDir + this.request.query.name + '.jpg';
-            var result = await getImage(url,config.specialityImgDir + 'default.jpg');
-        break
-        case 'organizations':
-        var url = config.organizationImgDir + this.request.query.name + '.jpg';
-        var result = await getImage(url,config.organizationImgDir + 'default.jpg');
-        break
+            var result = await getThumbImage(this.request.query.name,config.specialityImgDir);
+            break
         case 'article':
-        var url = config.articleImgDir + this.request.query.name + '.jpg';
-        var result = await getImage(url,config.articleImgDir + 'default.jpg');
-        break
+            var result = await getThumbImage(this.request.query.name,config.articleImgDir);
+            break
         }
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
     },
-    publicuploadHeadImg:async function(next){
-        if (!this.request.query.member) {
-            this.body = { status: "err", msg: "缺少参数" }
-            return
+    loadOriginImg:async function(next){
+        switch(this.request.query.from){
+        case 'chat':
+            var result = await getOriginImage(this.request.query.name,config.messageImgDir);
+            break
+        case 'speciality':
+            var result = await getOriginImage(this.request.query.name,config.specialityImgDir);
+            break
+        case 'article':
+            var result = await getOriginImage(this.request.query.name,config.articleImgDir);
+            break;
+        case 'organizations':
+            var result = await getOriginImage(this.request.query.name,config.organizationImgDir);
+            break;
+        case 'member':
+            var result = await getOriginImage(this.request.query.name,config.headDir);
+            break;
         }
-        var url = config.headDir + this.request.query.member + '.jpg';
-        var result = await getImage(url,config.headDir + 'default.jpg');
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(result, "binary");
         this.res.end();
     },
     qrCode:async function(){
-        // console.log(this.request.query.text)
         var qr_svg = qr.imageSync(this.request.query.text, { type: 'png' });
-        // console.log(qr_svg)
         this.res.writeHead(200, { "Content-Type": "image/png" });
         this.res.write(qr_svg, "binary");
         this.res.end();
@@ -159,15 +191,16 @@ const fileController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-        var name = this.session.user + Date.parse(new Date())
+        // var name = this.session.user + Date.parse(new Date())
 
-        var result = await uploadOneImg(this.req,name,config.messageImgDir)
+        var result = await uploadImgs(this.req,this.session.user,config.messageImgDir)
 
-        this.request.body.imgUrl = name
         if (result.status != 200) {
             this.body = {status:500,msg:'上传失败'}
             return
         }
+
+        this.request.body.imgUrl = result.msg.names[0]
         this.request.body.sendTo = result.msg.sendTo[0]
     },
     uploadSpecialityImg:async function(next){  //可上传多张图片

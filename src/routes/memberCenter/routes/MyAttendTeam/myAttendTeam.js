@@ -59,7 +59,7 @@ export default class myAttendTeam extends Component {
         <div className="attendTeam">
         {this.state.getMyOrganization.length == 0 && <div className="text-center">您还没加入任何社团耶~<Link to="/Organization">去发现一个</Link></div>}
             {this.state.getMyOrganization.map((item,index)=>{
-              var headImg = `/img?name=${item.head}&from=organizations`
+              var headImg = `/originImg?name=${item.head}&from=organizations`
               var date = new Date(item.time)
               var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               var organizationName = `organizationName${item.id}`

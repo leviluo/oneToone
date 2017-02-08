@@ -47,7 +47,7 @@ export default class MemberBrief extends Component{
                   <h3>最热社团</h3>
                   <div>
                   {this.state.organizations.map((item,index)=>{
-                    var headImg = `/img?from=organizations&name=${item.head}`
+                    var headImg = `/originImg?from=organizations&name=${item.head}`
                     var link = `/organizationsHome/${item.id}`
                     return <Link to={link} key={index}>
                               <img src={headImg} width="30" alt="" />

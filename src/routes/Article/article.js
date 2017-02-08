@@ -155,7 +155,7 @@ export default class Article extends Component{
   }
 
   render(){
-    var headSrc = `/public/Headload?member=${this.state.articleData.phone}`
+    var headSrc = `/originImg?from=member&name=${this.state.articleData.phone}`
     let link = `/memberBrief/${this.state.articleData.phone}`
     var date = new Date(this.state.articleData.updatedAt)
     var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
@@ -193,9 +193,9 @@ export default class Article extends Component{
           {this.state.articleData.attachedImgs.split(',').map((item,index)=>{
             if (!item) return;
             if (!this.imgs) {this.imgs = []}
-            var url = `/img?from=article&name=${item}`
+            var url = `/originImg?from=article&name=${item}`
             this.imgs.push(url)
-            return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:this.imgs})} style={{backgroundImage:`url(${url})`}}></div>
+            return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:this.imgs})} style={{backgroundImage:`url(${url.replace(/\/originImg\?/,"/img?")})`}}></div>
               })}
           </div>
           }
@@ -203,7 +203,7 @@ export default class Article extends Component{
           <span>回复区:&nbsp;&nbsp;</span>
           <div className="historyReplys">
             {this.state.replyData.map((item,index)=>{
-              var headSrc = `/public/Headload?member=${item.phone}`
+              var headSrc = `/originImg?from=member&name=${item.phone}`
               var link = `/memberBrief/${item.phone}`
               if(item.replyTo){
                 for (var i = 0; i < this.state.replyData.length; i++) {
