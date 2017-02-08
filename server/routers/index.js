@@ -76,7 +76,7 @@ export default function routers(router){
 //上传文章信息
 	router.post("/organizations/submitArticle",organizationController.addArticle,fileController.uploadArticleImg,router.allowedMethods());
 // 加入社团
-	router.get("/organizations/attendOrganization",organizationController.attendOrganization,router.allowedMethods());
+	router.post("/organizations/attendOrganization",organizationController.attendOrganization,router.allowedMethods());
 // 退出社团
 	router.get("/organizations/quitOrganization",organizationController.quitOrganization,router.allowedMethods());
 // 按照会员数获取最热社团
@@ -101,6 +101,8 @@ export default function routers(router){
 	router.get("/organizations/getmyNotice",organizationController.getmyNotice,router.allowedMethods());
 // 获取入社申请
 	router.get("/organizations/getrequestData",organizationController.getrequestData,router.allowedMethods());
+// 审核申请
+	router.get("/organizations/isApprove",organizationController.isApprove,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

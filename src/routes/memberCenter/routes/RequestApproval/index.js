@@ -1,7 +1,7 @@
 // import { injectReducer } from '../../../../store/reducers'
 
 export default (store) => ({
-	path:"/memberCenter/requestApproval",
+	path:"/memberCenter/requestApproval/:id",
     getComponent(nextState, cb) {
         require.ensure([], (require) => {
             const requestApproval = require('./requestApproval').default

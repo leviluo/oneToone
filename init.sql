@@ -60,6 +60,8 @@ CREATE TABLE `organizationsRequest` (
   `id` mediumint(8) unsigned auto_increment,
   `memberId` mediumint(8) unsigned,
   `organizationsId` mediumint(8) unsigned,
+  `createdAt` datetime DEFAULT now() COMMENT '//',
+  `verified` varchar(300) default '',
   PRIMARY KEY  (`id`)
 );
 --社团通知活动等

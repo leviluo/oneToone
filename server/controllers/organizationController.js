@@ -65,7 +65,7 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-        var result = await sqlStr("select o.*,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
+        var result = await sqlStr("select o.*,(select count(id) from organizationsrequest where organizationsId = o.id) as requests,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
         this.body = {status:200,data:result}
     },
     getMyOrganization: async function(){
@@ -85,9 +85,9 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("delete from organizations where id = ?",[this.request.body.id])
+        var result = await sqlStr("delete o.*,mo.*,a.*,ro.* from organizations as o left join memberOrganizations as mo on mo.organizationsId = o.id left join article as a on a.organizationsId = o.id left join organizationsrequest as ro on ro.organizationsId = o.id where o.id = ?",[this.request.body.id])
         
-        if (result.affectedRows == 1) {
+        if (result.affectedRows > 0) {
             this.body = {status:200}
             return
         }
@@ -107,7 +107,7 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select m.phone,m.nickname from memberOrganizations as mo left join member as m on mo.memberId = m.id where mo.organizationsId = ?",[this.request.query.id])
+        var result = await sqlStr("select m.id,m.phone,m.nickname from memberOrganizations as mo left join member as m on mo.memberId = m.id where mo.organizationsId = ?",[this.request.query.id])
         this.body = {status:200,data:result}
     },
     addArticle: async function(next){
@@ -151,7 +151,15 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-      var result = await sqlStr("insert into memberOrganizations set memberId = (select id from member where phone = ?),organizationsId=?;",[this.session.user,this.request.query.id])
+      if (!this.request.body.id) {
+        this.body = { status: 500, msg: "缺少参数" }
+        return
+      }
+      if (this.request.body.verified.length > 297) {
+        this.body = { status: 500, msg: "认证不能超过300个字符" }
+        return
+      }
+      var result = await sqlStr("insert into organizationsrequest set memberId = (select id from member where phone = ?),organizationsId=?,verified=?;",[this.session.user,this.request.body.id,this.request.body.verified])
       if (result.affectedRows == 1) {
             this.body = {status:200}
             return
@@ -176,16 +184,12 @@ const organizationController = {
       var result = await sqlStr("select head,name,id,(select count(*) from memberOrganizations where organizations.id = memberOrganizations.organizationsId) as countt from organizations order by countt limit 20")
       this.body = {status:200,data:result}
     },
-    getAllActivities:async function(next){
-      var result = await sqlStr("select a.id,a.organizationsId,o.name,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.type = 0")
-      this.body = {status:200,data:result}
-    },
     getArticleList:async function(next){
       if (!this.request.query.id || !this.request.query.limit || !this.request.query.type) {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr(`select a.id,a.title,a.updatedAt,m.nickname as publisher,m.phone from article as a left join member as m on m.id = a.memberId where a.type = ? and a.organizationsId = ? limit ${this.request.query.limit}`,[this.request.query.type,this.request.query.id])
+      var result = await sqlStr(`select a.id,a.title,a.updatedAt,m.nickname as publisher,m.id as memberId from article as a left join member as m on m.id = a.memberId where a.type = ? and a.organizationsId = ? limit ${this.request.query.limit}`,[this.request.query.type,this.request.query.id])
       var count = await sqlStr("select count(id) as count from article where type = ? and organizationsId = ?",[this.request.query.type,this.request.query.id])
 
       this.body = {status:200,data:result,count:count[0].count}
@@ -232,7 +236,7 @@ const organizationController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-      var result = await sqlStr("select c.comment,c.id,r.replyTo,c.createdAt,m.nickname,m.phone from comments as c left join reReply as r on r.commentsId = c.id left join member as m on m.id = c.memberId where c.articleId=? order by c.id",[this.request.query.id])
+      var result = await sqlStr("select c.comment,c.id,c.memberId,r.replyTo,c.createdAt,m.nickname,m.phone from comments as c left join reReply as r on r.commentsId = c.id left join member as m on m.id = c.memberId where c.articleId=? order by c.id",[this.request.query.id])
       this.body = {status:200,data:result}
     },
     deleteReply:async function(){
@@ -288,13 +292,41 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-      if (!this.request.query.id) {
+      if (!this.request.query.id || !this.request.query.limit) {
           this.body = { status: 600, msg: "缺少参数" }
           return
       };
-      var result = await sqlStr("select m.phone,m.nickname,c.createdAt,c.comment,a.id as articleId,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?) and r.status = 0",[this.session.user])
-      var resultt = await sqlStr("update reReply set status = 1 where replyTo in (select id from comments where memberId = (select id from member where phone = ?))",[this.session.user])
-      this.body = {status:200,data:result}
+      var result = await sqlStr("select m.id as memberId,m.phone,m.nickname,ro.createdAt,ro.verified,ro.id from organizationsrequest as ro left join member as m on m.id = ro.memberId where ro.organizationsId = ? limit "+this.request.query.limit,[this.request.query.id])
+      var count = await sqlStr("select count(id) as count from organizationsrequest where organizationsId = ? ",[this.request.query.id])
+      this.body = {status:200,data:result,count:count[0].count}
+    },
+    isApprove:async function(){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      if ((!this.request.query.flag && this.request.query.flag !=0) || !this.request.query.id) {
+          this.body = { status: 600, msg: "缺少参数" }
+          return
+      };
+        
+      if (this.request.query.flag == 1) {
+        var resultt = await sqlStr("insert into memberorganizations set memberId = (select memberId from organizationsrequest where id = ?),organizationsId=(select organizationsId from organizationsrequest where id = ?);", [this.request.query.id,this.request.query.id])
+        if (resultt.affectedRows > 0) {
+        var result = await sqlStr("delete from organizationsrequest where id = ?", [this.request.query.id])
+          if (result.affectedRows > 0) {
+            this.body = {status:200}
+            return
+          }
+        }
+      }else{
+        var result = await sqlStr("delete from organizationsrequest where id = ?", [this.request.query.id])
+        if (result.affectedRows > 0) {
+        this.body = {status:200}
+        return
+        }
+      }
+        this.body= {status:500,msg:"发生错误"}
     }
 }
 export default organizationController;

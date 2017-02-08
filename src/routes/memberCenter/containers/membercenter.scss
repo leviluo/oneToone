@@ -2,6 +2,13 @@
 	min-height:900px;
 	margin-bottom:10px;
 	min-width:1200px;
+	.noRead{
+		padding:0 5px;
+		background:#ff7f00;
+		color:white;
+		border-radius:10px;
+		margin-left:5px;
+	}
 	.memberCenterContentLeft{
 		width:14%;
 		height:300px;
@@ -30,13 +37,6 @@
 						background:#f0f8ff
 					}
 				}
-				.noRead{
-						padding:0 5px;
-						background:#ff7f00;
-						color:white;
-						border-radius:10px;
-						margin-left:5px;
-					}
 				.active{
 					color:#1C86EE; 
 					background:#f0f8ff;

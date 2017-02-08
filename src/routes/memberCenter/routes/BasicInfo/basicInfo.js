@@ -5,7 +5,7 @@ import './basicInfo.scss'
 import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
-import Modal,{modalShow,modalHide,modalUpdate} from '../../../../components/Modal'
+import Modal,{modalShow,modalHide} from '../../../../components/Modal'
 import Confirm,{confirmShow} from '../../../../components/Confirm'
 import {imgbrowserShow} from '../../../../components/ImageBrowser'
 import {fetchCatelogue} from '../../../../reducers/category'
@@ -31,7 +31,7 @@ import {asyncConnect} from 'redux-async-connect'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,fetchSpeciality,modalUpdate,imgbrowserShow,confirmShow}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,fetchSpeciality,imgbrowserShow,confirmShow}
 )
 
 export default class BasicInfo extends Component {

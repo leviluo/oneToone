@@ -18,22 +18,14 @@
 		}
 		&>span{
 			float:right;
-			a{
-				height:31px;
-				line-height:25px;
-				padding:3px;
-				border-radius:2px;
-				border:1px solid #ff7f00;
-				color:#ff7f00;
-				margin-left:5px;
-			}
 			i{
 				font-size:12px;
 			}
 		}
 		ul{
 			float:left;
-			margin:5px;
+			margin:2px;
+			padding-left:5px;
 			li:first-of-type{
 				margin-bottom:5px;
 				b{
@@ -55,6 +47,7 @@
 				 word-wrap: break-word;
 				 max-width:400px;
 				img{
+					margin-top:2px;
 					height:80px;
 				}
 			}

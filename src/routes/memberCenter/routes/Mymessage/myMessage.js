@@ -76,7 +76,7 @@ export default class myMessage extends Component {
           var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''
           var date = new Date(item.time)
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
-          var link = `/memberBrief/${item.phone}`
+          var link = `/memberBrief/${item.memberId}`
           if (item.isSend) {
             var head = <span>你发送给 <Link to={link}>{item.nickname}</Link> 的消息:</span>
             var isRead = item.active == '0'?'对方未读':'对方已读'
@@ -85,7 +85,7 @@ export default class myMessage extends Component {
             var isRead = item.active == '0'?'未读':'已读'
           }
           return <div key = {index}>
-              <img src={headImg} /><span><a onClick={()=>this.showChat(item.nickname,item.phone)}>查看</a></span>
+              <img src={headImg} /><span><button className="btn-default" onClick={()=>this.showChat(item.nickname,item.phone)}>查看</button></span>
               <ul>
                 <li><span style={{color:item.active == '0' ? 'green' : '#666'}}>●</span><span className="lightColor">({isRead})</span><span>{time}</span>{head} </li>
                 <li>{item.text}{item.imgUrl && <img src={imgUrl} />}</li>

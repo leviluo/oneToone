@@ -17,8 +17,8 @@
 		tbody{
 			tr{
 				td{
-					height:35px;
-					line-height:25px;
+					height:50px !important;
+					line-height:35px;
 					text-align:center;
 					border-bottom:1px dashed #e5e5e5;
 					.noRead{
@@ -26,6 +26,9 @@
 						background:#ff7f00;
 						color:white;
 						border-radius:10px;
+					}
+					button{
+						margin-right:5px;
 					}
 				}
 			}

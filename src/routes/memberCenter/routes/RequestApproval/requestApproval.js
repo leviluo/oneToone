@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {getMyPost} from './modules'
+import {getrequestData,isApprove} from './modules'
 import PageNavBar,{pageNavInit} from '../../../../components/PageNavBar'
 
 @asyncConnect([{
@@ -36,24 +36,43 @@ export default class requestApproval extends Component {
     };
 
     componentWillMount =()=>{
-     this.props.pageNavInit(this.getrequestData)
+     this.props.pageNavInit(this.requestData)
     }
 
-  //   getrequestData = (currentPage)=>{
-  //   return getMyPost(this.props.params.id,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
-  //       if (data.status == 200) {
-  //         this.setState({
-  //           requestData:data.data
-  //         })
-  //         return Math.ceil(data.count/this.state.averagenum)
-  //       }else if (data.status==600) {
-  //         this.props.dispatch({type:"AUTHOUT"})
-  //         this.context.router.push('/login')
-  //       }{
-  //         this.props.tipShow({type:'error',msg:data.msg})
-  //       }
-  //     })
-  // }
+    requestData = (currentPage)=>{
+    return getrequestData(this.props.params.id,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+        if (data.status == 200) {
+          this.setState({
+            requestData:data.data
+          })
+          return Math.ceil(data.count/this.state.averagenum)
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+      })
+  }
+
+  isApprove =(e,flag,id)=>{
+    isApprove(flag,id).then(({data})=>{
+      if (data.status == 200) {
+          for (var i = 0; i < this.state.requestData.length; i++) {
+            if(this.state.requestData[i].id == id){
+              this.state.requestData.splice(i,1)
+              this.setState({})
+              break
+            }
+          }
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+    })
+  }
 
   render () {
     return (
@@ -64,19 +83,22 @@ export default class requestApproval extends Component {
     {this.state.requestData.length == 0 && <div className="text-center">您还没有任何申请~</div>}
       <table>
         <tbody>
+        { this.state.requestData.length > 0 && <tr className="lightColor">
+          <td>请求时间</td>
+          <td>请求人</td>
+          <td>验证信息</td>
+          <td>操作</td>
+        </tr>
+        }
         {this.state.requestData.map((item,index)=>{
-          if (item.title.length > 20) {
-            item.title = item.title.slice(0,20) + '...'
-          };
-          var date = new Date(item.updatedAt)
+          var link = `/memberBrief/${item.memberId}`
+          var date = new Date(item.createdAt)
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
-          var linkArticle = `/article/${item.id}`
-          var linkOrganization = `/organizationsHome/${item.organizationsId}`
           return <tr key={index}>
-          <td className="lightColor">{time}</td>
-          <td><Link to={linkArticle}>{item.title}</Link></td>
-          <td className="lightColor">{item.count}条回复<br/>{item.noRead > 0 && <Link className="noRead" to={linkArticle}>{item.noRead}条未读</Link>}</td>
-          <td>来自<Link to={linkOrganization}>{item.name}</Link></td>
+            <td>{time}</td>
+            <td><Link to={link}>{item.nickname}</Link></td>
+            <td>{item.verified}</td>
+            <td><button className="btn-default" onClick={(e)=>this.isApprove(e,0,item.id)} >忽略</button><button onClick={(e)=>this.isApprove(e,1,item.id)}  className="btn-success">通过</button></td>
           </tr>
         })}
         </tbody>

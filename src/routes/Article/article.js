@@ -116,7 +116,7 @@ export default class Article extends Component{
       replyToId:this.state.replyData[index].id,
       replyToName:this.state.replyData[index].nickname,
       replyToComment:this.state.replyData[index].comment,
-      link:`/memberBrief/${this.state.replyData[index].phone}`
+      link:`/memberBrief/${this.state.replyData[index].memberId}`
     })
   }
 
@@ -156,7 +156,7 @@ export default class Article extends Component{
 
   render(){
     var headSrc = `/originImg?from=member&name=${this.state.articleData.phone}`
-    let link = `/memberBrief/${this.state.articleData.phone}`
+    let link = `/memberBrief/${this.state.articleData.memberId}`
     var date = new Date(this.state.articleData.updatedAt)
     var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
@@ -204,12 +204,12 @@ export default class Article extends Component{
           <div className="historyReplys">
             {this.state.replyData.map((item,index)=>{
               var headSrc = `/originImg?from=member&name=${item.phone}`
-              var link = `/memberBrief/${item.phone}`
+              var link = `/memberBrief/${item.memberId}`
               if(item.replyTo){
                 for (var i = 0; i < this.state.replyData.length; i++) {
                   if(this.state.replyData[i].id == item.replyTo){
                     var replyData = this.state.replyData[i]
-                    var replyLink = `/memberBrief/${replyData.phone}`
+                    var replyLink = `/memberBrief/${replyData.memberId}`
                   }
                 }
                 if(!replyData)replyData = {comment:"此消息已删除"}

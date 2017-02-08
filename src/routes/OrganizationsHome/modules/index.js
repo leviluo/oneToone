@@ -17,8 +17,8 @@ export function getConsults() {
       return axios.get('/organizations/getConsults')
 }
 
-export function attendOrganization(id) {
-      return axios.get('/organizations/attendOrganization?id='+id)
+export function attendOrganization(item) {
+      return axios.post('/organizations/attendOrganization',item)
 }
 
 export function quitOrganization(id) {

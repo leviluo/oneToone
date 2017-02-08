@@ -61,6 +61,12 @@ export default class myPost extends Component {
     {this.state.myPostData.length == 0 && <div className="text-center">您还没有发布过活动,咨询耶~</div>}
       <table>
         <tbody>
+        {this.state.myPostData.length > 0 && <tr className="lightColor">
+          <td>发布时间</td>
+          <td>标题</td>
+          <td>回复数</td>
+          <td>社团</td>
+        </tr>}
         {this.state.myPostData.map((item,index)=>{
           if (item.title.length > 20) {
             item.title = item.title.slice(0,20) + '...'

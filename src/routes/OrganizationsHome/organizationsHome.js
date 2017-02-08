@@ -8,13 +8,15 @@ import {Link} from 'react-router'
 import {tipShow} from '../../components/Tips/modules/tips'
 // import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
 import PageNavBar,{pageNavInit} from '../../components/PageNavBar'
+import Modal,{modalShow,modalHide} from '../../components/Modal'
+import Textarea from '../../components/Textarea'
 
 @connect(
   state=>({
     auth:state.auth,
     pagenavbar:state.pagenavbar
   }),
-{tipShow,pageNavInit})
+{tipShow,pageNavInit,modalHide,modalShow})
 export default class OrganizationsHome extends Component{
 
 
@@ -60,7 +62,8 @@ export default class OrganizationsHome extends Component{
     Members:[],
     Activities:[],
     averagenum:5,
-    type:0 //文章类型
+    type:0, //文章类型
+    verified:''
 	}
 
   attendOrganization =()=>{
@@ -68,17 +71,35 @@ export default class OrganizationsHome extends Component{
       this.props.tipShow({type:"error",msg:"尚未登录"})
       return
     }
-    attendOrganization(this.props.params.id).then(({data})=>{
+
+    var content = <Textarea header="请填写认证信息" handleTextarea = {this.verified} rows="10" />
+
+    this.props.modalShow({header:"发送入社请求",content:content,submit:this.submitAttend})
+  }
+
+  verified = (e)=>{
+    this.setState({
+      verified:e.target.value
+    })
+  }
+
+  submitAttend = ()=>{
+    if (this.state.verified.length > 297) {
+        this.props.tipShow({type:"error",msg:"认证信息不能超过300个字符"})
+        return
+    }
+    this.props.modalHide()
+    attendOrganization({id:this.props.params.id,verified:this.state.verified}).then(({data})=>{
       if (data.status == 200) {
-        this.setState({
-            isAttended:true
-          })
+        this.props.tipShow({type:"error",msg:"发送请求成功,等待管理员审核"})
       }else{
           this.props.tipShow({type:"error",msg:data.msg})
           return
       }
     })
   }
+
+
 
   quitOrganization =()=>{
     if (!this.props.auth.phone) {
@@ -87,7 +108,7 @@ export default class OrganizationsHome extends Component{
     }
     quitOrganization(this.props.params.id).then(({data})=>{
       if (data.status == 200) {
-        this.setState({
+          this.setState({
             isAttended:false
           })
       }else{
@@ -98,7 +119,7 @@ export default class OrganizationsHome extends Component{
   }
 
   postArticle = (e) =>{
-    if (!this.state.isAttended) {
+    if (!this.state.isAttended && (this.props.auth.phone != this.state.BasicInfo.phone)) {
       this.props.tipShow({type:"error",msg:"请先加入这个社团才能发帖"})
       return
     }
@@ -124,7 +145,7 @@ export default class OrganizationsHome extends Component{
   	var headImg = this.state.BasicInfo.head ? `/originImg?name=${this.state.BasicInfo.head}&from=organizations` : ''
   	var date = new Date(this.state.BasicInfo.time)
     var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
-    var link = `/memberBrief/${this.state.BasicInfo.phone}`
+    var link = `/memberBrief/${this.state.BasicInfo.createById}`
       return(
       <div className="organizationHome">
         <Helmet title="社团" />
@@ -136,8 +157,8 @@ export default class OrganizationsHome extends Component{
           <div className="head">
             <img src={headImg} alt=""/>
             <span>{this.state.BasicInfo.name}</span>
-            {!this.state.isAttended && <button className="btn-default" onClick={this.attendOrganization} >加入社团</button>}
-            {this.state.isAttended && <button className="btn-default" onClick={this.quitOrganization} >退出社团</button>}
+            {(!this.state.isAttended && (this.props.auth.phone != this.state.BasicInfo.phone)) && <button className="btn-default" onClick={this.attendOrganization} >加入社团</button>}
+            {(this.state.isAttended && (this.props.auth.phone != this.state.BasicInfo.phone)) && <button className="btn-default" onClick={this.quitOrganization} >退出社团</button>}
           </div>
 
           <div className="content">
@@ -162,7 +183,7 @@ export default class OrganizationsHome extends Component{
             {this.state.Activities.map((item,index)=>{
               var date = new Date(item.updatedAt)
               var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
-              var linkMember = `/memberBrief/${item.phone}`
+              var linkMember = `/memberBrief/${item.memberId}`
               var linkArticle = `/article/${item.id}`
                 return <tr key={index}>
                   <td><Link to={linkArticle}>{item.title}</Link></td>
@@ -182,7 +203,7 @@ export default class OrganizationsHome extends Component{
           <div>
               {this.state.Members.map((item,index)=>{
                 var headImg = `/originImg?from=member&name=${item.phone}`
-                var link = `/memberBrief/${item.phone}`
+                var link = `/memberBrief/${item.id}`
                 return <Link to={link} key={index}>
                           <img src={headImg} width="30" alt="" />
                           {item.nickname}
@@ -190,6 +211,7 @@ export default class OrganizationsHome extends Component{
               })}
           </div>
       	</div>
+        <Modal />
       </div>
       )
   }
