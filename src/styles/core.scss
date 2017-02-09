@@ -21,6 +21,9 @@
                 cursor: pointer
             }
         }
+        table{
+            border-spacing:0;
+        }
         .btn-orange{
             height:30px;
             line-height:30px;
@@ -127,6 +130,9 @@
         }
         .pull-left{
             float:left
+        }
+        img{
+            box-shadow:2px 2px 5px 1px #ccc;
         }
     }
     *,

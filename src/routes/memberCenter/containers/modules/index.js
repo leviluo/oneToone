@@ -14,6 +14,7 @@ import {tipResult} from '../../../../components/Tips/modules/tips'
 const COUNTMESSAGE = 'COUNTMESSAGE'
 const COUNTNOTICE = 'COUNTNOTICE'
 const COUNTREPLY = 'COUNTREPLY'
+const COUNTREQUEST = 'COUNTREQUEST'
 // const CLEAR_LOGIN = 'CLEAR_LOGIN'
 
 // ------------------------------------
@@ -25,7 +26,7 @@ export function countMessage() {
   return (dispatch, getState) => {
     axios.get('/member/countMessage').then(({data}) => {
       if (data.status == 200) {
-        dispatch({type:COUNTMESSAGE,value:data.data[0].count});
+        dispatch({type:COUNTMESSAGE,value:data.data});
       } else{
         dispatch(tipResult({type:"error",msg:data.msg}))
       }
@@ -38,7 +39,7 @@ export function countNotice() {
   return (dispatch, getState) => {
     axios.get('/member/countNotice').then(({data}) => {
       if (data.status == 200) {
-        dispatch({type:COUNTNOTICE,value:data.data[0].count});
+        dispatch({type:COUNTNOTICE,value:data.data});
       } else{
         dispatch(tipResult({type:"error",msg:data.msg}))
       }
@@ -51,7 +52,19 @@ export function countReply() {
   return (dispatch, getState) => {
     axios.get('/member/countReply').then(({data}) => {
       if (data.status == 200) {
-        dispatch({type:COUNTREPLY,value:data.data[0].count});
+        dispatch({type:COUNTREPLY,value:data.data});
+      } else{
+        dispatch(tipResult({type:"error",msg:data.msg}))
+      }
+    })
+  }
+}
+
+export function countRequest() {
+  return (dispatch, getState) => {
+    axios.get('/member/countRequest').then(({data}) => {
+      if (data.status == 200) {
+        dispatch({type:COUNTREQUEST,value:data.data});
       } else{
         dispatch(tipResult({type:"error",msg:data.msg}))
       }
@@ -72,6 +85,9 @@ const ACTION_HANDLERS = {
   },
   [COUNTREPLY]:(state,action)=>{
     return({...state,isloaded:true,countReply:action.value})
+  },
+  [COUNTREQUEST]:(state,action)=>{
+    return({...state,isloaded:true,countRequest:action.value})
   }
 }
 
@@ -84,6 +100,7 @@ export const initialState = {
   countMessage:0,
   countNotice:0,
   countReply:0,
+  countRequest:0,
   isloaded:false
 }
 export default function (state = initialState, action) {

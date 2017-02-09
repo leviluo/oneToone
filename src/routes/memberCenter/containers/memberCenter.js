@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 import {isAuth} from '../../../reducers/auth'
 import { connect } from 'react-redux'
 import ImageBrowser from '../../../components/ImageBrowser'
-import {countMessage,countNotice,countReply} from './modules'
+import {countMessage,countNotice,countReply,countRequest} from './modules'
 import { tipShow } from '../../../components/Tips/modules/tips'
 // import {asyncConnect} from 'redux-async-connect'
 
@@ -29,7 +29,7 @@ import { tipShow } from '../../../components/Tips/modules/tips'
     auth:state.auth,
     status:state.memberCenter
   }),
-  {isAuth,tipShow,countMessage,countNotice,countReply}
+  {isAuth,tipShow,countMessage,countNotice,countReply,countRequest}
 )
 export default class memberCenter extends Component {
 
@@ -41,24 +41,27 @@ export default class memberCenter extends Component {
       this.props.countMessage()
       this.props.countNotice()
       this.props.countReply()
+      this.props.countRequest()
       if(!this.props.auth.isAuth)this.props.isAuth(this.context.router) 
     }
 
     render(){
-      console.log(this.props.location)
       return(
           <div className="memberCentercontent">
             <Helmet title='个人中心' />
             <div className="memberCenterContentLeft">
-            <h3>基本信息</h3>
             <ul>
-              <li><Link to="/memberCenter" className={this.props.location.pathname == '/memberCenter' ? 'active' : ''}>我的名片</Link></li>
-              <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/myMessage' ? 'active' : ''}>私信{this.props.status.countMessage > 0 && <span className="noRead">{this.props.status.countMessage}</span>}</Link></li>
-              <li><Link to="/memberCenter/myNotice" className={this.props.location.pathname == '/memberCenter/myNotice' ? 'active' : ''}>回复通知{this.props.status.countNotice > 0 && <span className="noRead">{this.props.status.countNotice}</span>}</Link></li>
+              <li><Link to="/memberCenter" className={this.props.location.pathname == '/memberCenter' ? 'active' : ''}>关注动态</Link></li>
             </ul>
-            <h3>社团</h3>
+            <h4>基本信息</h4>
             <ul>
-              <li><Link to="/memberCenter/myCreateTeam" className={this.props.location.pathname == '/memberCenter/myCreateTeam' || /\/memberCenter\/requestApproval/.test(this.props.location.pathname) ? 'active' : ''}>我创建的</Link></li>
+              <li><Link to="/memberCenter/basicInfo" className={this.props.location.pathname == '/memberCenter/basicInfo' ? 'active' : ''}>我的名片</Link></li>
+              <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/myMessage' ? 'active' : ''}>私信{this.props.status.countMessage > 0 && <span className="noRead">{this.props.status.countMessage}</span>}</Link></li>
+              <li><Link to="/memberCenter/myNotice" className={this.props.location.pathname == '/memberCenter/myNotice' ? 'active' : ''}>通知{this.props.status.countNotice > 0 && <span className="noRead">{this.props.status.countNotice}</span>}</Link></li>
+            </ul>
+            <h4>社团</h4>
+            <ul>
+              <li><Link to="/memberCenter/myCreateTeam" className={this.props.location.pathname == '/memberCenter/myCreateTeam' || /\/memberCenter\/requestApproval/.test(this.props.location.pathname) ? 'active' : ''}>我创建的{this.props.status.countRequest > 0 && <span className="noRead">{this.props.status.countRequest}</span>}</Link></li>
               <li><Link to="/memberCenter/myAttendTeam" className={this.props.location.pathname == '/memberCenter/myAttendTeam' ? 'active' : ''}>我加入的</Link></li>
               <li><Link to="/memberCenter/myPost" className={this.props.location.pathname == '/memberCenter/myPost' ? 'active' : ''}>我发布的{this.props.status.countReply > 0 && <span className="noRead">{this.props.status.countReply}</span>}</Link></li>
             </ul>

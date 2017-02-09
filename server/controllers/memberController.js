@@ -29,8 +29,7 @@ const memberController = {
             return
         }
 
-        var works = this.request.body.names.join(',')
-        var result = await sqlStr("insert into memberSpeciality set brief = ?,works=?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,works,this.request.body.experience,this.session.user,this.request.body.speciality])
+        var result = await sqlStr("insert into memberSpeciality set brief = ?,experience = ?,memberId=(select id from member where phone = ?),specialitiesId=(select id from specialities where name= ?)",[this.request.body.brief,this.request.body.experience,this.session.user,this.request.body.speciality])
         if (result.affectedRows == 1 ) {
             this.body = { status: 200}
             return
@@ -170,17 +169,17 @@ const memberController = {
             return
         }
         // console.log()
-        if(this.request.body.works){
-            if (this.request.body.names.length > 0) {
-                var works = this.request.body.works +','+ this.request.body.names.join(',')
-            }else{
-                var works = this.request.body.works
-            }
-        }else{
-                var works = this.request.body.names.join(',')
-        }
+        // if(this.request.body.works){
+        //     if (this.request.body.names.length > 0) {
+        //         var works = this.request.body.works +','+ this.request.body.names.join(',')
+        //     }else{
+        //         var works = this.request.body.works
+        //     }
+        // }else{
+        //         var works = this.request.body.names.join(',')
+        // }
 
-        var result = await sqlStr("update memberSpeciality set works=?,brief = ?,experience=? where specialitiesId = (select id from specialities where name = ?) and memberId = (select id from member where phone = ?)",[works,this.request.body.brief,this.request.body.experience,this.request.body.speciality,this.session.user])
+        var result = await sqlStr("update memberSpeciality set brief = ?,experience=? where specialitiesId = (select id from specialities where name = ?) and memberId = (select id from member where phone = ?)",[this.request.body.brief,this.request.body.experience,this.request.body.speciality,this.session.user])
         
         if (result.affectedRows == 1) {
         this.body = {status:200}
@@ -215,7 +214,7 @@ const memberController = {
             return
         }
         var result = await sqlStr("select count(DISTINCT fromMember) as count from message where toMember = (select id from member where phone = ?) and active = 0",[this.session.user])
-        this.body = {status:200,data:result}
+        this.body = {status:200,data:result[0].count}
     },
     countNotice:async function(){
         if (!this.session.user) {
@@ -223,15 +222,27 @@ const memberController = {
             return
         }
         var result = await sqlStr("select count(*) as count from reReply where replyTo in (select id from comments where memberId = (select id from member where phone = ?)) and status = 0",[this.session.user])
-        this.body = {status:200,data:result}
+        //通过申请
+        var resultt = await sqlStr("select count(id) as count from organizationsrequest where memberId = (select id from member where phone = ?) and status = 1",[this.session.user])
+       
+        this.body = {status:200,data:result[0].count + resultt[0].count}
     },
     countReply:async function(){
         if (!this.session.user) {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
+        //回复通知
         var result = await sqlStr("select count(DISTINCT a.id) as count from article as a left join comments as c on c.articleId = a.id where c.status = 0 and a.memberId = (select id from member where phone = ?);",[this.session.user])
-        this.body = {status:200,data:result}
+         this.body = {status:200,data:result[0].count}
+    },
+    countRequest:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select count(DISTINCT o.id) as count from organizationsRequest as ro left join organizations as o on ro.organizationsId = o.id where ro.status = 0 and o.createById = (select id from member where phone = ?);",[this.session.user])
+        this.body = {status:200,data:result[0].count}
     }
 }
 export default memberController;

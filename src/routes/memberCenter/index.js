@@ -6,11 +6,12 @@ import mymessage from './routes/Mymessage'
 import myPost from './routes/MyPost'
 import myNotice from './routes/MyNotice'
 import requestApproval from './routes/RequestApproval'
+import updates from './routes/Updates'
 
 
 export default (store) => ({
     path: 'memberCenter',
-    indexRoute: basic(store),
+    indexRoute: updates(store),
     getComponent(nextState, cb) {
         require.ensure([], (require) => {
             const memberCenter = require('./containers/memberCenter').default
@@ -20,6 +21,7 @@ export default (store) => ({
         })
     },
     childRoutes:[
+        basic(store),
         myPost(store),
         myAttendTeam(store),
         myCreateTeam(store),

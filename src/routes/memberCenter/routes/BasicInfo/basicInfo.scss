@@ -103,7 +103,7 @@
 						text-align:left;
 						padding-left:30px;
 						padding-right:30px;
-						margin-top:30px;
+						margin-top:20px;
 						margin-bottom:0;
 						textarea{
 							width:100%;
@@ -119,73 +119,6 @@
 							width:50%;
 							position:relative;
 							top:50px;
-						}
-						.imgShow{
-							height:110px;
-							margin-top:20px;
-							div{
-								width:100px;
-								overflow:hidden;
-								height:100px;
-								margin-right:10px;
-								float:left;
-								border:2px solid #efefef;
-								border-radius:5px;
-								background-position:center;
-								background-repeat:no-repeat;
-								background-size:cover;
-								cursor:pointer
-							}
-						}
-						.imgList{
-							width:100px;
-							overflow:hidden;
-							height:100px;
-							margin-right:10px;
-							float:left;
-							border:2px solid #efefef;
-							border-radius:5px;
-							background-position:center;
-							background-repeat:no-repeat;
-							background-size:cover;
-							margin-bottom:20px;
-							div{
-								width:100px;
-								height:100px;
-								text-align:center;
-								line-height:100px;
-								cursor:pointer;
-								background:rgba(0,0,0,0.3);
-								filter:alpha(opacity=0);
-								font-size:200%;
-								color:white;
-								opacity:0;
-								margin:0
-							}
-							img{
-								min-height:100px;
-								min-width:100px
-							}
-						}
-						.addDiv{
-							width:100px;
-							float:left;
-							height:100px;
-							color:#666;
-							position:relative;
-							line-height:100px;
-							font-size:200%;
-							text-align:center;
-							border:1px dashed #ccc;
-							margin-bottom:20px;
-							input[type="file"]{
-								width:100px;
-								height:100px;
-							}
-							&:hover{
-								border:1px solid #ff7f00;
-								color:#ff7f00
-							}
 						}
 					}
 					li:first-of-type{
@@ -211,70 +144,23 @@
 						}
 					}
 					.editLi{
-						margin-top:0;
+
 					}
+					border-bottom:1px dashed #e5e5e5;
+					padding-bottom:20px;
 				}
 			}
 				.addSpeciality{
 					width:600px;
 					margin:0 auto;
-					.works{
-						height:30px;
-						line-height:30px;
-						background:#ccc;
-						text-align:center;
-						margin-bottom:10px;
-					}
-					.imgList{
-						width:100px;
-						overflow:hidden;
-						height:100px;
-						margin-right:10px;
-						float:left;
-						border:2px solid #efefef;
-						border-radius:5px;
-						background-position:center;
-						background-repeat:no-repeat;
-						background-size:cover;
-						div{
-							width:100px;
-							height:100px;
-							text-align:center;
-							line-height:100px;
-							cursor:pointer;
-							background:rgba(0,0,0,0.3);
-							filter:alpha(opacity=0);
-							font-size:200%;
-							color:white;
-							opacity:0;
-							margin:0
-						}
-					}
-					.addDiv{
-							width:100px;
-							float:left;
-							height:100px;
-							color:#666;
-							position:relative;
-							line-height:100px;
-							font-size:200%;
-							text-align:center;
-							border:1px dashed #ccc;
-							margin-bottom:20px;
-							input[type="file"]{
-								width:100px;
-								height:100px;
-							}
-							&:hover{
-								border:1px solid #ff7f00;
-								color:#ff7f00
-							}
-					}
 					.addSubmit{
 						clear:both;
+						text-align:center;
+						margin-top:20px;
+						height:40px;
 						button{
 							width:120px;
-							margin-left:10px;
+			                margin:0 20px;
 						}
 					}
 				}

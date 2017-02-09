@@ -203,27 +203,27 @@ const fileController = {
         this.request.body.imgUrl = result.msg.names[0]
         this.request.body.sendTo = result.msg.sendTo[0]
     },
-    uploadSpecialityImg:async function(next){  //可上传多张图片
-        if (!this.session.user) {
-            this.body = { status: 600, msg: "尚未登录" }
-            return
-        }
-        var name = this.session.user
-        var result = await uploadImgs(this.req,name,config.specialityImgDir)
+    // uploadSpecialityImg:async function(next){  //可上传多张图片
+    //     if (!this.session.user) {
+    //         this.body = { status: 600, msg: "尚未登录" }
+    //         return
+    //     }
+    //     var name = this.session.user
+    //     var result = await uploadImgs(this.req,name,config.specialityImgDir)
 
-        // this.request.body.imgUrl = name
-        if (result.status != 200) {
-            this.body = {status:500,msg:'上传失败'}
-            return
-        }
-        this.request.body.speciality = result.msg.speciality[0]
-        this.request.body.brief = result.msg.brief[0]
-        this.request.body.experience = result.msg.experience[0]
-        this.request.body.names = result.msg.names
-        if (result.msg.works) {
-            this.request.body.works = result.msg.works[0]
-        }
-    },
+    //     // this.request.body.imgUrl = name
+    //     if (result.status != 200) {
+    //         this.body = {status:500,msg:'上传失败'}
+    //         return
+    //     }
+    //     this.request.body.speciality = result.msg.speciality[0]
+    //     this.request.body.brief = result.msg.brief[0]
+    //     this.request.body.experience = result.msg.experience[0]
+    //     this.request.body.names = result.msg.names
+    //     if (result.msg.works) {
+    //         this.request.body.works = result.msg.works[0]
+    //     }
+    // },
     uploadOrganizationImg:async function(next){
         if (!this.session.user) {
             this.body = { status: 600, msg: "尚未登录" }

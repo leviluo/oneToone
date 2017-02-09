@@ -22,7 +22,7 @@ export default function routers(router){
 // 公共会员信息
 	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); 
 // 新增专业
-	router.post("/member/addSpeciality",memberController.addSpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
+	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
 // 获取所有的专业信息
 	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
  //上传头像
@@ -48,7 +48,7 @@ export default function routers(router){
 // 修改地址
 	router.post("/member/modifyAddress",memberController.modifyAddress,router.allowedMethods());
 // 修改专业
-	router.post("/member/modifySpeciality",memberController.modifySpeciality,fileController.uploadSpecialityImg,router.allowedMethods());
+	router.post("/member/modifySpeciality",memberController.modifySpeciality,router.allowedMethods());
 // 删除专业
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
 
@@ -58,6 +58,8 @@ export default function routers(router){
 	router.get("/member/countNotice",memberController.countNotice,router.allowedMethods());
 // 计算多少回复
 	router.get("/member/countReply",memberController.countReply,router.allowedMethods());
+// 计算多少入社请求
+	router.get("/member/countRequest",memberController.countRequest,router.allowedMethods());
 
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
@@ -98,7 +100,9 @@ export default function routers(router){
 // 发布的文章
 	router.get("/organizations/getMyPost",organizationController.getMyPost,router.allowedMethods());
 // 获取通知
-	router.get("/organizations/getmyNotice",organizationController.getmyNotice,router.allowedMethods());
+	router.get("/organizations/getReplyMe",organizationController.getReplyMe,router.allowedMethods());
+// 获取通知
+	router.get("/organizations/getApproveMe",organizationController.getApproveMe,router.allowedMethods());
 // 获取入社申请
 	router.get("/organizations/getrequestData",organizationController.getrequestData,router.allowedMethods());
 // 审核申请

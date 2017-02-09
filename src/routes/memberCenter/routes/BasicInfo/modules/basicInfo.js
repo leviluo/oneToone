@@ -29,41 +29,25 @@ export function modifyAddress(item) {
 }
 
 
-export function modifySpeciality(that,speciality,brief,experience) {
-      var fd = new FormData(); 
-      var works = ''
-      for (var i = 0; i < that.state.modifyImgs.length; i++) {
-        if(that.state.modifyImgs[i].file){
-          fd.append("file", that.state.modifyImgs[i].file); 
-        }else{
-          works += that.state.modifyImgs[i].key+','
-        }
-      }
-      fd.append("speciality",speciality)
-      fd.append("brief",brief)
-      fd.append("experience",experience)
-      fd.append("works",works.slice(0,-1))
-      return axios.post('/member/modifySpeciality',fd)
+export function modifySpeciality(items) {
+      return axios.post('/member/modifySpeciality',items)
 }
 
 export function deleteSpeciality(item) {
 	    return axios.post('/member/deleteSpeciality',item)
 }
 
-export function addSpeciatity (that,speciality,brief,experience) {
-  var fd = new FormData(); 
-  for (var i = 0; i < that.state.imgs.length; i++) {
-  fd.append("file", that.state.imgs[i]); 
-  }
-  fd.append("speciality",speciality)
-  fd.append("brief",brief)
-  fd.append("experience",experience)
+export function addSpeciatity (that,items) {
   return (dispatch, getState) => {
-    axios.post('/member/addSpeciality',fd).then(({data}) => {
+    axios.post('/member/addSpeciality',items).then(({data}) => {
       if (data.status==200) {
           that.setState({showAddSpeciality:false})
           that.props.fetchSpeciality()
-      }else{
+      }else if(data.status==600){
+          that.props.dispatch({type:"AUTHOUT"})
+          that.context.router.push('/login')
+      }
+      else{
           dispatch(tipResult({type:"error",msg:data.msg}))
       }
     })

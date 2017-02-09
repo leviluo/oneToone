@@ -6,6 +6,7 @@ import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
 import {getrequestData,isApprove} from './modules'
 import PageNavBar,{pageNavInit} from '../../../../components/PageNavBar'
+import {countRequest} from '../../containers/modules'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -21,7 +22,7 @@ import PageNavBar,{pageNavInit} from '../../../../components/PageNavBar'
   state => ({
     auth:state.auth,
     }),
-  {tipShow,pageNavInit}
+  {tipShow,pageNavInit,countRequest}
 )
 
 export default class requestApproval extends Component {
@@ -58,6 +59,7 @@ export default class requestApproval extends Component {
   isApprove =(e,flag,id)=>{
     isApprove(flag,id).then(({data})=>{
       if (data.status == 200) {
+        this.props.countRequest()
           for (var i = 0; i < this.state.requestData.length; i++) {
             if(this.state.requestData[i].id == id){
               this.state.requestData.splice(i,1)
@@ -65,6 +67,7 @@ export default class requestApproval extends Component {
               break
             }
           }
+
         }else if (data.status==600) {
           this.props.dispatch({type:"AUTHOUT"})
           this.context.router.push('/login')

@@ -1,7 +1,7 @@
 create database onetoone;
 use onetoone;
 CREATE TABLE `member` (         
-  `id` mediumint(8) unsigned auto_increment,
+  `id` int unsigned auto_increment,
   `nickname` varchar(20) DEFAULT '',
   `password` char(40) DEFAULT '',
   `phone` varchar(40) DEFAULT '',   
@@ -14,61 +14,97 @@ CREATE TABLE `member` (
   PRIMARY KEY  (`id`)
 );
 
+--关注
+CREATE TABLE `follows` (  
+  `id` int unsigned auto_increment,
+  `memberId` int unsigned auto_increment,
+  `followId` int unsigned auto_increment,
+  PRIMARY KEY  (`id`)
+);
+
+--会员更新
+CREATE TABLE `memberupdates` (  
+  `id` int unsigned auto_increment,
+  `memberId` int unsigned auto_increment,
+  `articleId` int unsigned auto_increment,
+  `worksIds` varchar(300) default '',
+  PRIMARY KEY  (`id`)
+);
+
 --专业类目表
 CREATE TABLE `specialityCategory` (  
-  `id` mediumint(8) unsigned auto_increment,
+  `id` int unsigned auto_increment,
   `name` varchar(20) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
 --专业表
 CREATE TABLE `specialities` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `categoryId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `categoryId` int unsigned,
   `name` varchar(20) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
+
 --用户专业表
 CREATE TABLE `memberSpeciality` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `memberId` mediumint(8) unsigned,
-  `specialitiesId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `memberId` int unsigned,
+  `specialitiesId` int unsigned,
   `brief` varchar(300) DEFAULT '',
   `works` varchar(300) default '',
   `experience` text ,
   PRIMARY KEY  (`id`)
 );
+
+--作品表
+CREATE TABLE `works` (  
+  `id` int unsigned auto_increment,
+  `memberSpecialityId` int unsigned auto_increment,
+  `name` char(30) default '',
+  `createdAt` datetime DEFAULT now(),
+  PRIMARY KEY  (`id`)
+);
+--点赞表
+CREATE TABLE `likes` (  
+  `id` int unsigned auto_increment,
+  `worksId` int unsigned auto_increment,
+  `memberId` int unsigned auto_increment,
+  PRIMARY KEY  (`id`)
+);
+
 --社团表
 CREATE TABLE `organizations` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `categoryId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `categoryId` int unsigned,
   `name` varchar(40) default '',
   `brief` varchar(1000) default '',
   `time` datetime default NOW(),
   `head` varchar(80) default '',
-  `createById` mediumint(8) unsigned,
+  `createById` int unsigned,
   PRIMARY KEY  (`id`)
 );
 -- 用户社团
 CREATE TABLE `memberOrganizations` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `memberId` mediumint(8) unsigned,
-  `organizationsId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `memberId` int unsigned,
+  `organizationsId` int unsigned,
   PRIMARY KEY  (`id`)
 );
 -- 加入社团申请表
 CREATE TABLE `organizationsRequest` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `memberId` mediumint(8) unsigned,
-  `organizationsId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `memberId` int unsigned,
+  `organizationsId` int unsigned,
   `createdAt` datetime DEFAULT now() COMMENT '//',
   `verified` varchar(300) default '',
+  `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已通过',
   PRIMARY KEY  (`id`)
 );
 --社团通知活动等
 CREATE TABLE `article`(  
-  `id` mediumint(8) unsigned auto_increment,
-  `organizationsId` mediumint(8) unsigned,
-  `memberId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `organizationsId` int unsigned,
+  `memberId` int unsigned,
   `title` varchar(50) DEFAULT '' COMMENT '//标题',
   `content` text COMMENT '//',
   `type` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:普通,1:活动,2:公告,3:咨询',
@@ -80,9 +116,9 @@ CREATE TABLE `article`(
 select count(a.id) as count from article as a left join comments as c on c.articleId = a.id where c.status = 0 and a.memberId = (select id from member where phone = "15601912385")
 --评论列表
 CREATE TABLE `comments` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `articleId` mediumint(8) unsigned,
-  `memberId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `articleId` int unsigned,
+  `memberId` int unsigned,
   `comment` varchar(1000) default '',
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   `createdAt` datetime DEFAULT now() COMMENT '//',
@@ -90,18 +126,18 @@ CREATE TABLE `comments` (
 );
 -- 回复通知 
 CREATE TABLE `reReply` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `replyTo` mediumint(8) unsigned,
-  `commentsId` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `replyTo` int unsigned,
+  `commentsId` int unsigned,
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   PRIMARY KEY  (`id`)
 );
 select count(*) as count from reReply where replyTo = ()
 -- 私信
 CREATE TABLE `message` (  
-  `id` mediumint(8) unsigned auto_increment,
-  `fromMember` mediumint(8) unsigned,
-  `toMember` mediumint(8) unsigned,
+  `id` int unsigned auto_increment,
+  `fromMember` int unsigned,
+  `toMember` int unsigned,
   `active` char(1) default 0,
   `text` varchar(300) default '',
   `imgUrl` varchar(80) default '',

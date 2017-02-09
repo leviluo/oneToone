@@ -65,7 +65,7 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-        var result = await sqlStr("select o.*,(select count(id) from organizationsrequest where organizationsId = o.id) as requests,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
+        var result = await sqlStr("select o.*,(select count(id) from organizationsrequest where organizationsId = o.id and status = 0) as requests,s.name as categoryName from organizations as o left join specialitycategory as s on s.id = o.categoryId where createById = (select id from member where phone = ?)",[this.session.user])
         this.body = {status:200,data:result}
     },
     getMyOrganization: async function(){
@@ -159,7 +159,12 @@ const organizationController = {
         this.body = { status: 500, msg: "认证不能超过300个字符" }
         return
       }
-      var result = await sqlStr("insert into organizationsrequest set memberId = (select id from member where phone = ?),organizationsId=?,verified=?;",[this.session.user,this.request.body.id,this.request.body.verified])
+      var result = await sqlStr("select id from organizationsrequest where memberId = (select id from member where phone = ?) and organizationsId=?",[this.session.user,this.request.body.id])
+      if (result.length > 0) {
+          this.body = {status:500,msg:"您已申请过,等待审核"}
+          return
+      };
+      result = await sqlStr("insert into organizationsrequest set memberId = (select id from member where phone = ?),organizationsId=?,verified=?;",[this.session.user,this.request.body.id,this.request.body.verified])
       if (result.affectedRows == 1) {
             this.body = {status:200}
             return
@@ -278,12 +283,12 @@ const organizationController = {
       var count = await sqlStr("select count(id) as count from article where memberId = (select id from member where phone = ?)",[this.session.user])
       this.body = {status:200,data:result,count:count[0].count}
     },
-    getmyNotice:async function(){
+    getReplyMe:async function(){
       if (!this.session.user) {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
-      var result = await sqlStr("select m.phone,m.nickname,c.createdAt,c.comment,a.id as articleId,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?) and r.status = 0",[this.session.user])
+      var result = await sqlStr("select m.id,m.nickname,c.createdAt,c.comment,a.id as articleId,r.status,a.title,o.name,o.id as organizationsId from reReply as r left join comments as c on c.id = r.commentsId left join member as m on m.id = c.memberId left join article as a on a.id = c.articleId left join organizations as o on o.id = a.organizationsId left join comments as cc on cc.id = r.replyTo where cc.memberId = (select id from member where phone = ?)",[this.session.user])
       var resultt = await sqlStr("update reReply set status = 1 where replyTo in (select id from comments where memberId = (select id from member where phone = ?))",[this.session.user])
       this.body = {status:200,data:result}
     },
@@ -296,8 +301,8 @@ const organizationController = {
           this.body = { status: 600, msg: "缺少参数" }
           return
       };
-      var result = await sqlStr("select m.id as memberId,m.phone,m.nickname,ro.createdAt,ro.verified,ro.id from organizationsrequest as ro left join member as m on m.id = ro.memberId where ro.organizationsId = ? limit "+this.request.query.limit,[this.request.query.id])
-      var count = await sqlStr("select count(id) as count from organizationsrequest where organizationsId = ? ",[this.request.query.id])
+      var result = await sqlStr("select m.id as memberId,m.phone,m.nickname,ro.createdAt,ro.verified,ro.id from organizationsrequest as ro left join member as m on m.id = ro.memberId where ro.status = 0 and ro.organizationsId = ? limit "+this.request.query.limit,[this.request.query.id])
+      var count = await sqlStr("select count(id) as count from organizationsrequest where organizationsId = ? and status = 0",[this.request.query.id])
       this.body = {status:200,data:result,count:count[0].count}
     },
     isApprove:async function(){
@@ -313,7 +318,7 @@ const organizationController = {
       if (this.request.query.flag == 1) {
         var resultt = await sqlStr("insert into memberorganizations set memberId = (select memberId from organizationsrequest where id = ?),organizationsId=(select organizationsId from organizationsrequest where id = ?);", [this.request.query.id,this.request.query.id])
         if (resultt.affectedRows > 0) {
-        var result = await sqlStr("delete from organizationsrequest where id = ?", [this.request.query.id])
+        var result = await sqlStr("update organizationsrequest set status = 1 where id = ?", [this.request.query.id])
           if (result.affectedRows > 0) {
             this.body = {status:200}
             return
@@ -327,6 +332,18 @@ const organizationController = {
         }
       }
         this.body= {status:500,msg:"发生错误"}
+    },
+    getApproveMe:async function(){
+      if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+      var result = await sqlStr("select o.id,o.name from organizationsrequest as ro left join organizations as o on o.id = ro.organizationsId where ro.status = 1 and ro.memberId = (select id from member where phone = ?)",[this.session.user])
+      if (result.length > 0) {
+        await sqlStr("delete from organizationsrequest where status = 1 and memberId = (select id from member where phone = ?)", [this.session.user])
+      };
+
+      this.body = {status:200,data:result}
     }
 }
 export default organizationController;

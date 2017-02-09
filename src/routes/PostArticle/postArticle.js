@@ -300,7 +300,7 @@ export default class PostArticle extends Component{
         }
 
         addImages = (e)=>{
-          if (this.state.imgs.length > 7) {
+          if ((this.state.imgs.length + e.target.files.length) > 8) {
             this.props.tipShow({type:'error',msg:'只能添加8张图片'})
             return;
           };
@@ -313,25 +313,26 @@ export default class PostArticle extends Component{
           return;
           }
 
-          var fileUrl = window.URL.createObjectURL(e.target.files[0])
+          for (var i = e.target.files.length - 1; i >= 0; i--) {
+              var fileUrl = window.URL.createObjectURL(e.target.files[i])
+              var div = document.createElement('div')
+              div.className = "imgList"
+              div.style.backgroundImage = `url(${fileUrl})`
 
-          var div = document.createElement('div')
-          div.className = "imgList"
-          div.style.backgroundImage = `url(${fileUrl})`
+              var divDelete = document.createElement('div')
+              divDelete.onmouseout = this.hideDeleteImg
+              divDelete.onmouseover = this.showDeleteImg
+              divDelete.className = "fa fa-trash"
+              var key = Date.parse(new Date())
+              divDelete.setAttribute('name',key)
 
-          var divDelete = document.createElement('div')
-          divDelete.onmouseout = this.hideDeleteImg
-          divDelete.onmouseover = this.showDeleteImg
-          divDelete.className = "fa fa-trash"
-          var key = Date.parse(new Date())
-          divDelete.setAttribute('name',key)
+              div.appendChild(divDelete)
 
-          div.appendChild(divDelete)
+              e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
+              this.state.imgs.push({key:key,file:e.target.files[i]})
+          };
 
-          e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
-          this.state.imgs.push({key:key,file:e.target.files[0]})
           this.setState({})
-
       }
 
       static contextTypes = {
@@ -482,7 +483,7 @@ export default class PostArticle extends Component{
                                 </div>
                             }
                             <div className="addDiv">
-                              +<input onChange={this.addImages} type="file" />
+                              +<input onChange={this.addImages} type="file" multiple/>
                             </div>
                             <div className="addSubmit">
                               <button onClick={this.submitArticle} className="btn-success">提交</button>

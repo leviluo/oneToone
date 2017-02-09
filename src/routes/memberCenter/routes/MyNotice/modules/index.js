@@ -1,7 +1,11 @@
 import axios from 'axios'
 
 
-export function getmyNotice(){
-	return axios.get('/organizations/getmyNotice')
+export function getReplyMe(){
+	return axios.get('/organizations/getReplyMe')
+}
+
+export function getApproveMe(){
+	return axios.get('/organizations/getApproveMe')
 }
 

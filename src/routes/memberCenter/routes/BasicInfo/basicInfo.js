@@ -200,7 +200,7 @@ export default class BasicInfo extends Component {
       this.props.tipShow({type:"error",msg:"工作经验不能超过300个字符"})
       return
     }
-    this.props.addSpeciatity(this,speciality,brief,experience)
+    this.props.addSpeciatity(this,{speciality:speciality,brief:brief,experience:experience})
   }
 
   showDeleteImg=(e,index)=>{
@@ -228,39 +228,39 @@ export default class BasicInfo extends Component {
     }
   }
 
-  modifyAddImg=(e)=>{
-      if (this.state.modifyImgs.length > 7) {
-        this.props.tipShow({type:'error',msg:'只能添加8张图片'})
-        return;
-      };
-      var value = e.target.value
-      var filextension=value.substring(value.lastIndexOf("."),value.length);
-      filextension = filextension.toLowerCase();
-      if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
-      {
-      this.props.tipShow({type:'error',msg:'文件类型不正确'})
-      return;
-      }
+  // modifyAddImg=(e)=>{
+  //     if (this.state.modifyImgs.length > 7) {
+  //       this.props.tipShow({type:'error',msg:'只能添加8张图片'})
+  //       return;
+  //     };
+  //     var value = e.target.value
+  //     var filextension=value.substring(value.lastIndexOf("."),value.length);
+  //     filextension = filextension.toLowerCase();
+  //     if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+  //     {
+  //     this.props.tipShow({type:'error',msg:'文件类型不正确'})
+  //     return;
+  //     }
 
-      var fileUrl = window.URL.createObjectURL(e.target.files[0])
+  //     var fileUrl = window.URL.createObjectURL(e.target.files[0])
 
-      var div = document.createElement('div')
-      div.className = "imgList"
-      div.style.backgroundImage = `url(${fileUrl})`
+  //     var div = document.createElement('div')
+  //     div.className = "imgList"
+  //     div.style.backgroundImage = `url(${fileUrl})`
 
-      var divDelete = document.createElement('div')
-      divDelete.onmouseout = this.hideDeleteImg
-      divDelete.onmouseover = this.modifyDeleteImg
-      divDelete.className = "fa fa-trash"
-      var key = Date.parse(new Date())
-      divDelete.setAttribute('name',key)
+  //     var divDelete = document.createElement('div')
+  //     divDelete.onmouseout = this.hideDeleteImg
+  //     divDelete.onmouseover = this.modifyDeleteImg
+  //     divDelete.className = "fa fa-trash"
+  //     var key = Date.parse(new Date())
+  //     divDelete.setAttribute('name',key)
 
-      div.appendChild(divDelete)
+  //     div.appendChild(divDelete)
 
-      e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
-      this.state.modifyImgs.push({key:key,file:e.target.files[0]})
-      this.setState({})
-  }
+  //     e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
+  //     this.state.modifyImgs.push({key:key,file:e.target.files[0]})
+  //     this.setState({})
+  // }
 
   hideDeleteImg=(e)=>{
     e.target.style.filter = "alpha(opacity=0)"
@@ -335,34 +335,12 @@ export default class BasicInfo extends Component {
 
   }
 
-  modifySpeciality =(e,name)=>{
-    this.state[name] = true
-    var items = []
-    var data = this.props.myspecialities.text
-    for (var i = 0; i < data.length; i++) {
-      if(data[i].speciality == name){
-        if(data[i].works){
-          var arr = data[i].works.split(',')
-          for (var i = 0; i < arr.length; i++) {
-            items.push({key:arr[i]})
-          }
-        }
-        break;
-      }
-    }
-    this.setState({
-      modifyImgs:items
-    })
-  }
-
   cancelSpeciality =(e,name)=>{
     this.state[name] = false
     this.setState({})
   }
 
   saveSpeciality=(e,speciality)=>{
-
-    // console.log(this.state.modifyImgs)
 
     var brief = this.refs[speciality+'brief'].value
     var experience = this.refs[speciality+'experience'].value
@@ -382,7 +360,7 @@ export default class BasicInfo extends Component {
       return
     }
 
-    modifySpeciality(this,speciality,brief,experience).then(({data})=>{
+    modifySpeciality({speciality:speciality,brief:brief,experience:experience}).then(({data})=>{
       if (data.status == 200) {
         this.state[speciality] = false
         this.setState({})
@@ -439,12 +417,7 @@ export default class BasicInfo extends Component {
 
     this.setState({
       showAddSpeciality:true,
-      imgs:[]
     })
-  }
-
-  showThisImg =(index,works)=>{
-    this.props.imgbrowserShow({currentChoose:index,imgs:works})
   }
 
   render () {
@@ -478,37 +451,20 @@ export default class BasicInfo extends Component {
                          if(works[i])works[i] = `/originImg?from=speciality&name=${works[i]}`
                     }
                     return <ul key={index}>
-                      <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>this.modifySpeciality(e,item.speciality)}><i className="fa fa-edit"></i>修改</a></li>
+                      <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.speciality] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></li>
                       {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
                       {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
-                      {(item.works && !this.state[item.speciality]) && <li>
-                      <span>作品展示&nbsp;:&nbsp;</span>
-                        <div className="imgShow">
-                        {works.map((item,index)=>{
-                          if (!item) return;
-                          return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item.replace(/\/originImg\?/,"/img?")})`}}></div>
-                            })}
-                        </div>
-                      </li>}
                       {this.state[item.speciality] && <li className="editLi">
                         <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
                         <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>
                         <br/>
                         <br/>
                         <p>经验&nbsp;:&nbsp;</p><textarea ref={experience} defaultValue={item.experience} rows="10"></textarea>
-                        <p>作品展示(最多8张)&nbsp;:&nbsp;</p>{works.map((item,index)=>{
-                        if (!item) return;
-                        return <div className="imgList" key={index} style={{backgroundImage:`url(${item})`}}>
-                          <div onMouseOut={this.hideDeleteImg} onMouseOver={this.modifyDeleteImg} name={item} className="fa fa-trash"></div></div>
-                          })}
-                        <div className="addDiv">
-                          +<input onChange={this.modifyAddImg} type="file" />
-                        </div>
                       </li>}
                     </ul>
                   }
                     )}
-                    <div style={{marginTop:"30px",clear:'both'}} ><button onClick={this.showAddSpeciality} className="btn-success">+添加专业能力</button>
+                    <div style={{marginTop:"30px",clear:'both'}} ><button onClick={this.showAddSpeciality} className="btn-success">+添加专长</button>
                     </div>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
@@ -518,19 +474,9 @@ export default class BasicInfo extends Component {
                   <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" />
                   <br/>
                   <Textarea header="经验" rows="10" ref="experience" defaultValue="" />
-                  <br/>
-                  <div className="works">作品展示(最多8张)</div>
-                  {this.state.imgs.map((item,index)=>{
-                    var img = window.URL.createObjectURL(item)
-                    return <div className="imgList" key={index} style={{backgroundImage:`url(${img})`}}>
-                      <div onMouseOut={this.hideDeleteImg} onMouseOver={(e)=>this.showDeleteImg(e,index)} className="fa fa-trash"></div></div>
-                      })}
-                  <div className="addDiv">
-                    +<input onChange={this.addWorks} type="file" />
-                  </div>
                     <div className="addSubmit">
-                      <button onClick={this.addSpeciatity} className="btn-success pull-right">保存</button>
-                      <button onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default pull-right">取消</button>
+                      <button onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default">取消</button>
+                      <button onClick={this.addSpeciatity} className="btn-success">保存</button>
                     </div>
                   </div>}
               </ul>
