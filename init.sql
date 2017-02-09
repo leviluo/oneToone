@@ -59,7 +59,7 @@ CREATE TABLE `memberSpeciality` (
 --作品表
 CREATE TABLE `works` (  
   `id` int unsigned auto_increment,
-  `memberSpecialityId` int unsigned auto_increment,
+  `memberSpecialityId` int unsigned,
   `name` char(30) default '',
   `createdAt` datetime DEFAULT now(),
   PRIMARY KEY  (`id`)

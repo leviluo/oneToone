@@ -111,6 +111,7 @@
 				border:2px solid #e5e5e5;
 				float:left;
 				width:50px;
+
 			}
 			div{
 				float:left;
@@ -147,12 +148,13 @@
 					height:100px;
 					margin-right:10px;
 					float:left;
-					border:2px solid #efefef;
+					border:2px solid #e5e5e5;
 					border-radius:5px;
 					background-position:center;
 					background-repeat:no-repeat;
 					background-size:cover;
-					cursor:pointer
+					cursor:pointer;
+					box-shadow:3px 3px 5px 1px #efefef;
 					}
 			}
 		}

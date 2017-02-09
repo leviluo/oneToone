@@ -344,6 +344,10 @@ const organizationController = {
       };
 
       this.body = {status:200,data:result}
+    },
+    submitPhotos:async function(next){
+      await next
+      console.log(this.request.body)
     }
 }
 export default organizationController;

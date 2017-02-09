@@ -120,6 +120,21 @@
 							position:relative;
 							top:50px;
 						}
+						.addDiv{
+							width:100px;
+							height:100px;
+							line-height:100px;
+							color:#666;
+							font-size:200%;
+							border:1px dashed #e5e5e5;
+							text-align:center;
+							display:block;
+							&:hover{
+								border:1px solid #ff7f00;
+								color:#ff7f00;
+								background:none
+							}
+						}
 					}
 					li:first-of-type{
 						padding-left:0px;

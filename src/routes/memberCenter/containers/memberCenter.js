@@ -55,7 +55,7 @@ export default class memberCenter extends Component {
             </ul>
             <h4>基本信息</h4>
             <ul>
-              <li><Link to="/memberCenter/basicInfo" className={this.props.location.pathname == '/memberCenter/basicInfo' ? 'active' : ''}>我的名片</Link></li>
+              <li><Link to="/memberCenter/basicInfo" className={this.props.location.pathname == '/memberCenter/basicInfo' || /\/memberCenter\/photos/.test(this.props.location.pathname) ? 'active' : ''}>我的名片</Link></li>
               <li><Link to="/memberCenter/myMessage" className={this.props.location.pathname == '/memberCenter/myMessage' ? 'active' : ''}>私信{this.props.status.countMessage > 0 && <span className="noRead">{this.props.status.countMessage}</span>}</Link></li>
               <li><Link to="/memberCenter/myNotice" className={this.props.location.pathname == '/memberCenter/myNotice' ? 'active' : ''}>通知{this.props.status.countNotice > 0 && <span className="noRead">{this.props.status.countNotice}</span>}</Link></li>
             </ul>

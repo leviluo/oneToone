@@ -41,9 +41,9 @@ const memberController = {
     specialities:async function(next){
 
         if (this.request.query.id) {
-        var result = await sqlStr("select m.brief,m.experience,m.works,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = ?;",[this.request.query.id])
+        var result = await sqlStr("select m.brief,m.experience,m.id,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = ?;",[this.request.query.id])
         }else if (this.session.user) {
-        var result = await sqlStr("select m.brief,m.experience,m.works,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ?);",[this.session.user])
+        var result = await sqlStr("select m.brief,m.experience,m.id,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ?);",[this.session.user])
         }else{
             this.body = { status: 600, msg: "尚未登录" }
             return

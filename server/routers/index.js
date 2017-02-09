@@ -107,6 +107,8 @@ export default function routers(router){
 	router.get("/organizations/getrequestData",organizationController.getrequestData,router.allowedMethods());
 // 审核申请
 	router.get("/organizations/isApprove",organizationController.isApprove,router.allowedMethods());
+// 上传作品
+	router.post("/organizations/submitPhotos",organizationController.submitPhotos,fileController.uploadPhotos,router.allowedMethods());
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next

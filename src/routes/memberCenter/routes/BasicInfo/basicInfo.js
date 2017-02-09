@@ -11,6 +11,7 @@ import {imgbrowserShow} from '../../../../components/ImageBrowser'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
 import {asyncConnect} from 'redux-async-connect'
+import {Link} from 'react-router'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -446,14 +447,14 @@ export default class BasicInfo extends Component {
                   {this.props.myspecialities.text.map((item,index)=>{
                     var brief = `${item.speciality}brief`;
                     var experience = `${item.speciality}experience`;
-                    var works = item.works.split(',')
-                    for (var i = 0; i < works.length; i++) {
-                         if(works[i])works[i] = `/originImg?from=speciality&name=${works[i]}`
-                    }
+                    var linkPhotos = `/memberCenter/photos/${item.id}`
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.speciality] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></li>
                       {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
                       {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
+                      {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/><Link to={linkPhotos} className="addDiv">
+                              +
+                            </Link></li>}
                       {this.state[item.speciality] && <li className="editLi">
                         <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
                         <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>
