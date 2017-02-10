@@ -37,6 +37,7 @@ CREATE TABLE `specialityCategory` (
   `name` varchar(20) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
+
 --专业表
 CREATE TABLE `specialities` (  
   `id` int unsigned auto_increment,
@@ -64,6 +65,7 @@ CREATE TABLE `works` (
   `createdAt` datetime DEFAULT now(),
   PRIMARY KEY  (`id`)
 );
+
 --点赞表
 CREATE TABLE `likes` (  
   `id` int unsigned auto_increment,

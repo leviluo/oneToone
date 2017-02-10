@@ -55,26 +55,32 @@
 	 		background:#efefef
 	 	}
 	 }
-	&>table{
-		width:100%;
-		tbody{
-			tr{
-				td{
-					height:50px !important;
-					line-height:35px;
-					text-align:center;
-					border-bottom:1px dashed #e5e5e5;
-					.noRead{
-						padding:0 6px;
-						background:#ff7f00;
-						color:white;
-						border-radius:10px;
-					}
-					button{
-						margin-right:5px;
-					}
-				}
+	 h3{
+	 text-align:center;
+	 }
+	.imgShows{
+			float:left;
+			padding:4px 4px 4px 4px; 
+			text-align:center;
+			background:#efefef;
+			margin:5px;
+			width:188px;
+			img{
+				width:180px;
+				box-shadow:none;
 			}
-		}
+			.lightColor{
+				margin:5px;
+				color:#666;
+				font-size:10px;
+			}
+			box-shadow:3px 3px 6px 1px #ccc;
+			&>div{
+				cursor:pointer;
+				background-position:center;
+				background-repeat:no-repeat;
+				background-size:cover;
+				height:140px;
+			}
 	}
 }

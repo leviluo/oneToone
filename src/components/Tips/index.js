@@ -31,7 +31,7 @@ export default class Tip extends Component {
         let that = this;
         if(nextProps.result.msg) {
             if (nextProps.result.type=="success") {
-                this.showTip("#008B00")
+                this.showTip("#00be5f")
             }else{
                 this.showTip("#FF7F00")
             }

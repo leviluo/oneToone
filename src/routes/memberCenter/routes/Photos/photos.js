@@ -29,7 +29,7 @@ export default class photos extends Component {
 
     state = {
       worksData:[],
-      averagenum:5,
+      averagenum:15,
       imgs:[]
     }
 
@@ -67,8 +67,23 @@ export default class photos extends Component {
     }
     fd.append("id", this.props.params.id)
     submitPhotos(fd).then(({data})=>{
-
+      if (data.status == 200) {
+          this.props.tipShow({type:'success',msg:"上传成功"})
+          this.cancelPhotos()
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
     })
+  }
+
+  cancelPhotos = ()=>{
+    this.setState({
+      imgs:[],
+    })
+    this.refs.add.innerHTML = '';
   }
 
   hideDeleteImg=(e)=>{
@@ -133,33 +148,22 @@ export default class photos extends Component {
     <div className="addDIV">
     <div ref="add" className="add">
     </div>
-    {this.state.imgs.length > 0 && <div className="submit"><button onClick={this.savePhotos} className="btn-success">上传</button></div>}
+    {this.state.imgs.length > 0 && <div className="submit"><button onClick={this.cancelPhotos} className="btn-default">取消</button>&nbsp;&nbsp;<button onClick={this.savePhotos} className="btn-success">上传</button></div>}
     </div>
-
+    <h3>{this.props.location.query.specialityName}</h3>
     {this.state.worksData.length == 0 && <div className="text-center">您还没有任何作品耶,赶快上传吧~</div>}
-      <table>
-        <tbody>
-        { this.state.worksData.length > 0 && <tr className="lightColor">
-          <td>请求时间</td>
-          <td>请求人</td>
-          <td>验证信息</td>
-          <td>操作</td>
-        </tr>
-        }
-        {this.state.worksData.map((item,index)=>{
-          var link = `/memberBrief/${item.memberId}`
-          var date = new Date(item.createdAt)
-          var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
-          return <tr key={index}>
-            <td>{time}</td>
-            <td><Link to={link}>{item.nickname}</Link></td>
-            <td>{item.verified}</td>
-            <td><button className="btn-default" onClick={(e)=>this.isApprove(e,0,item.id)} >忽略</button><button onClick={(e)=>this.isApprove(e,1,item.id)}  className="btn-success">通过</button></td>
-          </tr>
-        })}
-        </tbody>
-      </table>
+      {this.state.worksData.map((item,index)=>{
+        var src = `/img?from=speciality&name=${item.name}`
+        var date = new Date(item.createdAt)
+        var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
+        return <div key={index} className="imgShows">
+          <div style={{backgroundImage:`url(${src})`}}></div>
+          <span className="pull-left lightColor">{time}</span><span className="pull-right lightColor"><i className="fa fa-heart"></i>&nbsp;{item.likes}</span>
+        </div>
+      })}
+    <div style={{clear:"both"}}>
       <PageNavBar />
+    </div>
       <Modal />
     </div>
     )

@@ -452,7 +452,7 @@ export default class BasicInfo extends Component {
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.speciality] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></li>
                       {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
                       {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
-                      {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/><Link to={linkPhotos} className="addDiv">
+                      {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/><Link to={linkPhotos} query={{specialityName:item.speciality}} className="addDiv">
                               +
                             </Link></li>}
                       {this.state[item.speciality] && <li className="editLi">

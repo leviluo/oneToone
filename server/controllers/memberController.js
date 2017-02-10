@@ -243,6 +243,41 @@ const memberController = {
         }
         var result = await sqlStr("select count(DISTINCT o.id) as count from organizationsRequest as ro left join organizations as o on ro.organizationsId = o.id where ro.status = 0 and o.createById = (select id from member where phone = ?);",[this.session.user])
         this.body = {status:200,data:result[0].count}
+    },
+    submitPhotos:async function(next){
+      await next
+      var names = this.request.body.names
+      var id = this.request.body.id[0]
+      if (!id) {
+        this.body = {status:500,msg:"缺少参数"}
+        return
+      }
+      if (names.length > 0) {
+        var str = ''
+        var arr = []
+        for (var i = 0; i < names.length; i++) {
+          str += `(?,?),`,
+          arr.push(id)
+          arr.push(names[i])
+        }
+        var result = await sqlStr("insert into works(`memberSpecialityId`,`name`) values "+str.slice(0,-1),arr)
+       if (result.affectedRows > 0) {
+            this.body = {status:200}
+            return
+        }
+        this.body= {status:500,msg:"写入数据库失败"}
+      }else{
+        this.body = {status:500,msg:"上传图片失败"}
+      }
+    },
+    getWorks:async function(){
+      if (!this.request.query.id || !this.request.query.limit) {
+        this.body = {status:500,msg:"缺少参数"}
+        return
+      }
+      var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where memberSpecialityId = ? limit "+this.request.query.limit,[this.request.query.id])
+      var count = await sqlStr("select count(id) as count from works where memberSpecialityId = ?",[this.request.query.id])
+      this.body = {status:200,data:result,count:count[0].count}
     }
 }
 export default memberController;

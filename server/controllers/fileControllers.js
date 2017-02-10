@@ -43,6 +43,7 @@ function getThumbImage(name,url){
                             if (exists) {
                                 gm(`${url}${name}.jpg`)
                                 .resize(200, 200)
+                                .flatten() //透明PNG透明
                                 .write(`${url}thumbs/${name}.jpg`, function(err){
                                   if (err) {
                                     reject(err);
@@ -130,6 +131,7 @@ function uploadImgs(ob,name,url){
 
 const fileController = {
     loadImg:async function(next){
+        console.log(this.request.query)
         switch(this.request.query.from){
         case 'chat':
             var result = await getThumbImage(this.request.query.name,config.messageImgDir);

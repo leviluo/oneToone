@@ -60,6 +60,10 @@ export default function routers(router){
 	router.get("/member/countReply",memberController.countReply,router.allowedMethods());
 // 计算多少入社请求
 	router.get("/member/countRequest",memberController.countRequest,router.allowedMethods());
+// 上传作品
+	router.post("/member/submitPhotos",memberController.submitPhotos,fileController.uploadPhotos,router.allowedMethods());
+// 获取作品
+	router.get("/member/getWorks",memberController.getWorks,router.allowedMethods());
 
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
@@ -107,8 +111,7 @@ export default function routers(router){
 	router.get("/organizations/getrequestData",organizationController.getrequestData,router.allowedMethods());
 // 审核申请
 	router.get("/organizations/isApprove",organizationController.isApprove,router.allowedMethods());
-// 上传作品
-	router.post("/organizations/submitPhotos",organizationController.submitPhotos,fileController.uploadPhotos,router.allowedMethods());
+
 	// router.get('*', async function (next){
 	// console.log("0000")
 	// 	// await next
