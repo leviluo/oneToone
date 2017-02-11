@@ -73,7 +73,7 @@ export default class Comfirm extends Component{
               <div className="close" onClick={this.hideModal}>×</div>
             </div>
             <div className="content-body">
-                  此操作不可更改,确定继续吗？
+                  {this.props.confirm.text || '此操作不可更改,确定继续吗？'}
             </div>
             <div className="content-footer">
               <button className="btn-default" onClick={this.hideModal}>取消</button>

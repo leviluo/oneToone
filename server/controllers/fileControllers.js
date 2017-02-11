@@ -75,6 +75,22 @@ function getThumbImage(name,url){
    }) 
 }
 
+function deleteImgs(name,url){
+    return new Promise(function(reslove,reject){
+        fs.exists(`${url}thumbs/${name}.jpg`, function (exists) {
+            if (exists) {
+                fs.unlinkSync(`${url}thumbs/${name}.jpg`);
+            }
+            fs.exists(`${url}${name}.jpg`, function (exists) {
+                if (exists) {
+                    fs.unlinkSync(`${url}${name}.jpg`);
+                    reslove(true)
+                }
+            })
+        })
+    })
+}
+
 function uploadOneImg(ob,user,url){
     return new Promise(function(reslove,reject){
           var form = new multiparty.Form({ uploadDir: url });
@@ -131,7 +147,7 @@ function uploadImgs(ob,name,url){
 
 const fileController = {
     loadImg:async function(next){
-        console.log(this.request.query)
+
         switch(this.request.query.from){
         case 'chat':
             var result = await getThumbImage(this.request.query.name,config.messageImgDir);
@@ -260,6 +276,14 @@ const fileController = {
         }
         
         this.request.body = result.msg
+    },
+    deletePhoto:async function(next){
+        var result = await deleteImgs(this.request.query.name,config.specialityImgDir)
+        if(!result){
+            this.body = {status:500,mag:"删除失败"}
+            return
+        }
+        next
     }
 }
 

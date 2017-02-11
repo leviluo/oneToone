@@ -10,6 +10,7 @@ import organization from './Organizations'
 import OrganizationsHome from './OrganizationsHome'
 import PostArticle from './PostArticle'
 import article from './Article'
+import works from './Works'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -28,6 +29,7 @@ export const createRoutes = (store) => ({
     OrganizationsHome(store),
     PostArticle(store),
     article(store),
+    works(store),
   ]
 })
 

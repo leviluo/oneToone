@@ -56,7 +56,7 @@ export default class Tip extends Component {
 
     showTip = (color)=>{
         findDOMNode(this).style.display = "block";
-        findDOMNode(this).style.background = color;
+        this.refs.text.style.background = color;
     }
 
     static propTypes = {
@@ -65,7 +65,7 @@ export default class Tip extends Component {
 
     render() {
         return ( 
-            < div id = "tips" > {this.props.result.msg} </div >
+            < div id = "tips" > <div ref="text"> {this.props.result.msg} </div> </div >
         )
     }
 }

@@ -12,6 +12,7 @@ export default function routers(router){
 	router.post("/login",authController.login,router.allowedMethods());
 	router.get("/auth",authController.auth,router.allowedMethods());
 	router.get("/loginOut",authController.loginOut,router.allowedMethods());
+// 获取所有的特长专业，用于新增特长时用
 	router.get("/public/catelogues",publicController.catelogues,router.allowedMethods());
 // 获取所有的专业信息在category页面
 	router.post("/public/items",publicController.items,router.allowedMethods());
@@ -64,6 +65,10 @@ export default function routers(router){
 	router.post("/member/submitPhotos",memberController.submitPhotos,fileController.uploadPhotos,router.allowedMethods());
 // 获取作品
 	router.get("/member/getWorks",memberController.getWorks,router.allowedMethods());
+// 赞
+	router.get("/member/addLike",memberController.addLike,router.allowedMethods());
+// 删除照片
+	router.get("/member/deletePhoto",memberController.deletePhoto,fileController.deletePhoto,router.allowedMethods());
 
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
@@ -89,8 +94,6 @@ export default function routers(router){
 	router.get("/organizations/OrganizationsSortByHot",organizationController.OrganizationsSortByHot,router.allowedMethods());
 // 获取所有活动信息
 	router.get("/organizations/getArticleList",organizationController.getArticleList,router.allowedMethods());
-// 获取所有咨询信息
-	// router.get("/organizations/getConsults",organizationController.getConsults,router.allowedMethods());
 // 获取文章详情
 	router.get("/organizations/article",organizationController.article,router.allowedMethods());
 // 删除文章

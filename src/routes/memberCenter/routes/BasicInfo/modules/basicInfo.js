@@ -14,6 +14,11 @@ export function commitHeadImg(items,phone) {
   }
 }
 
+export function submitPhotos(fd){
+  return axios.post("/member/submitPhotos",fd)
+}
+
+
 export function getMemberInfo() {
       return axios.get('/member/getMemberInfo')
 }

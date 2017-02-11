@@ -4,10 +4,10 @@ import Textarea from '../../../../components/Textarea'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality} from './modules/basicInfo'
+import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality,submitPhotos} from './modules/basicInfo'
 import Modal,{modalShow,modalHide} from '../../../../components/Modal'
 import Confirm,{confirmShow} from '../../../../components/Confirm'
-import {imgbrowserShow} from '../../../../components/ImageBrowser'
+// import {imgbrowserShow} from '../../../../components/ImageBrowser'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
 import {asyncConnect} from 'redux-async-connect'
@@ -32,7 +32,7 @@ import {Link} from 'react-router'
     myspecialities:state.myspecialities,
     catelogues:state.catelogues
     }),
-  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,fetchSpeciality,imgbrowserShow,confirmShow}
+  {modalShow,modalHide,tipShow,commitHeadImg,addSpeciatity,modifyname,updateSpeciality,fetchSpeciality,confirmShow}
 )
 
 export default class BasicInfo extends Component {
@@ -40,6 +40,7 @@ export default class BasicInfo extends Component {
   state ={
     content: <div></div>,
     address: '',
+    imgs:[]
   }
 
   static contextTypes = {
@@ -229,40 +230,6 @@ export default class BasicInfo extends Component {
     }
   }
 
-  // modifyAddImg=(e)=>{
-  //     if (this.state.modifyImgs.length > 7) {
-  //       this.props.tipShow({type:'error',msg:'只能添加8张图片'})
-  //       return;
-  //     };
-  //     var value = e.target.value
-  //     var filextension=value.substring(value.lastIndexOf("."),value.length);
-  //     filextension = filextension.toLowerCase();
-  //     if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
-  //     {
-  //     this.props.tipShow({type:'error',msg:'文件类型不正确'})
-  //     return;
-  //     }
-
-  //     var fileUrl = window.URL.createObjectURL(e.target.files[0])
-
-  //     var div = document.createElement('div')
-  //     div.className = "imgList"
-  //     div.style.backgroundImage = `url(${fileUrl})`
-
-  //     var divDelete = document.createElement('div')
-  //     divDelete.onmouseout = this.hideDeleteImg
-  //     divDelete.onmouseover = this.modifyDeleteImg
-  //     divDelete.className = "fa fa-trash"
-  //     var key = Date.parse(new Date())
-  //     divDelete.setAttribute('name',key)
-
-  //     div.appendChild(divDelete)
-
-  //     e.target.parentNode.parentNode.insertBefore(div,e.target.parentNode)
-  //     this.state.modifyImgs.push({key:key,file:e.target.files[0]})
-  //     this.setState({})
-  // }
-
   hideDeleteImg=(e)=>{
     e.target.style.filter = "alpha(opacity=0)"
     e.target.style.opacity = "0"
@@ -406,7 +373,7 @@ export default class BasicInfo extends Component {
     this.setState({
       speciality:speciality
     })
-    this.props.confirmShow({submit:this.confirmDelete})
+    this.props.confirmShow({submit:this.confirmDelete,text:"此操作会删除该条目下的作品集,确定继续吗？"})
   }
 
   showAddSpeciality=()=>{
@@ -420,6 +387,94 @@ export default class BasicInfo extends Component {
       showAddSpeciality:true,
     })
   }
+
+  savePhotos =(e,id,name)=>{
+    // console.log(this.state.imgs)
+    var fd = new FormData(); 
+    for (var i = 0; i < this.state.imgs.length; i++) {
+      if(this.state.imgs[i].file){
+          fd.append("file", this.state.imgs[i].file)
+      }
+    }
+    fd.append("id", id)
+    submitPhotos(fd).then(({data})=>{
+      if (data.status == 200) {
+          this.props.tipShow({type:'success',msg:"上传成功"})
+          this.props.fetchSpeciality()
+          this.cancelPhotos(e,name)
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+    })
+  }
+
+  cancelPhotos = (e,name)=>{
+    this.setState({
+      imgs:[],
+      addTO:''
+    })
+    this.refs[`add${name}`].innerHTML = '';
+  }
+
+  hideDeleteImg=(e)=>{
+          e.target.style.filter = "alpha(opacity=0)"
+          e.target.style.opacity = "0"
+        }
+
+  showDeleteImg=(e,index)=>{
+    e.target.style.filter = "alpha(opacity=0.8)"
+    e.target.style.opacity = "80"
+    var me = this
+    e.target.onclick=function(e){
+      e.srcElement.parentNode.parentNode.removeChild(e.srcElement.parentNode)
+      for (var i = 0; i < me.state.imgs.length; i++) {
+          if(me.state.imgs[i].key == e.target.getAttribute('name')){
+              me.state.imgs.splice(i,1)
+              break
+          }
+      }
+      me.setState({})
+    }
+  }
+
+  addImages = (e,name)=>{
+    if (this.state.addTO && (this.state.addTO != name)) {
+      this.props.tipShow({type:'error',msg:'上传前请先提交其它已选择的照片'})
+      return
+    }
+          var value = e.target.value
+          var filextension=value.substring(value.lastIndexOf("."),value.length);
+          filextension = filextension.toLowerCase();
+          if ((filextension!='.jpg')&&(filextension!='.gif')&&(filextension!='.jpeg')&&(filextension!='.png')&&(filextension!='.bmp'))
+          {
+          this.props.tipShow({type:'error',msg:'文件类型不正确'})
+          return;
+          }
+
+          for (var i = e.target.files.length - 1; i >= 0; i--) {
+              var fileUrl = window.URL.createObjectURL(e.target.files[i])
+              var div = document.createElement('div')
+              div.className = "imgList"
+              div.style.backgroundImage = `url(${fileUrl})`
+
+              var divDelete = document.createElement('div')
+              divDelete.onmouseout = this.hideDeleteImg
+              divDelete.onmouseover = this.showDeleteImg
+              divDelete.className = "fa fa-trash"
+              var key = Date.parse(new Date())
+              divDelete.setAttribute('name',key)
+
+              div.appendChild(divDelete)
+
+              this.refs[`add${name}`].appendChild(div)
+
+              this.state.imgs.push({key:key,file:e.target.files[i]})
+          };
+          this.setState({addTO:name})
+      }
 
   render () {
     this.items = [];
@@ -447,14 +502,27 @@ export default class BasicInfo extends Component {
                   {this.props.myspecialities.text.map((item,index)=>{
                     var brief = `${item.speciality}brief`;
                     var experience = `${item.speciality}experience`;
-                    var linkPhotos = `/memberCenter/photos/${item.id}`
+                    var linkPhotos = `/works/${item.id}`
+                    var ref= `add${item.speciality}`
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.speciality] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></li>
                       {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
                       {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
-                      {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/><Link to={linkPhotos} query={{specialityName:item.speciality}} className="addDiv">
-                              +
-                            </Link></li>}
+                      {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/>
+                        <div>
+                        {item.work && <ul>
+                          {item.work.split(',').map((item,index)=>{
+                            return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
+                          })}
+                          <li><Link to={linkPhotos} query={{specialityName:item.speciality,nickname:this.props.auth.nickname,memberId:item.memberId}} >查看更多&gt;</Link></li>
+                          </ul>
+                        }
+                          <div className="addDiv">添加+<input type="file" onChange={(e)=>this.addImages(e,item.speciality)} multiple/></div>
+                        </div>
+                        <div className="preSubmit"><div ref={ref} className="add"></div>
+                        {(this.state.imgs.length > 0 && this.state.addTO == item.speciality) && <div className="submit"><button onClick={(e)=>this.cancelPhotos(e,item.speciality)} className="btn-default">取消</button>&nbsp;&nbsp;<button onClick={(e)=>this.savePhotos(e,item.id,item.speciality)} className="btn-success">上传</button></div>}
+                        </div>
+                        </li>}
                       {this.state[item.speciality] && <li className="editLi">
                         <p>简介&nbsp;:&nbsp;</p><button className="btn-success" onClick={(e)=>this.saveSpeciality(e,item.speciality)}>保存</button><button className="btn-default" onClick={(e)=>this.cancelSpeciality(e,item.speciality)}>取消</button>
                         <textarea rows="4" ref={brief} defaultValue={item.brief}></textarea>

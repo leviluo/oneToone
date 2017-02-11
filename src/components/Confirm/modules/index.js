@@ -26,7 +26,7 @@ export function confirmHide() {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [CONDIRM_SHOW]: (state, action) => {
-    return ({...state, isShow:true,submit:action.text.submit})
+    return ({...state, isShow:true,submit:action.text.submit,text:action.text.text})
   },
   [CONDIRM_HIDE]: (state, action) => {
     return ({...state, isShow:false,submit:null})

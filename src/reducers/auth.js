@@ -20,11 +20,12 @@ function requestLOGIN () {
 }
 
 
-function authIn (nickname,phone) {
+function authIn (nickname,phone,memberId) {
   return {
     type: AUTHIN,
     nickname: nickname,
-    phone:phone
+    phone:phone,
+    memberId:memberId,
   }
 }
 
@@ -39,7 +40,7 @@ export function isAuth(history) {
     axios.get('/auth').then(({data}) => {
       if (data.status == 200) {
         // localStorage.setItem("nickname",data.nickname)
-        dispatch(authIn(data.nickname,data.phone));
+        dispatch(authIn(data.nickname,data.phone,data.memberId));
       } else{
         // localStorage.setItem("nickname",data.nickname)
         if (history) {
@@ -57,7 +58,7 @@ export function login(items,history) {
     axios.post('/login',items).then(({data}) => {
       if (data.status == 200) {
           // localStorage.setItem("nickname",data.nickname)
-          dispatch(authIn(data.nickname,items.phone));
+          dispatch(authIn(data.nickname,items.phone,data.memberId));
           history.push('/memberCenter')
       }else{
           dispatch(tipResult({type:"error",msg:data.msg}))
@@ -92,10 +93,10 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: true})
   },
   [AUTHIN]:(state,action)=>{
-    return({...state,isAuth: true,nickname:action.nickname,phone:action.phone})
+    return({...state,isAuth: true,nickname:action.nickname,phone:action.phone,memberId:action.memberId})
   },
   [AUTHOUT]:(state)=>{
-    return({...state,isAuth: false})
+    return({...state,isAuth: false,nickname:'',phone:'',memberId:''})
   },
   [MODIFYNICKNAME]:(state,action)=>{
     return({...state,nickname:action.nickname})
@@ -111,7 +112,8 @@ export const initialState = {
   fetching: false,
   isAuth: false,
   nickname:'',
-  phone:''
+  phone:'',
+  memberId:''
 }
 export default function (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

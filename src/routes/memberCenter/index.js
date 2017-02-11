@@ -6,7 +6,6 @@ import mymessage from './routes/Mymessage'
 import myPost from './routes/MyPost'
 import myNotice from './routes/MyNotice'
 import requestApproval from './routes/RequestApproval'
-import photos from './routes/Photos'
 import updates from './routes/Updates'
 
 
@@ -28,7 +27,6 @@ export default (store) => ({
         myCreateTeam(store),
         myNotice(store),
         mymessage(store),
-        requestApproval(store),
-        photos(store),
+        requestApproval(store)
     ]
 })

@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {tipShow} from '../../components/Tips/modules/tips'
 import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 import Chat,{chatShow} from '../../components/Chat'
+import {Link} from 'react-router'
 
 @connect(
   state=>({auth:state.auth}),
@@ -43,6 +44,7 @@ export default class MemberBrief extends Component{
   }
 
   showQrcode =(e)=>{
+    this.refs.qrcodeSrc.src = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     e.target.childNodes[0].style.display = "block"
   }
 
@@ -62,8 +64,8 @@ export default class MemberBrief extends Component{
 
   render(){
     const {sex,nickname,address,phone} = this.state.memberInfo
-    // var phone = this.props.params.phone
-    var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
+    // var phone = this.props.params.phone 
+    // var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     // var headImgUrl = `/originImg?from=member&name=${phone}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
@@ -79,7 +81,7 @@ export default class MemberBrief extends Component{
             <a href={shareZone} target="_blank" title="分享到QQ空间"></a>
             <a href={shareWeibo} target="_blank" title="分享到微博"></a>
             <a onClick={this.showQrcode} title="分享到朋友圈">
-               <div><span onClick={this.closeQrcode}>×</span><img src={qrcodeSrc} alt="" /><p>扫描即可分享</p></div>
+               <div><span onClick={this.closeQrcode}>×</span><img ref="qrcodeSrc" alt="" /><p>扫描即可分享</p></div>
             </a>
           </div>
         </div>
@@ -96,23 +98,21 @@ export default class MemberBrief extends Component{
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
                   {this.state.specialities.map((item,index)=>{
-                        var works = item.works.split(',')
-                        for (var i = 0; i < works.length; i++) {
-                         if(works[i])works[i] = `/img?from=speciality&name=${works[i]}`
-                        }
+                      var linkPhotos = `/works/${item.id}`
                         return <ul key={index}>
                           <li><b>{item.speciality}</b></li>
                           <li><p>简介&nbsp;:&nbsp;</p>{item.brief}</li>
                           <li><p>经验&nbsp;:&nbsp;</p>{item.experience}</li>
-                          {item.works && <li><p>作品展示&nbsp;:&nbsp;</p>
-                          <div className="imgShow">
-                          {works.map((item,index)=>{
-                            if (!item) return;
-                            return <div key={index} onClick={(e)=>this.showThisImg(index,works)} style={{backgroundImage:`url(${item.replace(/\/originImg\?/,"/img?")})`}}></div>
-                              })}
-                          </div>
-                          </li>
-                          }
+                          {item.work && <li><span>作品集&nbsp;:&nbsp;</span><br/>
+                            <div>
+                           <ul>
+                            {item.work.split(',').map((item,index)=>{
+                              return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
+                            })}
+                            <li><Link to={linkPhotos} query={{specialityName:item.speciality,nickname:nickname,memberId:this.props.params.id}} >查看更多&gt;</Link></li>
+                            </ul>
+                            </div>
+                          </li>}
                         </ul>
                     })}
                 </li>

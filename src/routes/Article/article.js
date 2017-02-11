@@ -86,6 +86,7 @@ export default class Article extends Component{
   }
 
   showQrcode =(e)=>{
+    this.refs.qrcodeSrc.src = `/qrcode?text=${encodeURIComponent(window.location.href)}`
     e.target.childNodes[0].style.display = "block"
   }
 
@@ -175,7 +176,7 @@ export default class Article extends Component{
             <a href={shareZone} target="_blank" title="分享到QQ空间"></a>
             <a href={shareWeibo} target="_blank" title="分享到微博"></a>
             <a onClick={this.showQrcode} title="分享到朋友圈">
-               <div><span onClick={this.closeQrcode}>×</span><img src={qrcodeSrc} alt="" /><p>扫描即可分享</p></div>
+               <div><span onClick={this.closeQrcode}>×</span><img ref="qrcodeSrc" alt="" /><p>扫描即可分享</p></div>
             </a>
           </div>
         </div>
