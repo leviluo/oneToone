@@ -75,7 +75,7 @@ export const receiveSpeciality = (value) => ({
 
 export function fetchSpeciality () {
   return (dispatch, getState) => {
-    axios.get('/member/specialities').then(({data}) => {
+    axios.get('/public/specialities').then(({data}) => {
         if (data.status==200) {
           dispatch(receiveSpeciality(data.data))
         }else{

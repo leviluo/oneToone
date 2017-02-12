@@ -66,7 +66,7 @@ export default class Modal extends Component{
         <div className='modal'>
           <div className="content">
             <div className="content-header">
-              <div className="close" onClick={this.hideModal}>×</div>
+              <div className="close" onClick={this.hideModal}><div>×</div></div>
               <h2>{header}</h2>
             </div>
             <div className="content-body">

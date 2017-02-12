@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../components/Tips/modules/tips'
-import {getworksData,submitPhotos,addLike,deletePhoto} from './modules'
+import {getworksData,submitPhotos,addLike,deletePhoto,getMemberInfo} from './modules'
 import Confirm,{confirmShow} from '../../components/Confirm'
 
 @asyncConnect([{
@@ -31,7 +31,8 @@ export default class photos extends Component {
       worksData:[],
       averagenum:24,
       imgs:[],
-      currentPage:1
+      currentPage:1,
+      memberInfo:[]
     }
 
     static contextTypes = {
@@ -39,11 +40,20 @@ export default class photos extends Component {
     };
 
     componentWillMount =()=>{
+     getMemberInfo(this.props.params.memberSpecialityId).then(({data})=>{
+        if (data.status == 200) {
+            this.setState({
+                memberInfo:data.data[0]
+            })
+        }else{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+     })
      this.worksData(this.state.currentPage)
     }
 
     worksData = (currentPage)=>{
-      getworksData(this.props.params.id,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+      getworksData(this.props.params.memberSpecialityId,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
         if (data.status == 200) {
             if (data.data.length < this.state.averagenum) {
                 this.setState({
@@ -137,10 +147,9 @@ export default class photos extends Component {
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return (
     <div className="photos">
-    <Helmet title={`${this.props.location.query.specialityName}•作品集`} />
+    <Helmet title={`${this.state.memberInfo.name}•作品集`} />
     <div>
           <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>
-          &nbsp;&nbsp;<b><Link to={`/memberBrief/${this.props.location.query.memberId}`}>{this.props.location.query.nickname}</Link>•{this.props.location.query.specialityName}•作品集</b>
           <div className="share">
            <i className="fa fa-share"></i>&nbsp;分享至:&nbsp;
             <a title="发送给微信好友">
@@ -152,14 +161,19 @@ export default class photos extends Component {
             </a>
           </div>
     </div>
-    
+    <div className="memberInfo">
+        <img src={`/originImg?from=member&name=${this.state.memberInfo.phone}`} alt="" />
+        <div>
+            <span className="lightColor">来自</span>&nbsp;<strong><Link to={`/memberBrief/${this.state.memberInfo.memberId}`}>{this.state.memberInfo.nickname}</Link>•{this.state.memberInfo.name}</strong>&nbsp;<span className="lightColor">的作品集</span> 
+        </div>
+    </div>
     <div className="photoBoard">
       {this.state.worksData.map((item,index)=>{
         var date = new Date(item.createdAt)
         var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
         return <div key={index} className="imgShows">
-            <div style={{backgroundImage:`url(/img?from=speciality&name=${item.name})`}}></div>
-            <span className="pull-left lightColor">{time}</span>{this.props.auth.memberId == this.props.location.query.memberId && <button className="btn-default pull-right operate">•••<ul><li onClick={(e)=>this.deletePhoto(e,item.id,item.name,index)}>删除</li></ul></button>}<span onClick={(e)=>this.addLike(e,item.id,index)} className={`pull-right like lightColor ${item.isLiked ? 'liked' : ''}`}><i className="fa fa-heart"></i>&nbsp;{item.likes}</span>
+            <Link to={`/photoList/${this.props.params.memberSpecialityId}/${item.id}`}><div style={{backgroundImage:`url(/img?from=speciality&name=${item.name})`}}></div></Link>
+            <span className="pull-left lightColor">{time}</span>{this.props.auth.memberId == this.state.memberInfo.memberId && <button className="btn-default pull-right operate">•••<ul><li onClick={(e)=>this.deletePhoto(e,item.id,item.name,index)}>删除</li></ul></button>}<span onClick={(e)=>this.addLike(e,item.id,index)} className={`pull-right like lightColor ${item.isLiked ? 'liked' : ''}`}><i className="fa fa-heart"></i>&nbsp;{item.likes}</span>
         </div>
       })}
     </div>

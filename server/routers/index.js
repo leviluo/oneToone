@@ -25,7 +25,13 @@ export default function routers(router){
 // 新增专业
 	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
 // 获取所有的专业信息
-	router.get("/member/specialities",memberController.specialities,router.allowedMethods());
+	router.get("/public/specialities",publicController.specialities,router.allowedMethods());
+// 获取作品
+	router.get("/public/getWorks",publicController.getWorks,router.allowedMethods());
+// 获取作品
+	router.get("/public/getWorksFrom",publicController.getWorksFrom,router.allowedMethods());
+// 获取作品页面的会员信息
+	router.get("/public/getMemberInfoWork",publicController.getMemberInfoWork,router.allowedMethods());
  //上传头像
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
 // 二维码
@@ -63,8 +69,6 @@ export default function routers(router){
 	router.get("/member/countRequest",memberController.countRequest,router.allowedMethods());
 // 上传作品
 	router.post("/member/submitPhotos",memberController.submitPhotos,fileController.uploadPhotos,router.allowedMethods());
-// 获取作品
-	router.get("/member/getWorks",memberController.getWorks,router.allowedMethods());
 // 赞
 	router.get("/member/addLike",memberController.addLike,router.allowedMethods());
 // 删除照片

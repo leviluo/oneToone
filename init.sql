@@ -52,7 +52,6 @@ CREATE TABLE `memberSpeciality` (
   `memberId` int unsigned,
   `specialitiesId` int unsigned,
   `brief` varchar(300) DEFAULT '',
-  `works` varchar(300) default '',
   `experience` text ,
   PRIMARY KEY  (`id`)
 );

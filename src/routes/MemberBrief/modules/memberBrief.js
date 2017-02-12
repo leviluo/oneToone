@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export function getSpecialities(id) {
-	return axios.get('/member/specialities?id='+id)
+	return axios.get('/public/specialities?id='+id)
 }
 
 export function memberInfo(id) {

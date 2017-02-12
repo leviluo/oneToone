@@ -31,6 +31,66 @@ const publicController = {
         }
         var result = await sqlStr("select address,sex,nickname,phone from member where id = ?",[this.request.query.id])
         this.body = {status:200,data:result}
+    },
+    getWorks:async function(){
+      if (!this.request.query.limit) {
+        this.body = {status:500,msg:"缺少参数"}
+        return
+      }
+      if (this.session.user && this.request.query.id) {
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes,if((select id from likes where worksId = w.id and memberId = (select id from member where phone = ?) limit 1) != '',1,0) as isLiked from works as w where w.memberSpecialityId = ? limit "+this.request.query.limit,[this.session.user,this.request.query.id])
+      }else if(this.request.query.id){
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where w.memberSpecialityId = ? limit "+this.request.query.limit,[this.request.query.id])
+      }else{
+        this.body = {status:600,msg:"尚未登录"}
+        return
+      }
+      var count = await sqlStr("select count(id) as count from works where memberSpecialityId = ?",[this.request.query.id])
+      this.body = {status:200,data:result,count:count[0].count}
+    },
+    getWorksFrom:async function(){
+      if (!this.request.query.limit || !this.request.query.worksId) {
+        this.body = {status:500,msg:"缺少参数"}
+        return
+      }
+      if (this.session.user && this.request.query.id) {
+        if (this.request.query.direction == 1) {
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes,if((select id from likes where worksId = w.id and memberId = (select id from member where phone = ?) limit 1) != '',1,0) as isLiked from works as w where w.memberSpecialityId = ? and w.id <= ? order by w.id desc limit "+this.request.query.limit,[this.session.user,this.request.query.id,this.request.query.worksId])
+        }else{
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes,if((select id from likes where worksId = w.id and memberId = (select id from member where phone = ?) limit 1) != '',1,0) as isLiked from works as w where w.memberSpecialityId = ? and w.id >= ? limit "+this.request.query.limit,[this.session.user,this.request.query.id,this.request.query.worksId])
+        }
+      }else if(this.request.query.id){
+        if (this.request.query.direction == 1) {
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where w.memberSpecialityId = ? and w.id <= ? order by w.id desc limit "+this.request.query.limit,[this.request.query.id,this.request.query.worksId])
+        }else{
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where w.memberSpecialityId = ? and w.id >= ? limit "+this.request.query.limit,[this.request.query.id,this.request.query.worksId])
+        }
+      }else{
+        this.body = {status:600,msg:"尚未登录"}
+        return
+      }
+
+      var count = await sqlStr("select count(id) as count from works where memberSpecialityId = ?",[this.request.query.id])
+      this.body = {status:200,data:result,count:count[0].count}
+    },
+    specialities:async function(next){
+        if (this.request.query.id) {
+        var result = await sqlStr("select m.brief,m.experience,m.id,m.memberId,substring_index((select GROUP_CONCAT(name order by createdAt desc) from works where memberSpecialityId = m.id),',',8) as work,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = ?;",[this.request.query.id])
+        }else if (this.session.user) {
+        var result = await sqlStr("select m.brief,m.experience,m.id,m.memberId,substring_index((select GROUP_CONCAT(name order by createdAt desc) from works where memberSpecialityId = m.id),',',6) as work,s.name as speciality from memberSpeciality as m left join specialities as s on s.id = m.specialitiesId  where memberId = (select id from member where phone = ?)",[this.session.user])
+        }else{
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        this.body = {status:200,data:result}
+    },
+    getMemberInfoWork: async function(){
+        if (!this.request.query.id) {
+           this.body = {status:500,msg:"缺少参数"}
+            return 
+        }
+        var result = await sqlStr("select m.phone,m.nickname,m.id as memberId,s.name from works as w left join memberSpeciality as ms on ms.id = w.memberSpecialityId left join member as m on m.id = ms.memberId left join specialities as s on s.id = ms.specialitiesId where w.memberSpecialityId = ?",[this.request.query.id])
+        this.body = {status:200,data:result}
     }
 }
 export default publicController;

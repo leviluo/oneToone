@@ -109,7 +109,7 @@ export default class MemberBrief extends Component{
                             {item.work.split(',').map((item,index)=>{
                               return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
                             })}
-                            <li><Link to={linkPhotos} query={{specialityName:item.speciality,nickname:nickname,memberId:this.props.params.id}} >查看更多&gt;</Link></li>
+                            <li><Link to={linkPhotos} >查看更多&gt;</Link></li>
                             </ul>
                             </div>
                           </li>}

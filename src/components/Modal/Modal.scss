@@ -23,25 +23,33 @@
                 left:476px; 
                 width:34px;
                 margin:5px;
-			    height:34px;
-			    border-radius: 17px;
-			    background:#efefef;
-			    float:right;
-			    text-align: center;
-			    line-height:34px;
-			    font-size: 120%;
-			    font-weight: bold;
-			    cursor: pointer;
-			    color:#1C86EE
-    		}
+                height:34px;
+                border-radius: 17px;
+                background:#efefef;
+                float:right;
+                text-align: center;
+                line-height:34px;
+                font-weight: bold;
+                &>div{
+                     font-size: 120%;
+                     cursor: pointer;
+                    background:#1C86EE;
+                    color:white;
+                    line-height:28px;
+                    height:28px;
+                    width:28px;
+                    border-radius:15px;
+                    margin:3px;
+                    &:hover{
+                        font-size:150%;
+                        font-weight:bold;
+                        line-height:26px;
+                    }
+                }
+            }
             h2{
                  margin:0;                                                    
             }
-    		.close:hover{
-    			font-size:180%;
-                font-weight:bold;
-                line-height:30px;
-    		}
     	}
         .content-body{
             padding:10px 20px;

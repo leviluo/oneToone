@@ -1,7 +1,12 @@
 import axios from 'axios'
 
-export function getworksData(id,limit){
-	return axios.get(`/public/getWorks?id=${id}&limit=${limit}`)
+export function getworksData(id,worksId,limit,direction){
+	if (direction) {
+		var directions = direction
+	}else{
+		var directions = 0
+	}
+	return axios.get(`/public/getWorksFrom?id=${id}&limit=${limit}&worksId=${worksId}&direction=${directions}`)
 }
 
 export function addLike(id){

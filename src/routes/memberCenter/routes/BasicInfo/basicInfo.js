@@ -514,7 +514,7 @@ export default class BasicInfo extends Component {
                           {item.work.split(',').map((item,index)=>{
                             return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
                           })}
-                          <li><Link to={linkPhotos} query={{specialityName:item.speciality,nickname:this.props.auth.nickname,memberId:item.memberId}} >查看更多&gt;</Link></li>
+                          <li><Link to={linkPhotos} >查看更多&gt;</Link></li>
                           </ul>
                         }
                           <div className="addDiv">添加+<input type="file" onChange={(e)=>this.addImages(e,item.speciality)} multiple/></div>

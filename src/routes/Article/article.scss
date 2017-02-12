@@ -102,9 +102,6 @@
 	}
 	.articleContent{
 		padding:10px 20px;
-		span{
-				color:#777
-			}
 		.articleContentTop{
 			height:54px;
 			line-height:54px;
@@ -119,7 +116,7 @@
 				float:left;
 				margin-left:10px;
 				span{
-				color:#777;
+				color:#999;
 				}
 			}
 			&>span{
@@ -178,7 +175,7 @@
 					margin-left:10px;
 						font-size:13px;
 					span{
-						color:#777;
+						color:#999;
 					}
 					p{
 						background:#efefef;

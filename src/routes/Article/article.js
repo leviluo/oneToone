@@ -159,7 +159,7 @@ export default class Article extends Component{
     var headSrc = `/originImg?from=member&name=${this.state.articleData.phone}`
     let link = `/memberBrief/${this.state.articleData.memberId}`
     var date = new Date(this.state.articleData.updatedAt)
-    var time = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+    var time = `${date.getFullYear()} ${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
@@ -184,13 +184,13 @@ export default class Article extends Component{
           <h3>{this.state.articleData.title}</h3>
           <div className="articleContentTop">
             <img src={headSrc} alt=""/>
-            <div><span>来自于&nbsp;:&nbsp;</span><Link to={link}>{this.state.articleData.nickname}</Link><span>&nbsp;&nbsp;最后修改&nbsp;:&nbsp;</span>{time}</div>
-            {this.state.articleData.phone != this.props.auth.phone && <span><a className="pull-right" onClick={this.goReply}>回复</a></span>}{this.state.articleData.phone == this.props.auth.phone && <span className="operate"><Link to={editLink} query={this.state.articleData}>编辑</Link><a onClick={this.deleteArticle}>删除</a></span>}
+            <div><span className="lightColor">来自于&nbsp;:&nbsp;</span><Link to={link}>{this.state.articleData.nickname}</Link><span className="lightColor">&nbsp;&nbsp;最后修改&nbsp;:&nbsp;</span>{time}</div>
+            {this.state.articleData.phone != this.props.auth.phone && <span className="lightColor"><a className="pull-right" onClick={this.goReply}>回复</a></span>}{this.state.articleData.phone == this.props.auth.phone && <span className="operate"><Link to={editLink} query={this.state.articleData}>编辑</Link><a onClick={this.deleteArticle}>删除</a></span>}
           </div>
           <div className="content" dangerouslySetInnerHTML={{__html:this.state.articleData.content}}>
           </div>
           <div className="attachedImgs">
-          {this.state.articleData.attachedImgs && <div className="imgShow"><span>附图:&nbsp;&nbsp;</span>
+          {this.state.articleData.attachedImgs && <div className="imgShow"><span className="lightColor">附图:&nbsp;&nbsp;</span>
           {this.state.articleData.attachedImgs.split(',').map((item,index)=>{
             if (!item) return;
             if (!this.imgs) {this.imgs = []}
@@ -216,7 +216,7 @@ export default class Article extends Component{
                 if(!replyData)replyData = {comment:"此消息已删除"}
               }
               var date = new Date(item.createdAt)
-              var rtime = `${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+              var rtime = `${date.getFullYear()} ${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
               return <div key={index}>
                   {item.phone != this.props.auth.phone && <a className="pull-right" onClick={(e)=>this.replyTo(e,index)}>回复</a>}{item.phone == this.props.auth.phone && <a onClick={(e)=>this.deleteReply(e,index)} className="pull-right">删除</a>}
                   <img src={headSrc} alt="" />
