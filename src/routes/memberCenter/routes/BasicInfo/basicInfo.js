@@ -39,7 +39,7 @@ export default class BasicInfo extends Component {
 
   state ={
     content: <div></div>,
-    address: '',
+    memberInfo: [],
     imgs:[]
   }
 
@@ -51,8 +51,7 @@ export default class BasicInfo extends Component {
     getMemberInfo().then(({data}) => {
         if (data.status==200) {
             this.setState({
-              address:data.data[0].address,
-              sex:data.data[0].sex
+              memberInfo:data.data[0]
             })
         }else if (data.status==600) {
             this.props.dispatch({type:"AUTHOUT"})
@@ -491,12 +490,16 @@ export default class BasicInfo extends Component {
                 <img id="memberinfoHeadImg" src={headSrc} />
                 <a className="fa fa-image"><input onChange={this.modifyHead} type="file" /></a>
               </div>
+              <div className="follow">
+                <span className="lightColor">关注</span>&nbsp;{this.state.memberInfo.follows}
+                &nbsp;<span className="lightColor">粉丝</span>&nbsp;{this.state.memberInfo.fans}
+              </div>
             </div>
               <ul>
                 <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p></li>
-                <li><h3><hr /><span>性别</span></h3><p>{this.state.sex == 0 ? "男" : "女"}</p></li>
+                <li><h3><hr /><span>性别</span></h3><p>{this.state.memberInfo.sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" ref="nickname" defaultValue={nickname} /> <button className="btn-default" onClick={()=>this.setState({showNickname:false})}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showNickname:true})}><i className="fa fa-edit"></i>修改</a></li>
-                <li><h3><hr /><span>详细地址</span></h3><p>{this.state.address}</p>{this.state.showAddress && <p><input ref="address" type="text" defaultValue={this.state.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showAddress:true})}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>详细地址</span></h3><p>{this.state.memberInfo.address}</p>{this.state.showAddress && <p><input ref="address" type="text" defaultValue={this.state.memberInfo.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showAddress:true})}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
                   {this.props.myspecialities.text.map((item,index)=>{

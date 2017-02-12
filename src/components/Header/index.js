@@ -38,7 +38,8 @@ export default class Header extends Component{
              </span>}
              {auth.isAuth && <span><a onClick={this.loginOut}>退出</a>
              <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname} 的个人中心</Link></span>}
-              <Link className="item" to="/Organization">社团</Link>
+              <Link className="item" to="/Organization"><span>社团</span></Link>
+              <Link className="item" to="/"><span>首页</span></Link>
              </span>
           </nav>
         </div>

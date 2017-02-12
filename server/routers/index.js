@@ -58,6 +58,10 @@ export default function routers(router){
 	router.post("/member/modifySpeciality",memberController.modifySpeciality,router.allowedMethods());
 // 删除专业
 	router.post("/member/deleteSpeciality",memberController.deleteSpeciality,router.allowedMethods());
+// 关注
+	router.get("/member/followOne",memberController.followOne,router.allowedMethods());
+// 取关
+	router.get("/member/followOutOne",memberController.followOutOne,router.allowedMethods());
 
 // 计算多少未读消息
 	router.get("/member/countMessage",memberController.countMessage,router.allowedMethods());

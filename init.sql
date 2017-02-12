@@ -1,5 +1,6 @@
 create database onetoone;
 use onetoone;
+
 CREATE TABLE `member` (         
   `id` int unsigned auto_increment,
   `nickname` varchar(20) DEFAULT '',
@@ -17,16 +18,16 @@ CREATE TABLE `member` (
 --关注
 CREATE TABLE `follows` (  
   `id` int unsigned auto_increment,
-  `memberId` int unsigned auto_increment,
-  `followId` int unsigned auto_increment,
+  `memberId` int unsigned,
+  `followId` int unsigned,
   PRIMARY KEY  (`id`)
 );
 
 --会员更新
 CREATE TABLE `memberupdates` (  
   `id` int unsigned auto_increment,
-  `memberId` int unsigned auto_increment,
-  `articleId` int unsigned auto_increment,
+  `memberId` int unsigned,
+  `articleId` int unsigned,
   `worksIds` varchar(300) default '',
   PRIMARY KEY  (`id`)
 );
@@ -114,7 +115,7 @@ CREATE TABLE `article`(
   `updatedAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
-select count(a.id) as count from article as a left join comments as c on c.articleId = a.id where c.status = 0 and a.memberId = (select id from member where phone = "15601912385")
+
 --评论列表
 CREATE TABLE `comments` (  
   `id` int unsigned auto_increment,
@@ -125,6 +126,7 @@ CREATE TABLE `comments` (
   `createdAt` datetime DEFAULT now() COMMENT '//',
   PRIMARY KEY  (`id`)
 );
+
 -- 回复通知 
 CREATE TABLE `reReply` (  
   `id` int unsigned auto_increment,
@@ -133,7 +135,7 @@ CREATE TABLE `reReply` (
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已读',
   PRIMARY KEY  (`id`)
 );
-select count(*) as count from reReply where replyTo = ()
+
 -- 私信
 CREATE TABLE `message` (  
   `id` int unsigned auto_increment,

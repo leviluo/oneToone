@@ -44,7 +44,7 @@ const memberController = {
             // this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select address,sex from member where phone = ?",[this.session.user])
+        var result = await sqlStr("select m.address,m.sex,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where phone = ?",[this.session.user])
         this.body = {status:200,data:result}
     },
     messageText:async function(next){
@@ -291,7 +291,45 @@ const memberController = {
         }else{
             this.body = {status:500,msg:"删除失败"}
         }
-
+    },
+    followOne:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("select * from follows where memberId = (select id from member where phone = ?) and followId = ?",[this.session.user,this.request.query.id])
+        if (result.length > 0) {
+            this.body = { status: 500, msg: "请不要重复关注" }
+            return
+        }else{
+            result = await sqlStr("insert into follows set memberId = (select id from member where phone = ?),followId = ?",[this.session.user,this.request.query.id])
+            if (result.affectedRows == 1) {
+                this.body = {status:200}
+                return
+            }else{
+                this.body = {status:500,msg:"操作失败"}
+            }
+        }
+    },
+    followOutOne:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        if (!this.request.query.id) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("delete from follows where memberId = (select id from member where phone = ?) and followId = ?",[this.session.user,this.request.query.id])
+        if (result.affectedRows == 1) {
+            this.body ={status:200}
+        }else{
+            this.body ={status:500,msg:"操作失败"}
+        }
     }
 }
 export default memberController;

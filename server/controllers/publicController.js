@@ -29,7 +29,11 @@ const publicController = {
             this.body = {status:500,msg:"缺少参数"}
             return
         }
-        var result = await sqlStr("select address,sex,nickname,phone from member where id = ?",[this.request.query.id])
+        if (this.session.user) {
+        var result = await sqlStr("select m.address,m.id,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans,if((select id from follows where followId = ? and memberId = (select id from member where phone = ?)),1,0) as isFollowed from member as m where id = ?",[this.request.query.id,this.session.user,this.request.query.id])
+        }else{
+        var result = await sqlStr("select m.address,m.id,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where id = ?",[this.request.query.id])
+        }
         this.body = {status:200,data:result}
     },
     getWorks:async function(){

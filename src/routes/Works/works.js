@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../components/Tips/modules/tips'
-import {getworksData,submitPhotos,addLike,deletePhoto,getMemberInfo} from './modules'
+import {getworksData,addLike,deletePhoto,getMemberInfo} from './modules'
 import Confirm,{confirmShow} from '../../components/Confirm'
 
 @asyncConnect([{

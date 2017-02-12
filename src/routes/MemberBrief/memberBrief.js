@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import './memberBrief.scss'
-import {getSpecialities,memberInfo} from './modules/memberBrief'
+import {getSpecialities,memberInfo,followOne,followOutOne} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import {tipShow} from '../../components/Tips/modules/tips'
@@ -8,14 +8,27 @@ import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 import Chat,{chatShow} from '../../components/Chat'
 import {Link} from 'react-router'
 
+import {asyncConnect} from 'redux-async-connect'
+
+@asyncConnect([{
+  promise: ({store: {dispatch, getState}}) => {
+   
+  }
+}])
+
 @connect(
   state=>({auth:state.auth}),
 {tipShow,imgbrowserShow,chatShow})
 export default class MemberBrief extends Component{
+
   state = {
     specialities:[],
     memberInfo:[]
   }
+
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
 
   componentWillMount = ()=>{
       getSpecialities(this.props.params.id).then(({data})=>{
@@ -62,6 +75,44 @@ export default class MemberBrief extends Component{
         this.props.chatShow({chatTo:name,chatFrom:this.props.auth.nickname,sendTo:phone})
     }
 
+  followIt =()=>{
+      if (!this.props.auth.phone) {
+            this.props.tipShow({type:'error',msg:'您还未登录,请先登录'})
+            return
+        }
+      followOne(this.state.memberInfo.id).then(({data})=>{
+        if (data.status == 200) {
+            this.state.memberInfo.fans = this.state.memberInfo.fans + 1
+            this.state.memberInfo.isFollowed = 1
+            this.setState({})
+          }else if (data.status==600) {
+            this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+          }{
+            this.props.tipShow({type:'error',msg:data.msg})
+          }
+      })
+  }
+
+  followOut =()=>{
+    if (!this.props.auth.phone) {
+            this.props.tipShow({type:'error',msg:'您还未登录,请先登录'})
+            return
+        }
+      followOutOne(this.state.memberInfo.id).then(({data})=>{
+          if (data.status == 200) {
+            this.state.memberInfo.fans = this.state.memberInfo.fans - 1
+            this.state.memberInfo.isFollowed = 0
+            this.setState({})
+          }else if (data.status==600) {
+            this.props.dispatch({type:"AUTHOUT"})
+            this.context.router.push('/login')
+          }{
+            this.props.tipShow({type:'error',msg:data.msg})
+          }
+      })
+  }
+
   render(){
     const {sex,nickname,address,phone} = this.state.memberInfo
     // var phone = this.props.params.phone 
@@ -89,6 +140,12 @@ export default class MemberBrief extends Component{
             <div>
               <div>
                 <img id="memberinfoHeadImg" ref="headImgUrl" />
+              </div>
+              <div className="follow">
+                <span className="lightColor">关注</span>&nbsp;<strong><Link>{this.state.memberInfo.follows}</Link></strong>
+                &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link>{this.state.memberInfo.fans}</Link></strong>
+                {!this.state.memberInfo.isFollowed && <button className="btn-default" onClick={this.followIt}>+关注</button>}
+                {this.state.memberInfo.isFollowed == 1 && <button className="btn-default" onClick={this.followOut}>取关</button>}
               </div>
             </div>
               <ul>

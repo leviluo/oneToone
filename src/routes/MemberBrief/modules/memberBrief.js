@@ -7,3 +7,11 @@ export function getSpecialities(id) {
 export function memberInfo(id) {
 	return axios.get('/public/memberInfo?id='+id)
 }
+
+export function followOne(id) {
+	return axios.get('/member/followOne?id='+id)
+}
+
+export function followOutOne(id) {
+	return axios.get('/member/followOutOne?id='+id)
+}

@@ -5,6 +5,13 @@
 	color:white;
 	margin-bottom:10px;
 	box-shadow:2px 2px 4px 1px #e5e5e5;
+	a{
+	 	color:#37a;
+	 	padding:3px;
+	 	&:hover{
+	 		color:#37a;
+	 	}
+	 }
 	.memberBriefTop{
 		height:40px;
 		line-height:40px;
@@ -103,10 +110,10 @@
 		}
 		padding:15px;
 		color:#333;
-			&>div{
+			div:first-of-type{
 				background:#f0f8ff;
 				margin-bottom:50px;
-				&>div{
+				div:first-of-type{
 					position:relative;
 					width:110px;
 					height:110px;
@@ -119,7 +126,18 @@
 						border:5px solid #ccc;
 					}
 				}
+				.follow{
+					text-align:center;
+					padding:20px 10px;
+					position:relative;
+					button{
+						position:absolute;
+						left:1100px;
+						top:8px;
+					}
+				}
 			}
+
 			&>ul{
 				width:100%;
 				padding:0;
@@ -160,6 +178,7 @@
 						}
 					}
 					&>ul{
+						padding:0;
 						&>li{
 							text-align:left;
 							padding:0 30px;
