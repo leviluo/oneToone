@@ -30,16 +30,18 @@ export default class Header extends Component{
     return(
         <div className='menu'>
           <nav>
-            <h1><IndexLink to="/" className="brand">OneOne</IndexLink></h1>
-            <h4>各个身怀绝技</h4><Location />
+          <span className="pull-left">
+            <h1 ><IndexLink to="/" className="brand">OneOne</IndexLink></h1>
+            <h4 >各个身怀绝技</h4><Location />
+          </span>
+              <Link className="item pull-left" to="/"><span>首页</span></Link>
+              <Link className="item pull-left" to="/Organization"><span>社团</span></Link>
             <span className="headerRight">
              {!auth.isAuth && <span><Link to='/login'>登录</Link>
              <Link to='/register'>注册</Link>
              </span>}
              {auth.isAuth && <span><a onClick={this.loginOut}>退出</a>
              <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname} 的个人中心</Link></span>}
-              <Link className="item" to="/Organization"><span>社团</span></Link>
-              <Link className="item" to="/"><span>首页</span></Link>
              </span>
           </nav>
         </div>

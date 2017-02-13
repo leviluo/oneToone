@@ -26,7 +26,6 @@
 					height:40px;
 					float:right;
 					color:#666;
-
 				a{
 					width:30px;
 					height:30px;
@@ -110,7 +109,7 @@
 		}
 		padding:15px;
 		color:#333;
-			div:first-of-type{
+			&>div:first-of-type{
 				background:#f0f8ff;
 				margin-bottom:50px;
 				div:first-of-type{

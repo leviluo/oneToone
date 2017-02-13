@@ -55,7 +55,11 @@
                 cursor: pointer;
                 background: #e5e5e5;
             }
+
+        }
             .item{
+                height:44px;
+                line-height:44px;
                 font-weight:bold;
                 font-size:120%;
                 padding:0;
@@ -68,9 +72,17 @@
                     line-height:20px;
                     margin-top:10px;
                 }
+                &:hover {
+                    cursor: pointer;
+                    background: #e5e5e5;
+                }
+                &:last-of-type span{
+                    border:none;
+                }
+                &:first-of-type{
+                    margin-left:10px;
+                }
             }
-
-        }
     }
 }
 

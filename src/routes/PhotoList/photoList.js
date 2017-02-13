@@ -50,18 +50,17 @@ export default class photoList extends Component {
     this.worksData(this.props.params.worksId,this.state.averagenum).then((data)=>{
             for (var i = 0; i < data.length; i++) {
               if(data[i].id == this.props.params.worksId){
-                if (data.length < this.state.averagenum) {
-                  this.setState({
-                      isFull:true,
-                      currentLargePhoto:i,
-                      worksData:data
-                  })
-                }else{
+                // if (data.length < this.state.averagenum) {
                   this.setState({
                       currentLargePhoto:i,
                       worksData:data
                   })
-                }
+                // }else{
+                  // this.setState({
+                  //     currentLargePhoto:i,
+                  //     worksData:data
+                  // })
+                // }
                 break
               }
             }
@@ -172,7 +171,7 @@ export default class photoList extends Component {
   }
 
   pageDown = ()=>{
-    if (this.state.currentLargePhoto == (this.state.averagenum -1)) {
+    if (this.state.currentLargePhoto == (this.state.worksData.length -1)) {
       if (this.state.isFull) {
         this.props.tipShow({type:"error",msg:"已经到头了哦"})
         return
