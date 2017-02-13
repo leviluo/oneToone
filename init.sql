@@ -69,8 +69,8 @@ CREATE TABLE `works` (
 --点赞表
 CREATE TABLE `likes` (  
   `id` int unsigned auto_increment,
-  `worksId` int unsigned auto_increment,
-  `memberId` int unsigned auto_increment,
+  `worksId` int unsigned,
+  `memberId` int unsigned,
   PRIMARY KEY  (`id`)
 );
 

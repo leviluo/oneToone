@@ -8,7 +8,7 @@
 		 		background:#efefef
 		 	}
 		 }
-		div:first-of-type{
+		&>div:first-of-type{
 			background:#f0f8ff;
 			margin-bottom:50px;
 			div:first-of-type{
