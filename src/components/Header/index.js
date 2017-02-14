@@ -28,7 +28,7 @@ export default class Header extends Component{
     // console.log(this.props)
     const{auth} = this.props;
     return(
-        <div className='menu'>
+        <header>
           <nav>
           <span className="pull-left">
             <h1 ><IndexLink to="/" className="brand">OneOne</IndexLink></h1>
@@ -44,7 +44,7 @@ export default class Header extends Component{
              <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname} 的个人中心</Link></span>}
              </span>
           </nav>
-        </div>
+        </header>
       )
   }
 }

@@ -11,9 +11,9 @@ export const CoreLayout = ({ children }) => (
     <div className='mainContainer'>
       {children}
     </div>
-    <div className="footer">
+    <footer>
     <p>版权所有-上海一一网络技术有限公司</p>
-    </div>
+    </footer>
   </div>
 )
 
