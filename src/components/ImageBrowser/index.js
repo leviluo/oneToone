@@ -67,13 +67,15 @@ export default class ImageBrowser extends Component{
     return(
         <div className='ImageBrowser'>
           <div className='content'>
-            <div>
+            <div className="page">
               <button onClick={this.up} >&lt;</button>
-              <button onClick={this.next} >&gt;</button>
             </div>
             <div>
               <img ref="src" alt=""/>
               <button className="close" onClick={this.close} >×</button>
+            </div>
+            <div className="page">
+              <button onClick={this.next} >&gt;</button>
             </div>
           </div>
         </div>

@@ -28,7 +28,7 @@ CREATE TABLE `memberupdates` (
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
   `articleId` int unsigned,
-  `worksIds` varchar(300) default '',
+  `worksId` varchar(300) default '',
   PRIMARY KEY  (`id`)
 );
 
@@ -69,8 +69,8 @@ CREATE TABLE `works` (
 --点赞表
 CREATE TABLE `likes` (  
   `id` int unsigned auto_increment,
-  `worksId` int unsigned,
-  `memberId` int unsigned,
+  `worksId` int unsigned auto_increment,
+  `memberId` int unsigned auto_increment,
   PRIMARY KEY  (`id`)
 );
 

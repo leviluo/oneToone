@@ -139,8 +139,8 @@ export default class MemberBrief extends Component{
                 <img id="memberinfoHeadImg" ref="headImgUrl" />
               </div>
               <div className="follow">
-                <span className="lightColor">关注</span>&nbsp;<strong><Link>{this.state.memberInfo.follows}</Link></strong>
-                &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link>{this.state.memberInfo.fans}</Link></strong>
+                <span className="lightColor">关注</span>&nbsp;<strong><Link to={`/follows/${this.state.memberInfo.id}`}>{this.state.memberInfo.follows}</Link></strong>
+                &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link to={`/follows/${this.state.memberInfo.id}`}>{this.state.memberInfo.fans}</Link></strong>
                 {(!this.state.memberInfo.isFollowed && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followIt}>+关注</button>}
                 {(this.state.memberInfo.isFollowed == 1 && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followOut}>取关</button>}
               </div>
