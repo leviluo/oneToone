@@ -115,9 +115,6 @@ export default class MemberBrief extends Component{
 
   render(){
     const {sex,nickname,address,phone} = this.state.memberInfo
-    // var phone = this.props.params.phone 
-    // var qrcodeSrc = `/qrcode?text=${encodeURIComponent(window.location.href)}`
-    // var headImgUrl = `/originImg?from=member&name=${phone}`
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return(
@@ -144,8 +141,8 @@ export default class MemberBrief extends Component{
               <div className="follow">
                 <span className="lightColor">关注</span>&nbsp;<strong><Link>{this.state.memberInfo.follows}</Link></strong>
                 &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link>{this.state.memberInfo.fans}</Link></strong>
-                {!this.state.memberInfo.isFollowed && <button className="btn-default" onClick={this.followIt}>+关注</button>}
-                {this.state.memberInfo.isFollowed == 1 && <button className="btn-default" onClick={this.followOut}>取关</button>}
+                {(!this.state.memberInfo.isFollowed && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followIt}>+关注</button>}
+                {(this.state.memberInfo.isFollowed == 1 && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followOut}>取关</button>}
               </div>
             </div>
               <ul>
