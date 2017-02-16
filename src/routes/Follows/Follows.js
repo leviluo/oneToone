@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../components/Tips/modules/tips'
-import {getworksData,addLike,deletePhoto,getMemberInfo} from './modules'
+import {getFollows,getFans} from './modules'
 import Confirm,{confirmShow} from '../../components/Confirm'
 
 @asyncConnect([{
@@ -28,13 +28,50 @@ import Confirm,{confirmShow} from '../../components/Confirm'
 export default class follows extends Component {
 
     state = {
-      worksData:[],
-      averagenum:24,
-      imgs:[],
+      averagenum:20,
       currentPage:1,
-      memberInfo:[]
+      items:[]
     }
 
+    componentWillMount=()=>{
+      this.getFollowData(this.state.currentPage)
+      // this.getFans(this.state.currentPage)
+    }
+
+    getFollowData =(currentPage)=>{
+      // console.log(currentPage)
+      getFollows(this.props.params.memberId,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+        if (data.status == 200) {
+          this.setState({
+            items:data.data,
+          })
+        }else{
+          this.props.tipShow({type:"error",msg:data.msg})
+        }
+      })
+    }
+
+    getFanData =(currentPage)=>{
+      getFans(this.props.params.memberId,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+        
+      })
+    }
+
+    checkFollows =(e)=>{
+      this.refs.back.style.left = "2px"
+      this.setState({
+        currentPage:1,
+      })
+      this.getFollowData(1)
+    }
+
+    checkFans =(e)=>{
+       this.refs.back.style.left = "42px"
+       this.setState({
+        currentPage:1,
+      })
+      this.getFanData(1)
+    }
 
   render () {
     return (
@@ -45,11 +82,16 @@ export default class follows extends Component {
         </div>
         <div className="switchBtn">
           <div>
-            <strong>关注</strong>
-            <strong>粉丝</strong>
-            <button className="btn-default"></button>
+            <strong onClick={this.checkFollows}>关注</strong>
+            <button ref="back" className="goForward"></button>
+            <strong onClick={this.checkFans}>粉丝</strong>
           </div>
         </div>
+        {this.state.items.map((item,index)=>{
+          return <div key={index}>
+
+          </div>
+        })}
     </div>
     )
   }

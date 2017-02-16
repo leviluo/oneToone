@@ -4,7 +4,7 @@ import Textarea from '../../../../components/Textarea'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality,submitPhotos} from './modules/basicInfo'
+import {modifyBrief,commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality,submitPhotos} from './modules/basicInfo'
 import Modal,{modalShow,modalHide} from '../../../../components/Modal'
 import Confirm,{confirmShow} from '../../../../components/Confirm'
 // import {imgbrowserShow} from '../../../../components/ImageBrowser'
@@ -439,6 +439,23 @@ export default class BasicInfo extends Component {
     }
   }
 
+  saveBrief =()=>{
+    if (!this.refs.brief.value || this.refs.brief.value.length > 98) {
+      this.props.tipShow({type:"error",msg:"请填写简介在1到100个字符之间"})
+      return
+    }
+    modifyBrief({brief:this.refs.brief.value}).then(({data})=>{
+      if (data.status == 200) {
+        this.state.memberInfo.brief = this.refs.brief.value;
+        this.setState({
+          showBrief:false
+        })
+      }else{
+        this.props.tipShow({type:'error',msg:data.msg})
+      }
+    })
+  }
+
   addImages = (e,name)=>{
     if (this.state.addTO && (this.state.addTO != name)) {
       this.props.tipShow({type:'error',msg:'上传前请先提交其它已选择的照片'})
@@ -499,6 +516,7 @@ export default class BasicInfo extends Component {
                 <li><h3><hr /><span>电话</span></h3><p>{this.props.auth.phone}</p></li>
                 <li><h3><hr /><span>性别</span></h3><p>{this.state.memberInfo.sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p>{this.state.showNickname && <p><input type="text" ref="nickname" defaultValue={nickname} /> <button className="btn-default" onClick={()=>this.setState({showNickname:false})}>取消</button><button className="btn-success" onClick={this.saveNickname}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showNickname:true})}><i className="fa fa-edit"></i>修改</a></li>
+                <li><h3><hr /><span>个人简介</span></h3><p>{this.state.memberInfo.brief ? this.state.memberInfo.brief : "您还没有填写个人简介哦,快点填写一个吧！"}</p>{this.state.showBrief && <p><input type="text" ref="brief" defaultValue={this.state.memberInfo.brief} /> <button className="btn-default" onClick={()=>this.setState({showBrief:false})}>取消</button><button className="btn-success" onClick={this.saveBrief}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showBrief:true})}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>详细地址</span></h3><p>{this.state.memberInfo.address}</p>{this.state.showAddress && <p><input ref="address" type="text" defaultValue={this.state.memberInfo.address} /> <button className="btn-default" onClick={()=>this.setState({showAddress:false})}>取消</button><button className="btn-success" onClick={this.saveAddress}>保存</button></p>}<a className="btn-normal" onClick={()=>this.setState({showAddress:true})}><i className="fa fa-edit"></i>修改</a></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>
@@ -509,7 +527,7 @@ export default class BasicInfo extends Component {
                     var ref= `add${item.speciality}`
                     return <ul key={index}>
                       <li><b>{item.speciality}</b><a onClick={(e)=>this.deleteSpeciality(e,item.speciality)}><i className="fa fa-trash"></i>删除</a><a onClick={(e)=>{this.state[item.speciality] = true;this.setState({})}}><i className="fa fa-edit"></i>修改</a></li>
-                      {!this.state[item.speciality] && <li><span>简介&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
+                      {!this.state[item.speciality] && <li><span>个人签名&nbsp;:&nbsp;</span><br/><br/>{item.brief}</li>}
                       {!this.state[item.speciality] && <li><span>经验&nbsp;:&nbsp;</span><br/><br/>{item.experience}</li>}
                       {!this.state[item.speciality] && <li><span>作品集&nbsp;:&nbsp;</span><br/><br/>
                         <div>

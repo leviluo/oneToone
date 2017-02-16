@@ -50,17 +50,10 @@ export default class photoList extends Component {
     this.worksData(this.props.params.worksId,this.state.averagenum).then((data)=>{
             for (var i = 0; i < data.length; i++) {
               if(data[i].id == this.props.params.worksId){
-                // if (data.length < this.state.averagenum) {
                   this.setState({
                       currentLargePhoto:i,
                       worksData:data
                   })
-                // }else{
-                  // this.setState({
-                  //     currentLargePhoto:i,
-                  //     worksData:data
-                  // })
-                // }
                 break
               }
             }

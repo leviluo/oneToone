@@ -27,32 +27,41 @@
 			margin-top:10px;
 		div{
 			height:42px;
-			line-height:38px;
-			width:85px;
+			line-height:42px;
+			width:90px;
 			margin:0 auto;
-			border:1px solid rgba(255, 127, 0,0.6);
-			border-radius:40px;
-			padding:2px;
+			background:#efefef;
+			border-radius:10px;
 			position:relative;
 			text-align:center;
+			box-shadow:0 0 6px 3px #e5e5e5 inset;
 			strong{
+				position:absolute;
 				cursor:pointer;
-				margin:0 3px;
-				color:#999;
-			}
-			strong:first-of-type{
-				color:rgb(255, 127, 0)
+				display:inline-block;
+				width:44px;
+				height:40px;
+				color:#1c86ee;
+				&:first-of-type{
+					left:2px;
+					z-index:10;
+				}
+				&:nth-of-type(2){
+					left:44px;
+					z-index:10;
+				}
 			}
 			button{
 				position:absolute;
-				width:35px;
-				height:35px;
-				background:rgba(255, 127, 0,0.2);
+				width:44px;
+				height:38px;
+				background:#f0f8ff;
 				border:none;
 				border-radius:10px;
 				cursor:auto;
-				left:6px;
-				
+				left:2px;
+				top:2px;
+				transition:left 0.2s;
 			}
 		}
 	}

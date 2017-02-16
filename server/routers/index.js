@@ -18,8 +18,6 @@ export default function routers(router){
 	router.post("/public/items",publicController.items,router.allowedMethods());
 //获取类目
 	router.get("/public/getCatelogy",publicController.getCatelogy,router.allowedMethods()); 
-//加载头像
-	// router.get("/public/Headload",fileController.loadImg,router.allowedMethods()); 
 // 公共会员信息
 	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); 
 // 新增专业
@@ -30,6 +28,10 @@ export default function routers(router){
 	router.get("/public/getWorks",publicController.getWorks,router.allowedMethods());
 // 获取作品
 	router.get("/public/getWorksFrom",publicController.getWorksFrom,router.allowedMethods());
+// 获取关注
+	router.get("/public/getFollows",publicController.getFollows,router.allowedMethods());
+// 获取粉丝
+	router.get("/public/getFans",publicController.getFans,router.allowedMethods());
 // 获取作品页面的会员信息
 	router.get("/public/getMemberInfoWork",publicController.getMemberInfoWork,router.allowedMethods());
  //上传头像
@@ -52,6 +54,8 @@ export default function routers(router){
 	router.get("/member/getMessageList",memberController.getMessageList,router.allowedMethods());
 // 修改昵称
 	router.post("/member/modifyNickname",memberController.modifyNickname,router.allowedMethods());
+// 修改简介
+	router.post("/member/modifyBrief",memberController.modifyBrief,router.allowedMethods());
 // 修改地址
 	router.post("/member/modifyAddress",memberController.modifyAddress,router.allowedMethods());
 // 修改专业

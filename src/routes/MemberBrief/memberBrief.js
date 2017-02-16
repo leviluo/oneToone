@@ -114,7 +114,7 @@ export default class MemberBrief extends Component{
   }
 
   render(){
-    const {sex,nickname,address,phone} = this.state.memberInfo
+    const {sex,nickname,address,phone,brief} = this.state.memberInfo
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     var shareWeibo = `http://v.t.sina.com.cn/share/share.php?&appkey=895033136?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
     return(
@@ -148,6 +148,7 @@ export default class MemberBrief extends Component{
               <ul>
                 <li><h3><hr /><span>性别</span></h3><p>{sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p></li>
+                {brief && <li><h3><hr /><span>个人签名</span></h3><p>{brief}</p></li>}
                 <li><h3><hr /><span>详细地址</span></h3><p>{address}</p></li>
                 <li><h3><hr /><span>专长领域</span></h3></li>
                 <li>

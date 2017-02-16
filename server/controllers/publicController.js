@@ -30,9 +30,9 @@ const publicController = {
             return
         }
         if (this.session.user) {
-        var result = await sqlStr("select m.address,m.id,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans,if((select id from follows where followId = ? and memberId = (select id from member where phone = ?)),1,0) as isFollowed from member as m where id = ?",[this.request.query.id,this.session.user,this.request.query.id])
+        var result = await sqlStr("select m.address,m.id,m.brief,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans,if((select id from follows where followId = ? and memberId = (select id from member where phone = ?)),1,0) as isFollowed from member as m where id = ?",[this.request.query.id,this.session.user,this.request.query.id])
         }else{
-        var result = await sqlStr("select m.address,m.id,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where id = ?",[this.request.query.id])
+        var result = await sqlStr("select m.address,m.id,m.brief,m.sex,m.nickname,m.phone,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where id = ?",[this.request.query.id])
         }
         this.body = {status:200,data:result}
     },
@@ -95,6 +95,22 @@ const publicController = {
         }
         var result = await sqlStr("select m.phone,m.nickname,m.id as memberId,s.name from works as w left join memberSpeciality as ms on ms.id = w.memberSpecialityId left join member as m on m.id = ms.memberId left join specialities as s on s.id = ms.specialitiesId where w.memberSpecialityId = ?",[this.request.query.id])
         this.body = {status:200,data:result}
+    },
+    getFollows: async function(){
+      if (!this.request.query.id || !this.request.query.limit) {
+           this.body = {status:500,msg:"缺少参数"}
+            return 
+        }
+      var result = await sqlStr("select m.nickname,m.phone,m.brief,m.id from follows as f left join member as m on m.id = f.followId where f.memberId = ? limit "+this.request.query.limit,[this.request.query.id])
+      this.body = {status:200,data:result}
+    },
+    getFans: async function(){
+      if (!this.request.query.id || !this.request.query.limit) {
+           this.body = {status:500,msg:"缺少参数"}
+            return 
+        }
+      var result = await sqlStr("select m.nickname,m.phone,m.brief,m.id from follows as f left join member as m on m.id = f.memberId where f.followId = ? limit "+this.request.query.limit,[this.request.query.id])
+      this.body = {status:200,data:result}
     }
 }
 export default publicController;

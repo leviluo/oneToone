@@ -18,6 +18,10 @@ export function submitPhotos(fd){
   return axios.post("/member/submitPhotos",fd)
 }
 
+export function modifyBrief(fd){
+  return axios.post("/member/modifyBrief",fd)
+}
+
 
 export function getMemberInfo() {
       return axios.get('/member/getMemberInfo')

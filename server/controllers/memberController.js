@@ -44,7 +44,7 @@ const memberController = {
             // this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select m.address,m.sex,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where phone = ?",[this.session.user])
+        var result = await sqlStr("select m.address,m.sex,m.brief,(select count(id) from follows where memberId = m.id) as follows,(select count(id) from follows where followId = m.id) as fans from member as m where phone = ?",[this.session.user])
         this.body = {status:200,data:result}
     },
     messageText:async function(next){
@@ -325,6 +325,22 @@ const memberController = {
             return
         }
         var result = await sqlStr("delete from follows where memberId = (select id from member where phone = ?) and followId = ?",[this.session.user,this.request.query.id])
+        if (result.affectedRows == 1) {
+            this.body ={status:200}
+        }else{
+            this.body ={status:500,msg:"操作失败"}
+        }
+    },
+    modifyBrief:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        if (!this.request.body.brief || this.request.body.brief.length > 98) {
+            this.body = { status: 500, msg: "缺少参数或者参数格式不正确" }
+            return
+        }
+        var result = await sqlStr("update member set brief = ? where phone = ?",[this.request.body.brief,this.session.user])
         if (result.affectedRows == 1) {
             this.body ={status:200}
         }else{

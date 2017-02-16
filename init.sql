@@ -6,6 +6,7 @@ CREATE TABLE `member` (
   `nickname` varchar(20) DEFAULT '',
   `password` char(40) DEFAULT '',
   `phone` varchar(40) DEFAULT '',   
+  `brief` varchar(100) DEFAULT '',  
   `location` varchar(15) default '',
   `head` varchar(30) default '',
   `address` varchar(100) default '',
@@ -20,6 +21,7 @@ CREATE TABLE `follows` (
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
   `followId` int unsigned,
+  `createAt` datetime default now(),
   PRIMARY KEY  (`id`)
 );
 
@@ -85,6 +87,7 @@ CREATE TABLE `organizations` (
   `createById` int unsigned,
   PRIMARY KEY  (`id`)
 );
+
 -- 用户社团
 CREATE TABLE `memberOrganizations` (  
   `id` int unsigned auto_increment,
@@ -92,6 +95,7 @@ CREATE TABLE `memberOrganizations` (
   `organizationsId` int unsigned,
   PRIMARY KEY  (`id`)
 );
+
 -- 加入社团申请表
 CREATE TABLE `organizationsRequest` (  
   `id` int unsigned auto_increment,
@@ -102,6 +106,7 @@ CREATE TABLE `organizationsRequest` (
   `status` tinyint(1) unsigned DEFAULT 0 COMMENT '//0:未读,1:已通过',
   PRIMARY KEY  (`id`)
 );
+
 --社团通知活动等
 CREATE TABLE `article`(  
   `id` int unsigned auto_increment,
