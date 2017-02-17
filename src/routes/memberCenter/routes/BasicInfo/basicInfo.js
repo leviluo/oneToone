@@ -508,8 +508,8 @@ export default class BasicInfo extends Component {
                 <a className="fa fa-image"><input onChange={this.modifyHead} type="file" /></a>
               </div>
               <div className="follow">
-                <span className="lightColor">关注</span>&nbsp;{this.state.memberInfo.follows}
-                &nbsp;<span className="lightColor">粉丝</span>&nbsp;{this.state.memberInfo.fans}
+                <span className="lightColor">关注</span>&nbsp;<strong><Link to={`/follows/${this.props.auth.memberId}`}>{this.state.memberInfo.follows}</Link></strong>
+                &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link to={`/follows/${this.props.auth.memberId}`}>{this.state.memberInfo.fans}</Link></strong>
               </div>
             </div>
               <ul>

@@ -8,9 +8,13 @@ import organizationController from '../controllers/organizationController'
 // const paths = config.utils_paths
 
 export default function routers(router){
+
 	router.post("/register",authController.register,router.allowedMethods());
+
 	router.post("/login",authController.login,router.allowedMethods());
+
 	router.get("/auth",authController.auth,router.allowedMethods());
+	
 	router.get("/loginOut",authController.loginOut,router.allowedMethods());
 // 获取所有的特长专业，用于新增特长时用
 	router.get("/public/catelogues",publicController.catelogues,router.allowedMethods());

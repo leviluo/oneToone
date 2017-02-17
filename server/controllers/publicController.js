@@ -108,7 +108,7 @@ const publicController = {
       if (!this.request.query.id || !this.request.query.limit) {
            this.body = {status:500,msg:"缺少参数"}
             return 
-        }
+      }
       var result = await sqlStr("select m.nickname,m.phone,m.brief,m.id from follows as f left join member as m on m.id = f.memberId where f.followId = ? limit "+this.request.query.limit,[this.request.query.id])
       this.body = {status:200,data:result}
     }

@@ -22,6 +22,30 @@
 			line-height:30px;
 		}
 	}
+	.items{
+		div{
+			padding:5px;
+			height:120px;
+			width:387px;
+			float:left;
+			background:#efefef;
+			border:1px solid #e5e5e5;
+			margin:10px 0 10px 10px;
+			img{
+				float:left;
+			  border:5px solid #efefef;
+			  border-radius:75px;
+			}
+			ul{
+				float:left;
+				width:250px;
+				padding-left:10px;
+				li{
+					width:100%;
+				}
+			}
+		}
+	}
 	.switchBtn{
 			height:40px;
 			margin-top:10px;
