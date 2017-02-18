@@ -52,6 +52,7 @@ export default class memberCenter extends Component {
             <div className="memberCenterContentLeft">
             <ul>
               <li><Link to="/memberCenter" className={this.props.location.pathname == '/memberCenter' ? 'active' : ''}>关注动态</Link></li>
+              <li><Link to="/memberCenter/myUpdates" className={this.props.location.pathname == '/memberCenter/myUpdates' ? 'active' : ''}>我的动态</Link></li>
             </ul>
             <h4>基本信息</h4>
             <ul>

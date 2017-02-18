@@ -26,6 +26,8 @@ export default function routers(router){
 	router.get("/public/memberInfo",publicController.memberInfo,router.allowedMethods()); 
 // 新增专业
 	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
+// 我的更新
+	router.get("/member/getMyUpdates",memberController.getMyUpdates,router.allowedMethods());
 // 获取所有的专业信息
 	router.get("/public/specialities",publicController.specialities,router.allowedMethods());
 // 获取作品

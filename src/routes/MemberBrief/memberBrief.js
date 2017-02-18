@@ -23,7 +23,8 @@ export default class MemberBrief extends Component{
 
   state = {
     specialities:[],
-    memberInfo:[]
+    memberInfo:[],
+    pageIndex:0 //默认分页
   }
 
   static contextTypes = {
@@ -113,6 +114,27 @@ export default class MemberBrief extends Component{
       })
   }
 
+  checkBasic =(e)=>{
+      this.refs.back.style.left = "2px"
+      this.setState({
+        pageIndex:0
+      })
+  }
+
+  checkUpdate =(e)=>{
+      this.refs.back.style.left = "92px"
+      this.setState({
+        pageIndex:1
+      })
+  }
+
+  checkSpeciality =(e)=>{
+      this.refs.back.style.left = "182px"
+      this.setState({
+        pageIndex:2
+      })
+  }
+
   render(){
     const {sex,nickname,address,phone,brief} = this.state.memberInfo
     var shareZone = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(document.location)}&title=${encodeURIComponent(document.title)}`
@@ -141,41 +163,53 @@ export default class MemberBrief extends Component{
               <div className="follow">
                 <span className="lightColor">关注</span>&nbsp;<strong><Link to={`/follows/${this.state.memberInfo.id}`}>{this.state.memberInfo.follows}</Link></strong>
                 &nbsp;<span className="lightColor">粉丝</span>&nbsp;<strong><Link to={`/follows/${this.state.memberInfo.id}`}>{this.state.memberInfo.fans}</Link></strong>
+                <div>
                 {(!this.state.memberInfo.isFollowed && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followIt}>+关注</button>}
                 {(this.state.memberInfo.isFollowed == 1 && this.props.auth.memberId != this.state.memberInfo.id) && <button className="btn-default" onClick={this.followOut}>取关</button>}
+                {this.props.auth.memberId != this.state.memberInfo.id && <button className="btn-success" onClick={()=>this.showChat(nickname,phone)}>私信</button>}
+                </div>
               </div>
             </div>
-              <ul>
+
+              <div className="nav">
+                <div>
+                <strong onClick={this.checkBasic}>基本资料</strong>
+                <strong onClick={this.checkUpdate}>动态</strong>
+                <strong onClick={this.checkSpeciality}>技能</strong>
+                <button ref="back"></button>
+                </div>
+              </div>
+
+              {this.state.pageIndex == 0 && <ul>
                 <li><h3><hr /><span>性别</span></h3><p>{sex == 0 ? "男" : "女"}</p></li>
                 <li><h3><hr /><span>昵称</span></h3><p>{nickname}</p></li>
                 {brief && <li><h3><hr /><span>个人签名</span></h3><p>{brief}</p></li>}
                 <li><h3><hr /><span>详细地址</span></h3><p>{address}</p></li>
-                <li><h3><hr /><span>专长领域</span></h3></li>
-                <li>
-                  {this.state.specialities.map((item,index)=>{
-                      var linkPhotos = `/works/${item.id}`
-                        return <ul key={index}>
-                          <li><b>{item.speciality}</b></li>
-                          <li><p>简介&nbsp;:&nbsp;</p>{item.brief}</li>
-                          <li><p>经验&nbsp;:&nbsp;</p>{item.experience}</li>
-                          {item.work && <li><span>作品集&nbsp;:&nbsp;</span><br/>
-                            <div>
-                           <ul>
-                            {item.work.split(',').map((item,index)=>{
-                              return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
-                            })}
-                            <li><Link to={linkPhotos} >查看更多&gt;</Link></li>
-                            </ul>
-                            </div>
-                          </li>}
-                        </ul>
-                    })}
-                </li>
               </ul>
-              <div className="message">
-                <button className="btn-success" onClick={()=>this.showChat(nickname,phone)}>私信</button>
-              </div>
+              }
+
+              {this.state.pageIndex == 2 && <div className="specialities">{this.state.specialities.map((item,index)=>{
+                        var linkPhotos = `/works/${item.id}`
+                          return <ul key={index}>
+                            <li><b>{item.speciality}</b></li>
+                            <li><p>简介&nbsp;:&nbsp;</p>{item.brief}</li>
+                            <li><p>经验&nbsp;:&nbsp;</p>{item.experience}</li>
+                            {item.work && <li><span>作品集&nbsp;:&nbsp;</span><br/>
+                              <div>
+                             <ul>
+                              {item.work.split(',').map((item,index)=>{
+                                return <li key={index}><div style={{backgroundImage:`url(/img?name=${item}&from=speciality)`}}></div></li>
+                              })}
+                              <li><Link to={linkPhotos} >查看更多&gt;</Link></li>
+                              </ul>
+                              </div>
+                            </li>}
+                          </ul>
+                      })}
+                </div>}
+
             </div>
+
             <ImageBrowser />
             <Chat />
         </div>

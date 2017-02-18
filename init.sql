@@ -30,7 +30,8 @@ CREATE TABLE `memberupdates` (
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
   `articleId` int unsigned,
-  `worksId` varchar(300) default '',
+  `works` varchar(300) default '',
+  `createAt` datetime default now(),
   PRIMARY KEY  (`id`)
 );
 

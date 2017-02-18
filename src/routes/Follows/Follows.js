@@ -112,7 +112,7 @@ export default class follows extends Component {
     }
 
     followIt =(e,id)=>{
-
+      
       if (!this.props.auth.phone) {
             this.props.tipShow({type:'error',msg:'您还未登录,请先登录'})
             return
@@ -163,7 +163,7 @@ export default class follows extends Component {
         <div className="switchBtn">
           <div>
             <strong onClick={this.checkFollows}>关注</strong>
-            <button ref="back" className="goForward"></button>
+            <button ref="back"></button>
             <strong onClick={this.checkFans}>粉丝</strong>
           </div>
         </div>

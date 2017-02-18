@@ -123,11 +123,19 @@ const organizationController = {
             this.body = { status: 500, msg: "标题不能为空或者大于50个字符" }
             return
         }
-        console.log(data)
+
       if (!data.articleId) {
       var result = await sqlStr("insert into article set title = ?,type = ?,content =?,organizationsId =?,attachedImgs=?,memberId = (select id from member where phone = ?)",[data.header[0],data.type[0],data.content[0],data.organizationId[0],data.names.join(','),this.session.user])
+      // 写入更新表
+      var resultt = await sqlStr("insert into memberupdates set articleId = ?,memberId = (select id from member where phone = ?)",[result.insertId,this.session.user])
+
+      if (result.affectedRows == 1 && resultt.affectedRows == 1) {
+              this.body = {status:200}
+              return
+      }
+
       }else{
-        // console.log(data)
+
         if(data.attachs[0]){
             if (this.request.body.names.length > 0) {
                 var imgs = data.attachs[0] +','+ this.request.body.names.join(',')
@@ -137,12 +145,12 @@ const organizationController = {
         }else{
                 var imgs = this.request.body.names.join(',')
         }
-        // console.log(imgs)
+
         var result = await sqlStr("update article set title =?,type=?,content=?,attachedImgs=?,updatedAt=now() where id = ?",[data.header[0],data.type[0],data.content[0],imgs,data.articleId[0]])
-      }
-      if (result.affectedRows == 1) {
-            this.body = {status:200}
-            return
+        if (result.affectedRows == 1) {
+              this.body = {status:200}
+              return
+        }
       }
       this.body = {status:500,msg:"发布失败"}
     },

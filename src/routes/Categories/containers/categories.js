@@ -31,7 +31,9 @@ import Chat,{chatShow} from '../../../components/Chat'
 export default class Categories extends React.Component{
 
     componentWillMount=(nextProps)=>{
-        // console.log("componentWillMount")
+        if (this.props.mylocation.isloaded) {  //加载数据
+            this.initItems(this.props)
+        }
     }
 
     componentWillUpdate =()=>{
@@ -39,12 +41,8 @@ export default class Categories extends React.Component{
     }
 
     componentDidMount=()=>{
-        // console.log("componentDidMount")
         if (this.props.catelogues.isloaded) {  //从首页跳转
             this.setStyle(this.props.location.query.childCatelogue?this.props.location.query.childCatelogue:this.props.location.query.parentCatelogue);
-        }
-        if (this.props.mylocation.isloaded) {  //加载数据
-            this.initItems(this.props)
         }
     }
 
@@ -60,22 +58,24 @@ export default class Categories extends React.Component{
             })
             this.props.pageNavInit(this.updateSpecialityData)
         }else{                                      //从父条目进入
+            this.props.pageNavInit(this.updateParentSpecialityData)                             
             this.setState({
                 speciality:speciality,
                 address:address,
                 childCatelogue:props.location.query.childCatelogue
             })    
-            console.log(this.updateParentSpecialityData)
-            this.props.pageNavInit(this.updateParentSpecialityData)                             
         }
     }
 
     updateSpecialityData = (currentPage)=>{
         return fetchItems({address:this.state.address,speciality:this.state.speciality,limit:`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`}).then(({data})=>{
             if (data.status == 200) {
-                this.setState({
-                  allItems:data.data
-                })
+                // console.log(this.isMounted)
+                // if (this.isMounted) {
+                    this.setState({
+                      allItems:data.data
+                    })
+                // }
                return Math.ceil(data.count/this.state.averagenum)
               }else {
                 this.props.tipShow({type:"error",msg:data.msg})
@@ -87,9 +87,12 @@ export default class Categories extends React.Component{
     updateParentSpecialityData = (currentPage)=>{
         return fetchItems({address:this.state.address,parentSpeciality:this.state.speciality,limit:`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`}).then(({data})=>{
             if (data.status == 200) {
-                this.setState({
-                  allItems:data.data
-                })
+                // console.log(this.isMounted)
+                // if (this.isMounted) {
+                    this.setState({
+                      allItems:data.data
+                    })
+                // }
                 return Math.ceil(data.count/this.state.averagenum)
               }else {
                 this.props.tipShow({type:"error",msg:data.msg})
@@ -162,7 +165,7 @@ export default class Categories extends React.Component{
         <div className="categoryTop">
             <nav><Link to="/">首页</Link> &gt; <a onClick={this.allCategory}>{this.props.location.query.parentCatelogue}</a>{this.state.childCatelogue && <span> &gt; {this.state.childCatelogue}</span>}</nav>
             <div>
-                <table >
+                <table>
                     <tbody>
                         <tr>
                             <td>类别:</td>
@@ -182,7 +185,7 @@ export default class Categories extends React.Component{
                 let brief = item.brief.length > 50 ? item.brief.slice(0,50) + '...' : item.brief
                 let link = `/memberBrief/${item.memberId}`
                 return <div key={index} className="itemContent">
-                     <span><a className="btn-default" onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>&nbsp;&nbsp;<Link className="btn-default" to={link}>查看名片</Link></span>
+                     <span>{item.memberId != this.props.auth.memberId && <a className="btn-default" onClick={()=>this.showChat(item.nickname,item.phone)}>私信</a>}&nbsp;&nbsp;<Link className="btn-default" to={link}>查看名片</Link></span>
                     <img src={src} alt=""/>
                     <div><ul><li><Link to={link}>{item.nickname}</Link>(<span className="lightColor">性别:</span>{item.sex==0 && <span>男</span>}{item.sex==1 && <span>女</span>})</li><li><p><span className="lightColor">简介:</span>{brief}</p></li><li><p><span className="lightColor">能力:</span>{item.name}</p></li><li><p><span className="lightColor">现居住地:</span>{item.address}</p></li></ul></div>
                 </div>

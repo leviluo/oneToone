@@ -7,6 +7,7 @@ import myPost from './routes/MyPost'
 import myNotice from './routes/MyNotice'
 import requestApproval from './routes/RequestApproval'
 import updates from './routes/Updates'
+import myUpdates from './routes/MyUpdates'
 
 
 export default (store) => ({
@@ -27,6 +28,7 @@ export default (store) => ({
         myCreateTeam(store),
         myNotice(store),
         mymessage(store),
-        requestApproval(store)
+        requestApproval(store),
+        myUpdates(store),
     ]
 })
