@@ -265,7 +265,7 @@ const organizationController = {
 
       this.body = {status:500,msg:"操作失败"}
     },
-    deleteArticle: async function(){
+    deleteArticle: async function(next){
       if (!this.request.query.id) {
             this.body = { status: 500, msg: "缺少参数" }
             return
@@ -274,6 +274,9 @@ const organizationController = {
             this.body = { status: 600, msg: "尚未登录" }
             return
         }
+      var resultt = await sqlStr("select attachedImgs from article where id = ?",[this.request.query.id])
+      this.request.body.deletImgs = resultt[0].attachedImgs.split(',')
+      await next
       var result = await sqlStr("delete a.*,c.*,r.* from article as a left join comments as c on c.articleId = a.id left join reReply as r on r.commentsId = c.id where a.id = ? and a.memberId = (select id from member where phone =?)",[this.request.query.id,this.session.user])
       if (result.affectedRows > 0) {
             this.body = {status:200}

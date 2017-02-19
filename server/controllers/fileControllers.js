@@ -77,17 +77,21 @@ function getThumbImage(name,url){
 
 function deleteImgs(name,url){
     return new Promise(function(reslove,reject){
-        fs.exists(`${url}thumbs/${name}.jpg`, function (exists) {
-            if (exists) {
-                fs.unlinkSync(`${url}thumbs/${name}.jpg`);
-            }
-            fs.exists(`${url}${name}.jpg`, function (exists) {
-                if (exists) {
-                    fs.unlinkSync(`${url}${name}.jpg`);
-                    reslove(true)
-                }
-            })
-        })
+        for (var i = 0; i < name.length; i++) {
+            ((i)=>{
+                fs.exists(`${url}thumbs/${name[i]}.jpg`, function (exists) {
+                    if (exists) {
+                        fs.unlinkSync(`${url}thumbs/${name[i]}.jpg`);
+                    }
+                    fs.exists(`${url}${name[i]}.jpg`, function (exists) {
+                        if (exists) {
+                            fs.unlinkSync(`${url}${name[i]}.jpg`);
+                            reslove(true)
+                        }
+                    })
+                })
+            })(i)
+        }
     })
 }
 
@@ -278,7 +282,16 @@ const fileController = {
         this.request.body = result.msg
     },
     deletePhoto:async function(next){
-        var result = await deleteImgs(this.request.query.name,config.specialityImgDir)
+        var result = await deleteImgs([this.request.query.name],config.specialityImgDir)
+        if(!result){
+            this.body = {status:500,mag:"删除失败"}
+            return
+        }
+        next
+    },
+    deletePhotos:async function(next){
+        await next
+        var result = await deleteImgs(this.request.body.deletImgs,config.articleImgDir)
         if(!result){
             this.body = {status:500,mag:"删除失败"}
             return

@@ -105,7 +105,6 @@ export default class myNotice extends Component {
         })}
         </tbody>
       </table>
-      
     </div>
     )
   }

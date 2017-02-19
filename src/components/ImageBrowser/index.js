@@ -3,16 +3,16 @@ import { findDOMNode } from 'react-dom';
 import './ImageBrowser.scss'
 import {imgbrowser} from './modules'
 import {connect} from 'react-redux'
-// import {loading} from './assert/loading.gif'
 import loading from './assets/loading.gif'
+import {tipShow} from '../Tips/modules/tips'
 
 export const imgbrowserShow = imgbrowser
 
 @connect(
   state=>({ImageBrowser:state.imageBrowser}),
-{})
+{tipShow})
 export default class ImageBrowser extends Component{
-
+ 
   componentDidUpdate =()=>{
     if(this.props.ImageBrowser.isShow){
       this.show()
@@ -33,6 +33,7 @@ export default class ImageBrowser extends Component{
 
   close=()=>{
     var ele = findDOMNode(this)
+    // console.log(ele)
     ele.style.display = "none"
     document.body.style.overflow = "auto"
     document.body.style.width = 'auto'   //在打开modal之后，关闭了modal，得改为自动，网页才会自动调整大小
@@ -46,8 +47,16 @@ export default class ImageBrowser extends Component{
     this.refs.src.src = nextProps.ImageBrowser.imgs[nextProps.ImageBrowser.currentChoose]
   }
 
+  shouldComponentUpdate =(nextProps,nextState)=>{
+    if(nextProps.ImageBrowser.imgs.length == 0) return false
+    return true
+  }
+
   up=()=>{
-    if (this.state.currentChoose == 0) {return};
+    if (this.state.currentChoose == 0) {
+      this.props.tipShow({type:"error",msg:"已经是第一张了"})
+      return
+    };
     this.setState({
       currentChoose:this.state.currentChoose - 1
     })
@@ -55,7 +64,10 @@ export default class ImageBrowser extends Component{
   }
 
   next=()=>{
-    if (this.state.currentChoose == this.props.ImageBrowser.imgs.length-1) {return};
+    if (this.state.currentChoose == this.props.ImageBrowser.imgs.length-1) {
+      this.props.tipShow({type:"error",msg:"已经是最后一张了"})
+      return
+    };
     this.setState({
       currentChoose:this.state.currentChoose + 1
     })

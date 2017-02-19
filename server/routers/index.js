@@ -27,7 +27,7 @@ export default function routers(router){
 // 新增专业
 	router.post("/member/addSpeciality",memberController.addSpeciality,router.allowedMethods());
 // 我的更新
-	router.get("/member/getMyUpdates",memberController.getMyUpdates,router.allowedMethods());
+	router.get("/public/getMyUpdates",publicController.getMyUpdates,router.allowedMethods());
 // 获取所有的专业信息
 	router.get("/public/specialities",publicController.specialities,router.allowedMethods());
 // 获取作品
@@ -115,7 +115,7 @@ export default function routers(router){
 // 获取文章详情
 	router.get("/organizations/article",organizationController.article,router.allowedMethods());
 // 删除文章
-	router.get("/organizations/deleteArticle",organizationController.deleteArticle,router.allowedMethods());
+	router.get("/organizations/deleteArticle",fileController.deletePhotos,organizationController.deleteArticle,router.allowedMethods());
 // 获取文章回复
 	router.get("/organizations/ArticleReply",organizationController.ArticleReply,router.allowedMethods());
 // 删除文章回复

@@ -3,7 +3,7 @@
 		clear:both;
 		min-height:80px;
 		padding:20px 0;
-			border-bottom:1px dashed #e5e5e5;
+		border-bottom:1px dashed #e5e5e5;
 		a{
 	 	color:#37a;
 	 	padding:3px;
@@ -16,11 +16,31 @@
 			border-radius:50px;
 			float:left;
 		}
-		&>div{
+		.header{
 			float:left;
 			height:50px;
 			line-height:50px;
 			margin-left:10px;
+			margin-bottom:10px;
 		}
+		.photoLists{
+			clear:both;
+			background:#efefef;
+			div{
+				height:100px;
+				width:100px;
+				display:inline-block;
+				margin:5px;
+				border-radius:2px;
+				background-position:center;
+				background-repeat:no-repeat;
+				background-size:cover;
+				cursor:pointer;
+			}
+		}
+	}
+	&>div:last-of-type{
+		text-align:center;
+		padding:20px 0;
 	}
 }

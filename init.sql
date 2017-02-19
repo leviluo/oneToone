@@ -30,6 +30,7 @@ CREATE TABLE `memberupdates` (
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
   `articleId` int unsigned,
+  `memberSpecialityId` int unsigned,
   `works` varchar(300) default '',
   `createAt` datetime default now(),
   PRIMARY KEY  (`id`)
@@ -89,7 +90,7 @@ CREATE TABLE `organizations` (
   PRIMARY KEY  (`id`)
 );
 
--- 用户社团
+--用户社团
 CREATE TABLE `memberOrganizations` (  
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
@@ -97,7 +98,7 @@ CREATE TABLE `memberOrganizations` (
   PRIMARY KEY  (`id`)
 );
 
--- 加入社团申请表
+--加入社团申请表
 CREATE TABLE `organizationsRequest` (  
   `id` int unsigned auto_increment,
   `memberId` int unsigned,
@@ -133,7 +134,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY  (`id`)
 );
 
--- 回复通知 
+--回复通知 
 CREATE TABLE `reReply` (  
   `id` int unsigned auto_increment,
   `replyTo` int unsigned,
@@ -142,7 +143,7 @@ CREATE TABLE `reReply` (
   PRIMARY KEY  (`id`)
 );
 
--- 私信
+--私信
 CREATE TABLE `message` (  
   `id` int unsigned auto_increment,
   `fromMember` int unsigned,

@@ -111,6 +111,14 @@ const publicController = {
       }
       var result = await sqlStr("select m.nickname,m.phone,m.brief,m.id from follows as f left join member as m on m.id = f.memberId where f.followId = ? limit "+this.request.query.limit,[this.request.query.id])
       this.body = {status:200,data:result}
+    },
+    getMyUpdates:async function(){
+        if (!this.request.query.id || !this.request.query.limit) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("select mu.id,m.phone,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where mu.memberId = ? order by mu.id desc limit "+this.request.query.limit,[this.request.query.id])
+        this.body = {status:200,data:result}
     }
 }
 export default publicController;

@@ -4,7 +4,7 @@
 	left:0;
 	width:100%;
 	background:rgba(0,0,0,0.8);
-    z-index: 100;
+    z-index: 99;
     display:none;
     img{
             box-shadow:none;
@@ -27,6 +27,7 @@
 	    		right:0;
 	    		margin:auto;
 	    		max-width:calc(80%);
+	    		border:3px solid #fff;
 		    }
 		    button{
 		    	font-size:200%;
@@ -36,7 +37,7 @@
 		    	color:#ccc;
 		    	width:40px;
 		    	height:40px;
-		    	line-height:26px;
+		    	line-height:20px;
 		    	text-align:center;
 		    	border-radius:20px;
 		    	margin-top:40px;
@@ -47,7 +48,7 @@
 		    }
 	    }
 	    .page{
-	    	width:7%;
+	    	width:8%;
 	    	height:100%;
 	    	position:relative;
 	    	button{
