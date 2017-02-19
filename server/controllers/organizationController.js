@@ -277,7 +277,7 @@ const organizationController = {
       var resultt = await sqlStr("select attachedImgs from article where id = ?",[this.request.query.id])
       this.request.body.deletImgs = resultt[0].attachedImgs.split(',')
       await next
-      var result = await sqlStr("delete a.*,c.*,r.* from article as a left join comments as c on c.articleId = a.id left join reReply as r on r.commentsId = c.id where a.id = ? and a.memberId = (select id from member where phone =?)",[this.request.query.id,this.session.user])
+      var result = await sqlStr("delete a.*,c.*,r.*,mu.* from article as a left join comments as c on c.articleId = a.id left join reReply as r on r.commentsId = c.id left join memberupdates as mu on mu.articleId = a.id where a.id = ? and a.memberId = (select id from member where phone =?)",[this.request.query.id,this.session.user])
       if (result.affectedRows > 0) {
             this.body = {status:200}
             return
