@@ -83,7 +83,8 @@ export default class myUpdates extends Component {
     <div className="myUpdates">
         {this.state.myUpdates.map((item,index)=>{
           var date = new Date(item.createAt)
-          var works = []
+          var works =[];
+          var imgs = item.works.split(',')
           var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
           return <div key={index} className="lists">
               <img width="50" src={`/originImg?from=member&name=${item.phone}`} alt=""/>
@@ -91,15 +92,15 @@ export default class myUpdates extends Component {
               {item.works && <div>
                 <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;在<Link to={`/works/${item.memberSpecialityId}`}>{item.specialityName}</Link>上传了新照片</div>
                 <div className="photoLists">
-                {item.works.split(',').map((item,index)=>{
+                {imgs.map((item,index)=>{
                   works.push(`/originImg?from=speciality&name=${item}`)
                   return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:works})} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
                 })}
+                <Link to={`/works/${item.memberSpecialityId}`}>查看更多...</Link>
                 </div>
               </div>}
           </div>
         })}
-        <ImageBrowser />
         <div><button className="btn-default" onClick={this.addMore}>加载更多...</button></div>
     </div>
     )

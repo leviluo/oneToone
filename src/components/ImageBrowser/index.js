@@ -12,6 +12,10 @@ export const imgbrowserShow = imgbrowser
   state=>({ImageBrowser:state.imageBrowser}),
 {tipShow})
 export default class ImageBrowser extends Component{
+
+  state = {
+    currentChoose:0
+  }
  
   componentDidUpdate =()=>{
     if(this.props.ImageBrowser.isShow){
@@ -74,6 +78,13 @@ export default class ImageBrowser extends Component{
     this.refs.src.src = this.props.ImageBrowser.imgs[this.state.currentChoose+1]
   }
 
+  go =(e,index)=>{
+    this.setState({
+      currentChoose:index
+    })
+    this.refs.src.src = this.props.ImageBrowser.imgs[index]
+  }
+
   render(){
     // console.log(this.state)
     return(
@@ -84,7 +95,21 @@ export default class ImageBrowser extends Component{
             </div>
             <div>
               <img ref="src" alt=""/>
+              <div className="photoLists">
+                <div className="pageUp" onClick={this.up} >&lt;</div>
               <button className="close" onClick={this.close} >×</button>
+                {this.props.ImageBrowser.imgs.map((item,index)=>{
+                  if(index == this.state.currentChoose){
+                    var color = "#ff7f00"
+                  }else{
+                    var color = "#efefef"
+                  }
+                  var date = new Date(item.createdAt)
+                  var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
+                  return <div onClick={(e)=>this.go(e,index)} key={index} style={{backgroundImage:`url(${item})`,border:`2px solid ${color}`}} className="imgShows"></div>
+                })}
+                <div className="pageDown" onClick={this.next} >&gt;</div>
+              </div>
             </div>
             <div className="page">
               <button onClick={this.next} >&gt;</button>

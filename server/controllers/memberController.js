@@ -242,7 +242,9 @@ const memberController = {
           arr.push(names[i])
         }
         var result = await sqlStr("insert into works(`memberSpecialityId`,`name`) values "+str.slice(0,-1),arr)
-        console.log(names.join(','))
+        if(names.length > 8){
+            names = names.splice(0,8) 
+        }
         var resultt = await sqlStr("insert into memberupdates set memberId = (select id from member where phone = ?),works = ?,memberSpecialityId=?",[this.session.user,names.join(','),id])
        if (result.affectedRows > 0 && resultt.affectedRows == 1) {
             this.body = {status:200}
