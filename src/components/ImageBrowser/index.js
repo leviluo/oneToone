@@ -108,6 +108,7 @@ export default class ImageBrowser extends Component{
                   var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
                   return <div onClick={(e)=>this.go(e,index)} key={index} style={{backgroundImage:`url(${item})`,border:`2px solid ${color}`}} className="imgShows"></div>
                 })}
+              {this.props.ImageBrowser.likeFunc && <button className="like" onClick={(e)=>this.props.ImageBrowser.likeFunc(e,this.props.ImageBrowser.imgs[this.state.currentChoose].match(/[\d]+/)[0])} ><i className="fa fa-heart"></i></button>}
                 <div className="pageDown" onClick={this.next} >&gt;</div>
               </div>
             </div>

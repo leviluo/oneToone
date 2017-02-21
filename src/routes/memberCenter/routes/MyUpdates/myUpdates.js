@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {getMyUpdates} from './modules'
+import {getMyUpdates,addLike} from './modules'
 import ImageBrowser,{imgbrowserShow} from '../../../../components/ImageBrowser'
 
 @asyncConnect([{
@@ -78,6 +78,24 @@ export default class myUpdates extends Component {
     this.getData(this.state.currentPage + 1)
   }
 
+  like =(e,name)=>{
+    if (!this.props.auth.memberId) {
+        this.props.tipShow({type:"error",msg:"请先登录"})
+        return
+    }
+    addLike(name).then(({data})=>{
+        if (data.status == 200) {
+         
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+    })
+  }
+
+
   render () {
     return (
     <div className="myUpdates">
@@ -94,7 +112,7 @@ export default class myUpdates extends Component {
                 <div className="photoLists">
                 {imgs.map((item,index)=>{
                   works.push(`/originImg?from=speciality&name=${item}`)
-                  return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:works})} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
+                  return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:works,likeFunc:this.like})} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
                 })}
                 <Link to={`/works/${item.memberSpecialityId}`}>查看更多...</Link>
                 </div>

@@ -19,7 +19,7 @@ export function imgbrowser(text) {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [IMGBROWSER_SHOW]: (state, action) => {
-    return ({...state, isShow:true,currentChoose:action.text.currentChoose,imgs:action.text.imgs})
+    return ({...state, isShow:true,currentChoose:action.text.currentChoose,imgs:action.text.imgs,likeFunc:action.text.likeFunc})
   }
 }
 
@@ -30,6 +30,7 @@ export const initialState = {
   isShow:false,
   currentChoose:0,
   imgs:[],
+  likeFunc:null
 }
 
 export default function (state = initialState, action) {

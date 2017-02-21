@@ -29,7 +29,7 @@
 	    		margin:auto;
 	    		max-width:100%;
 	    		max-height:80%;
-	    		border:3px solid #fff;
+	    		border:2px solid #fff;
 		    }
 		    button{
 		    	font-size:200%;
@@ -42,9 +42,15 @@
 		    	line-height:20px;
 		    	text-align:center;
 		    	float:right;
+		    	border-radius:30px;
 		    	&:hover{
 	    			color:#fff;
 	    		}
+		    }
+		    .like{
+		    	position:fixed;
+		    	bottom:25px;
+		    	left:calc(50% - 30px);
 		    }
 		    .photoLists{
 					 margin:10px auto;
@@ -67,10 +73,10 @@
 						color:white;
 						font-size:200%;
 						float:left;
-						background:#FFA500;
+						background:#777;
 						cursor:pointer;
 						&:hover{
-							background:#ff7f00
+							background:#999
 						}
 					}
 					.imgShows{
