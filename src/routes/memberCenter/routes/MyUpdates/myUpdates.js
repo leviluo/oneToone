@@ -78,21 +78,12 @@ export default class myUpdates extends Component {
     this.getData(this.state.currentPage + 1)
   }
 
-  like =(e,name)=>{
+  like =(name)=>{
     if (!this.props.auth.memberId) {
         this.props.tipShow({type:"error",msg:"请先登录"})
         return
     }
-    addLike(name).then(({data})=>{
-        if (data.status == 200) {
-         
-        }else if (data.status==600) {
-          this.props.dispatch({type:"AUTHOUT"})
-          this.context.router.push('/login')
-        }{
-          this.props.tipShow({type:'error',msg:data.msg})
-        }
-    })
+    return addLike(name)
   }
 
 
@@ -119,7 +110,7 @@ export default class myUpdates extends Component {
               </div>}
           </div>
         })}
-        <div><button className="btn-default" onClick={this.addMore}>加载更多...</button></div>
+        {!this.state.ifFull && <div><button className="btn-default" onClick={this.addMore}>加载更多...</button></div>}
     </div>
     )
   }

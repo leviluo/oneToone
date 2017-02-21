@@ -42,9 +42,9 @@ const publicController = {
         return
       }
       if (this.session.user && this.request.query.id) {
-        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes,if((select id from likes where worksId = w.id and memberId = (select id from member where phone = ?) limit 1) != '',1,0) as isLiked from works as w where w.memberSpecialityId = ? limit "+this.request.query.limit,[this.session.user,this.request.query.id])
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes,if((select id from likes where worksId = w.id and memberId = (select id from member where phone = ?) limit 1) != '',1,0) as isLiked from works as w where w.memberSpecialityId = ? order by id desc limit "+this.request.query.limit,[this.session.user,this.request.query.id])
       }else if(this.request.query.id){
-        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where w.memberSpecialityId = ? limit "+this.request.query.limit,[this.request.query.id])
+        var result = await sqlStr("select w.id,w.name,w.createdAt,(select count(id) from likes where worksId = w.id) as likes from works as w where w.memberSpecialityId = ? order by id desc limit "+this.request.query.limit,[this.request.query.id])
       }else{
         this.body = {status:600,msg:"尚未登录"}
         return

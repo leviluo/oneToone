@@ -376,6 +376,22 @@ const memberController = {
             }
         }
         this.body = {status:500,msg:"操作数据库失败"}
+    },
+    ifliked:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        if (!this.request.query.name) {
+            this.body = { status: 500, msg: "缺少参数" }
+            return
+        }
+        var result = await sqlStr("select * from likes where worksId = (select id from works where name = ?) and memberId = (select id from member where phone = ?)",[this.request.query.name,this.session.user])
+        if (result.length == 1) {
+            this.body = { status: 200, msg: 1 }
+        } else{
+            this.body = { status: 200, msg: 0 }
+        }
     }
 }
 export default memberController;

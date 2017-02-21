@@ -42,6 +42,8 @@ export default function routers(router){
 	router.get("/public/getMemberInfoWork",publicController.getMemberInfoWork,router.allowedMethods());
  //上传头像
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
+ // 图片浏览器中图片是否点赞
+	router.get("/member/ifliked",memberController.ifliked,router.allowedMethods());
 // 二维码
 	router.get("/qrcode",fileController.qrCode,router.allowedMethods());  
 // 获取图片

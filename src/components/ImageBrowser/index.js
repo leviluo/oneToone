@@ -1,15 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom';
 import './ImageBrowser.scss'
-import {imgbrowser} from './modules'
+import {imgbrowser,ifliked} from './modules'
 import {connect} from 'react-redux'
 import loading from './assets/loading.gif'
 import {tipShow} from '../Tips/modules/tips'
 
 export const imgbrowserShow = imgbrowser
+// export const isLiked = imgLiked
 
 @connect(
-  state=>({ImageBrowser:state.imageBrowser}),
+  state=>({
+    ImageBrowser:state.imageBrowser,
+  }),
 {tipShow})
 export default class ImageBrowser extends Component{
 
@@ -48,6 +51,7 @@ export default class ImageBrowser extends Component{
     this.setState({
       currentChoose:nextProps.ImageBrowser.currentChoose
     })
+    if(nextProps.ImageBrowser.likeFunc)this.update(nextProps.ImageBrowser.imgs[nextProps.ImageBrowser.currentChoose])
     this.refs.src.src = nextProps.ImageBrowser.imgs[nextProps.ImageBrowser.currentChoose]
   }
 
@@ -65,6 +69,7 @@ export default class ImageBrowser extends Component{
       currentChoose:this.state.currentChoose - 1
     })
     this.refs.src.src = this.props.ImageBrowser.imgs[this.state.currentChoose-1]
+    if(this.props.ImageBrowser.likeFunc)this.update(this.props.ImageBrowser.imgs[this.state.currentChoose-1])
   }
 
   next=()=>{
@@ -76,6 +81,7 @@ export default class ImageBrowser extends Component{
       currentChoose:this.state.currentChoose + 1
     })
     this.refs.src.src = this.props.ImageBrowser.imgs[this.state.currentChoose+1]
+    if(this.props.ImageBrowser.likeFunc)this.update(this.props.ImageBrowser.imgs[this.state.currentChoose+1])
   }
 
   go =(e,index)=>{
@@ -83,6 +89,39 @@ export default class ImageBrowser extends Component{
       currentChoose:index
     })
     this.refs.src.src = this.props.ImageBrowser.imgs[index]
+    if(this.props.ImageBrowser.likeFunc)this.update(this.props.ImageBrowser.imgs[index])
+  }
+
+  update =(name)=>{
+    // if(this.props.ImageBrowser.likeFunc){
+          ifliked(name.match(/[\d]+/)[0]).then(({data})=>{
+            if (data.status == 200) {
+              this.setState({
+                isliked:data.msg
+              })
+            }else if (data.status==600) {
+                // this.props.dispatch({type:"AUTHOUT"})
+                // this.context.router.push('/login')
+              }else{
+                this.props.tipShow({type:'error',msg:data.msg})
+              }
+               // }
+      })
+  }
+
+  addLike =()=>{
+    this.props.ImageBrowser.likeFunc(this.props.ImageBrowser.imgs[this.state.currentChoose].match(/[\d]+/)[0]).then(({data})=>{
+        if (data.status == 200) {
+          this.setState({
+                isliked:this.state.isliked ? 0 : 1
+          })
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+    })
   }
 
   render(){
@@ -106,9 +145,9 @@ export default class ImageBrowser extends Component{
                   }
                   var date = new Date(item.createdAt)
                   var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}` 
-                  return <div onClick={(e)=>this.go(e,index)} key={index} style={{backgroundImage:`url(${item})`,border:`2px solid ${color}`}} className="imgShows"></div>
+                  return <div onClick={(e)=>this.go(e,index)} key={index} style={{backgroundImage:`url(${item.replace(/\/originImg\?/,"/img?")})`,border:`2px solid ${color}`}} className="imgShows"></div>
                 })}
-              {this.props.ImageBrowser.likeFunc && <button className="like" onClick={(e)=>this.props.ImageBrowser.likeFunc(e,this.props.ImageBrowser.imgs[this.state.currentChoose].match(/[\d]+/)[0])} ><i className="fa fa-heart"></i></button>}
+              {this.props.ImageBrowser.likeFunc && <button className="like" onClick={this.addLike} style={{color:this.state.isliked ? "#ff7f00" : "#fff"}}><i className="fa fa-heart"></i></button>}
                 <div className="pageDown" onClick={this.next} >&gt;</div>
               </div>
             </div>
