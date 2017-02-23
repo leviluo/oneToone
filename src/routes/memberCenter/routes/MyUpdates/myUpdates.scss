@@ -1,4 +1,6 @@
 .myUpdates{
+	min-height:900px;
+	padding:10px 0;
 	.lists{
 		clear:both;
 		min-height:80px;
@@ -52,8 +54,7 @@
 			}
 		}
 	}
-	&>div:last-of-type{
+	&>p{
 		text-align:center;
-		padding:20px 0;
 	}
 }

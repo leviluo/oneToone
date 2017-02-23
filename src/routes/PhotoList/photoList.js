@@ -8,6 +8,7 @@ import { tipShow } from '../../components/Tips/modules/tips'
 import {getworksData,addLike,deletePhoto,getMemberInfo} from './modules'
 import Confirm,{confirmShow} from '../../components/Confirm'
 import Share from '../../components/Share'
+import loading from './asset/loading2.gif'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -122,24 +123,29 @@ export default class photoList extends Component {
   }
 
   pageUp = ()=>{
-
     if (this.state.currentLargePhoto == 0) {
+
       if (this.state.isFull) {
-        this.props.tipShow({type:"error",msg:"已经到头了哦"})
+        this.props.tipShow({type:"error",msg:"已经是第一张了"})
         return
       }
+
+      this.refs.preImg.src = loading
+
       this.worksData(this.state.worksData[0].id,`1,1`,1).then((data)=>{
         if (data.length == 0) {
           this.props.tipShow({type:"error",msg:"已经是第一张了"})
           this.setState({
             isFull:true
           })
+          this.refs.preImg.src = `/originImg?from=speciality&name=${this.state.worksData[this.state.currentLargePhoto].name}`
           return
         }
         this.state.worksData.pop()
         this.state.worksData.unshift(data[0])
         this.setState({isFull:false})
       });
+
       return
     }
     this.setState({
@@ -149,6 +155,7 @@ export default class photoList extends Component {
   }
 
   go =(e,index)=>{
+    this.refs.preImg.src = loading
     this.setState({
       currentLargePhoto: index
     })
@@ -157,15 +164,17 @@ export default class photoList extends Component {
   pageDown = ()=>{
     if (this.state.currentLargePhoto == (this.state.worksData.length -1)) {
       if (this.state.isFull) {
-        this.props.tipShow({type:"error",msg:"已经到头了哦"})
+        this.props.tipShow({type:"error",msg:"已经是最后一张了"})
         return
       }
+    this.refs.preImg.src = loading
       this.worksData(this.state.worksData[this.state.currentLargePhoto].id,`1,1`).then((data)=>{
         if (data.length == 0) {
           this.props.tipShow({type:"error",msg:"已经是最后一张了"})
           this.setState({
             isFull:true
           })
+          this.refs.preImg.src = `/originImg?from=speciality&name=${this.state.worksData[this.state.currentLargePhoto].name}`
           return
         }
         this.state.worksData.shift()
@@ -206,7 +215,7 @@ export default class photoList extends Component {
     </div>
     {this.state.worksData.length > 0 && <div className="largePhoto">
         <div onClick={this.pageUp}>&lt;</div>
-        <img src={`/originImg?from=speciality&name=${this.state.worksData[this.state.currentLargePhoto].name}`} alt="" />
+        <img ref="preImg" src={`/originImg?from=speciality&name=${this.state.worksData[this.state.currentLargePhoto].name}`} alt="" />
         <div onClick={this.pageDown}>&gt;</div>
     </div>}
     <div className="photoBoard">

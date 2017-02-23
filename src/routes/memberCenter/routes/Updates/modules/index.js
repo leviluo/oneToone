@@ -1,7 +1,11 @@
 import axios from 'axios'
 
-export function getMyOrganization(){
-	return axios.get('/organizations/getMyOrganization')
+export function getupdates(limit){ 
+	return axios.get(`/member/getupdates?limit=${limit}`)
+}
+
+export function addLike(name){
+	return axios.get(`/member/addLikeByName?name=${name}`)
 }
 
 

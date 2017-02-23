@@ -392,6 +392,14 @@ const memberController = {
         } else{
             this.body = { status: 200, msg: 0 }
         }
+    },
+    getupdates:async function(){
+        if (!this.session.user) {
+            this.body = { status: 600, msg: "尚未登录" }
+            return
+        }
+        var result = await sqlStr("select mu.id,m.phone,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId left join follows as f on f.followId = mu.memberId where f.memberId = (select id from member where phone = ?) order by mu.id desc limit "+this.request.query.limit,[this.session.user])
+        this.body = {status:200,data:result}
     }
 }
 export default memberController;

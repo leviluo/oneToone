@@ -69,6 +69,24 @@
                 cursor:pointer
             }
         }
+        .btn-addMore{
+            padding: 0 5px;
+            line-height: 35px;
+            background: #efefef;
+            border-radius: 5px;
+            width:90%;
+            height:60px;
+            font-size:20px;
+            letter-spacing:2px;
+            color:#37a; 
+            border:none;
+            padding:0 10px;
+            border:1px solid #ccc;
+            &:hover{
+                background: #e5e5e5;
+                cursor:pointer
+            }
+        }
         .btn-primary {
             padding: 0 5px;
             height: 35px;

@@ -42,7 +42,7 @@ function getThumbImage(name,url){
                         fs.exists(`${url}${name}.jpg`, function (exists) {
                             if (exists) {
                                 gm(`${url}${name}.jpg`)
-                                .resize(200, 200)
+                                .resize(180, 180)
                                 .flatten() //透明PNG透明
                                 .write(`${url}thumbs/${name}.jpg`, function(err){
                                   if (err) {

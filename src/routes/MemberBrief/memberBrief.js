@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import './memberBrief.scss'
-import {getSpecialities,memberInfo,followOne,followOutOne} from './modules/memberBrief'
+import {getSpecialities,memberInfo,followOne,followOutOne,getMyUpdates,addLike} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import {tipShow} from '../../components/Tips/modules/tips'
@@ -25,7 +25,10 @@ export default class MemberBrief extends Component{
   state = {
     specialities:[],
     memberInfo:[],
-    pageIndex:0 //默认分页
+    pageIndex:1, //默认分页
+    myUpdates:[],
+    averagenum:10,
+    currentPage:1
   }
 
   static contextTypes = {
@@ -33,15 +36,7 @@ export default class MemberBrief extends Component{
   };
 
   componentWillMount = ()=>{
-      getSpecialities(this.props.params.id).then(({data})=>{
-         if (data.status==200) {
-              this.setState({
-                specialities:data.data
-              })
-          }else{
-              this.props.tipShow({type:'error',msg:data.msg})
-          }
-      })
+      this.getData(this.state.currentPage)
       memberInfo(this.props.params.id).then(({data})=>{
         if (data.status==200) {
               this.setState({
@@ -124,7 +119,69 @@ export default class MemberBrief extends Component{
       this.setState({
         pageIndex:2
       })
+      if (this.state.specialitiesLoaded) return;
+      getSpecialities(this.props.params.id).then(({data})=>{
+         if (data.status==200) {
+              this.setState({
+                specialities:data.data,
+                specialitiesLoaded:true
+              })
+          }else{
+              this.props.tipShow({type:'error',msg:data.msg})
+          }
+      })
   }
+
+    // componentWillMount =()=>{ //正常进入页面可以直接获取到memberId
+    //   if (this.props.auth.memberId)this.getData(this.state.currentPage)
+    // }
+
+    // componentWillReceiveProps=()=>{ //刷新时获取memberId
+    //   if (this.props.auth.memberId)this.getData(this.state.currentPage)
+    // }
+
+    getData = (currentPage)=>{
+       getMyUpdates(this.props.params.id,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+        if (data.status == 200) {
+          if (data.data.length < this.state.averagenum) {
+                this.setState({
+                    ifFull:true,
+                    myUpdates:this.state.myUpdates.concat(data.data)
+                })
+            }else{
+                this.setState({
+                    myUpdates:this.state.myUpdates.concat(data.data)
+                })
+            }
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+      })
+    }
+
+  addMore =()=>{
+    if (this.state.ifFull) {
+        this.props.tipShow({type:"error",msg:"亲,没有更多更新了"})
+        return
+    }
+    this.setState({
+        currentPage:this.state.currentPage + 1
+    })
+    this.getData(this.state.currentPage + 1)
+  }
+
+  like =(name)=>{
+    if (!this.props.auth.memberId) {
+        this.props.tipShow({type:"error",msg:"请先登录"})
+        return
+    }
+    return addLike(name)
+  }
+
+  
 
   render(){
     const {sex,nickname,address,phone,brief} = this.state.memberInfo
@@ -166,6 +223,32 @@ export default class MemberBrief extends Component{
                 {brief && <li><h3><hr /><span>个人签名</span></h3><p>{brief}</p></li>}
                 <li><h3><hr /><span>详细地址</span></h3><p>{address}</p></li>
               </ul>
+              }
+
+              {this.state.pageIndex == 1 && <div className="myUpdates">
+                {this.state.myUpdates.length == 0 && <p style={{textAlign:"center"}}>暂时没有任何动态哦~</p>}
+                {this.state.myUpdates.map((item,index)=>{
+                  var date = new Date(item.createAt)
+                  var works =[];
+                  var imgs = item.works.split(',')
+                  var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+                  return <div key={index} className="lists">
+                      <img width="50" src={`/originImg?from=member&name=${item.phone}`} alt=""/>
+                      {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationName}</Link>发布了<Link to={`/article/${item.articleId}`}>{item.title}({item.titleType})</Link></div>}
+                      {item.works && <div>
+                        <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;在<Link to={`/works/${item.memberSpecialityId}`}>{item.specialityName}</Link>上传了新照片</div>
+                        <div className="photoLists">
+                        {imgs.map((item,index)=>{
+                          works.push(`/originImg?from=speciality&name=${item}`)
+                          return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:works,likeFunc:this.like})} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
+                        })}
+                        <Link to={`/works/${item.memberSpecialityId}`}>查看更多...</Link>
+                        </div>
+                      </div>}
+                  </div>
+                })}
+                {!this.state.ifFull && <p><button className="btn-addMore" onClick={this.addMore}>加载更多...</button></p>}
+            </div>
               }
 
               {this.state.pageIndex == 2 && <div className="specialities">{this.state.specialities.map((item,index)=>{

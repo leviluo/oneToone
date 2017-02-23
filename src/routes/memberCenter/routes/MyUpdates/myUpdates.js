@@ -90,6 +90,7 @@ export default class myUpdates extends Component {
   render () {
     return (
     <div className="myUpdates">
+        {this.state.myUpdates.length == 0 && <div style={{textAlign:"center"}}>暂时没有任何动态哦~</div>}
         {this.state.myUpdates.map((item,index)=>{
           var date = new Date(item.createAt)
           var works =[];
@@ -110,7 +111,7 @@ export default class myUpdates extends Component {
               </div>}
           </div>
         })}
-        {!this.state.ifFull && <div><button className="btn-default" onClick={this.addMore}>加载更多...</button></div>}
+        {!this.state.ifFull && <p><button className="btn-addMore" onClick={this.addMore}>加载更多...</button></p>}
     </div>
     )
   }

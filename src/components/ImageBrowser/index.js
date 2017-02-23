@@ -3,8 +3,8 @@ import { findDOMNode } from 'react-dom';
 import './ImageBrowser.scss'
 import {imgbrowser,ifliked} from './modules'
 import {connect} from 'react-redux'
-import loading from './assets/loading.gif'
 import {tipShow} from '../Tips/modules/tips'
+import loading from './asset/loading2.gif'
 
 export const imgbrowserShow = imgbrowser
 // export const isLiked = imgLiked
@@ -44,7 +44,6 @@ export default class ImageBrowser extends Component{
     ele.style.display = "none"
     document.body.style.overflow = "auto"
     document.body.style.width = 'auto'   //在打开modal之后，关闭了modal，得改为自动，网页才会自动调整大小
-    this.refs.src.src = loading
   }
 
   componentWillReceiveProps=(nextProps)=>{
@@ -65,6 +64,7 @@ export default class ImageBrowser extends Component{
       this.props.tipShow({type:"error",msg:"已经是第一张了"})
       return
     };
+    this.refs.src.src = loading
     this.setState({
       currentChoose:this.state.currentChoose - 1
     })
@@ -77,6 +77,7 @@ export default class ImageBrowser extends Component{
       this.props.tipShow({type:"error",msg:"已经是最后一张了"})
       return
     };
+    this.refs.src.src = loading
     this.setState({
       currentChoose:this.state.currentChoose + 1
     })
@@ -85,6 +86,7 @@ export default class ImageBrowser extends Component{
   }
 
   go =(e,index)=>{
+    this.refs.src.src = loading
     this.setState({
       currentChoose:index
     })

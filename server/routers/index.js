@@ -91,6 +91,8 @@ export default function routers(router){
 	router.get("/member/addLike",memberController.addLike,router.allowedMethods());
 // 删除照片
 	router.get("/member/deletePhoto",memberController.deletePhoto,fileController.deletePhoto,router.allowedMethods());
+// 获取更新信息
+	router.get("/member/getupdates",memberController.getupdates,router.allowedMethods());
 
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());

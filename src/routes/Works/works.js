@@ -157,9 +157,9 @@ export default class photos extends Component {
         </div>
       })}
     </div>
-    {!this.state.ifFull && <div style={{clear:"both",textAlign:"center",padding:"20px 0"}}>
-        <button className="btn-default" onClick={this.addMore}>加载更多...</button>
-    </div>}
+    {!this.state.ifFull && <p style={{clear:"both",textAlign:"center",padding:"20px 0"}}>
+        <button className="btn-addMore" onClick={this.addMore}>加载更多...</button>
+    </p>}
     <div style={{clear:"both"}}></div>
     <Confirm />
     </div>

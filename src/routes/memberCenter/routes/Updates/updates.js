@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import {asyncConnect} from 'redux-async-connect'
 import { tipShow } from '../../../../components/Tips/modules/tips'
-import {getMyOrganization} from './modules'
+import {getupdates,addLike} from './modules'
+import ImageBrowser,{imgbrowserShow} from '../../../../components/ImageBrowser'
 
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
@@ -19,82 +20,97 @@ import {getMyOrganization} from './modules'
 @connect(
   state => ({
     auth:state.auth,
-
     }),
-  {tipShow}
+  {tipShow,imgbrowserShow}
 )
 
 export default class updates extends Component {
 
     state = {
-      getMyOrganization:[]
+      updates:[],
+      averagenum:10,
+      currentPage:1
     }
 
     static contextTypes = {
       router: React.PropTypes.object.isRequired
     };
 
-    componentWillMount =()=>{
-     this.updateDate()
+    componentWillMount =()=>{ //正常进入页面可以直接获取到memberId
+      if (this.props.auth.memberId)this.getData(this.state.currentPage)
     }
 
-    updateDate = ()=>{
-      // getMyOrganization().then(({data})=>{
-      //   if (data.status == 200) {
-      //     this.setState({
-      //       getMyOrganization:data.data
-      //     })
-      //   }else if (data.status==600) {
-      //     this.props.dispatch({type:"AUTHOUT"})
-      //     this.context.router.push('/login')
-      //   }{
-      //     this.props.tipShow({type:'error',msg:data.msg})
-      //   }
-      // })
+    componentWillReceiveProps=()=>{ //刷新时获取memberId
+      if (this.props.auth.memberId)this.getData(this.state.currentPage)
     }
+
+    getData = (currentPage)=>{
+       getupdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+        if (data.status == 200) {
+          if (data.data.length < this.state.averagenum) {
+                this.setState({
+                    ifFull:true,
+                    updates:this.state.updates.concat(data.data)
+                })
+            }else{
+                this.setState({
+                    updates:this.state.updates.concat(data.data)
+                })
+            }
+        }else if (data.status==600) {
+          this.props.dispatch({type:"AUTHOUT"})
+          this.context.router.push('/login')
+        }{
+          this.props.tipShow({type:'error',msg:data.msg})
+        }
+      })
+    }
+
+  addMore =()=>{
+    if (this.state.ifFull) {
+        this.props.tipShow({type:"error",msg:"亲,没有更多更新了"})
+        return
+    }
+    this.setState({
+        currentPage:this.state.currentPage + 1
+    })
+    this.getData(this.state.currentPage + 1)
+  }
+
+  like =(name)=>{
+    if (!this.props.auth.memberId) {
+        this.props.tipShow({type:"error",msg:"请先登录"})
+        return
+    }
+    return addLike(name)
+  }
+
 
   render () {
     return (
-    <div className="team">
-        <div className="attendTeam">
-        {this.state.getMyOrganization.length == 0 && <div className="text-center">暂时没有任何动态~</div>}
-            {this.state.getMyOrganization.map((item,index)=>{
-              var headImg = `/originImg?name=${item.head}&from=organizations`
-              var date = new Date(item.time)
-              var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
-              var organizationName = `organizationName${item.id}`
-              var organizationBrief = `organizationBrief${item.id}`
-              var link = `/organizationsHome/${item.id}`
-              return <div className="items" key = {index}>
-                      {!this.state[item.name] && <div>{item.name}<span><Link to={link} >去社团主页</Link></span></div>}
-                      {!this.state[item.name] && <img src={headImg} />}
-
-                      <ul>
-                        {!this.state[item.name] && <li><span>所属类别:</span>{item.categoryName}</li>}
-                        {!this.state[item.name] && <li><span>创建时间:</span>{time}</li>}
-                        {!this.state[item.name] && <li><span>社团简介:</span>{item.brief}</li>}
-                        {this.state[item.name] && <li className="editLi">
-                          <canvas style={{background:`url(${headImg})`}} width="100" height="100" ></canvas>
-                          <div>
-                          <button className="btn-default modifyHead">修改社团头像<input onChange={this.modifyHead} type="file" /></button>
-                          </div>
-                          <p>修改名称</p>
-                          <div>
-                          <input defaultValue={item.name} ref={organizationName} type="text"/>
-                          </div>
-                          <p>填写简介</p>
-                          <div>
-                          <textarea defaultValue={item.brief} ref={organizationBrief} cols="30" rows="10" ></textarea>
-                          </div>
-                          <div>
-                          <button onClick={(e)=>{this.state[item.name] = false;this.setState({})}} className="btn-default">取消</button>
-                          <button onClick={(e)=>this.modifyOrganization(e,item.id,item.name)} className="submit btn-success">提交</button>
-                          </div>
-                        </li>}
-                      </ul>
-                    </div>
-            })}
-        </div>
+    <div className="updates">
+        {this.state.updates.length == 0 && <div style={{textAlign:"center"}}>暂时没有任何动态哦~</div>}
+        {this.state.updates.map((item,index)=>{
+          var date = new Date(item.createAt)
+          var works =[];
+          var imgs = item.works.split(',')
+          var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+          return <div key={index} className="lists">
+              <img width="50" src={`/originImg?from=member&name=${item.phone}`} alt=""/>
+              {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationName}</Link>发布了<Link to={`/article/${item.articleId}`}>{item.title}({item.titleType})</Link></div>}
+              {item.works && <div>
+                <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;在<Link to={`/works/${item.memberSpecialityId}`}>{item.specialityName}</Link>上传了新照片</div>
+                <div className="photoLists">
+                {imgs.map((item,index)=>{
+                  works.push(`/originImg?from=speciality&name=${item}`)
+                  return <div key={index} onClick={(e)=>this.props.imgbrowserShow({currentChoose:index,imgs:works,likeFunc:this.like})} style={{backgroundImage:`url(/img?from=speciality&name=${item})`}}></div>
+                })}
+                <Link to={`/works/${item.memberSpecialityId}`}>查看更多...</Link>
+                </div>
+              </div>}
+          </div>
+        })}
+        {!this.state.ifFull && <p><button className="btn-addMore" onClick={this.addMore}>加载更多...</button></p>}
     </div>
     )
   }
