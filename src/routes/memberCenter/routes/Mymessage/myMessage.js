@@ -71,6 +71,7 @@ export default class myMessage extends Component {
     return (
     <div>
       <div className="messageContent">
+        {this.state.items.length == 0 && <div className="text-center">您还没有收到任何私信耶~</div>}
         {this.state.items.map((item,index)=>{
           var headImg = `/originImg?from=member&name=${item.phone}`
           var imgUrl = item.imgUrl ? `/img?from=chat&name=${item.imgUrl}` : ''

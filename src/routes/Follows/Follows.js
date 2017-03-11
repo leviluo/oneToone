@@ -179,7 +179,7 @@ export default class follows extends Component {
         })}
         </div>
         <p style={{clear:"both",textAlign:"center"}}>
-              <button className="btn-default" onClick={this.addMore} >加载更多...</button>
+              <button className="btn-addMore" onClick={this.addMore} >加载更多...</button>
         </p>
     </div>
     )
