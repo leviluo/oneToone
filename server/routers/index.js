@@ -40,6 +40,10 @@ export default function routers(router){
 	router.get("/public/getFans",publicController.getFans,router.allowedMethods());
 // 获取作品页面的会员信息
 	router.get("/public/getMemberInfoWork",publicController.getMemberInfoWork,router.allowedMethods());
+// 根据地理位置获取所有的图片动态
+	router.get("/public/getPhotoUpdates",publicController.getPhotoUpdates,router.allowedMethods());
+// 根据地理位置获取所有的文章动态
+	router.get("/public/getTitleUpdates",publicController.getTitleUpdates,router.allowedMethods());
  //上传头像
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
  // 图片浏览器中图片是否点赞
@@ -76,7 +80,6 @@ export default function routers(router){
 	router.get("/member/followOutOne",memberController.followOutOne,router.allowedMethods());
 // 动态中的图片点赞功能
 	router.get("/member/addLikeByName",memberController.addLikeByName,router.allowedMethods());
-
 // 计算多少未读消息
 	router.get("/member/countMessage",memberController.countMessage,router.allowedMethods());
 // 计算多少未读通知
@@ -93,7 +96,6 @@ export default function routers(router){
 	router.get("/member/deletePhoto",memberController.deletePhoto,fileController.deletePhoto,router.allowedMethods());
 // 获取更新信息
 	router.get("/member/getupdates",memberController.getupdates,router.allowedMethods());
-
 // 添加新社团
 	router.post("/organizations/addOrganization",organizationController.addOrganization,fileController.uploadOrganizationImg,router.allowedMethods());
 // 修改社团信息

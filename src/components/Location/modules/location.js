@@ -24,7 +24,7 @@ export function fetchLocation () {
     fetchJsonp('http://api.map.baidu.com/location/ip?ak=W6TiQkinV02e8UGbIPFqEZMzwWB3e797&callback=JSON_CALLBACK&coor=bd09ll').then(function(response) {
     return response.json()
     }).then(function(data) {
-      dispatch(receiveLocation(data))
+      dispatch(receiveLocation(data.content.address))
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -32,7 +32,7 @@ export function fetchLocation () {
 }
 export function modifyLocation(city) {
   return (dispatch, getState) => {
-      dispatch(receiveLocation({content:{address:city}}))
+      dispatch(receiveLocation(city))
   }
 }
 
@@ -45,7 +45,7 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: true})
   },
   [RECEIVE_LOCATION]: (state, action) => {
-    return ({...state, fetching: false, text:action.payload,isloaded:true})
+    return ({...state, fetching: false, text:[action.payload],isloaded:true})
   }
 }
 
@@ -54,7 +54,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 export const initialState = {
   fetching: false,
-  text: {},
+  text:[],
   isloaded:false
 }
 export default function (state = initialState, action) {

@@ -33,7 +33,7 @@ export default class Location extends Component{
   }
 
   chooseCity=(e,item)=>{
-    this.props.modifyLocation(item)
+    this.props.modifyLocation(item + "市")
     var ele = document.getElementById('locationCities')
     ele.setAttribute('class',"")
     ele.style.display="none"
@@ -47,7 +47,7 @@ export default class Location extends Component{
 
   render(){
     const {mylocation} = this.props
-    let address = mylocation.text.content ? mylocation.text.content.address :'';
+    let address = mylocation.text[0];
     return(
       <span className="location">
        <span><i className="fa fa-map-marker"></i>&nbsp;[{address}]&nbsp;</span>

@@ -49,7 +49,7 @@ export default class Categories extends React.Component{
 
     initItems =(props)=>{
         let speciality = props.location.query.childCatelogue ? props.location.query.childCatelogue :props.location.query.parentCatelogue
-        let address = props.mylocation.text.content ? props.mylocation.text.content.address :'';
+        let address = props.mylocation.text[0];
         if (props.location.query.childCatelogue) {   //从子条目进入
             this.setState({
                 speciality:speciality,

@@ -31,7 +31,7 @@ CREATE TABLE `memberupdates` (
   `memberId` int unsigned,
   `articleId` int unsigned,
   `memberSpecialityId` int unsigned,
-  `works` varchar(300) default '',
+  `works` varchar(300) not null default '',
   `createAt` datetime default now(),
   PRIMARY KEY  (`id`)
 );
