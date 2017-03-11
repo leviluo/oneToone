@@ -3,7 +3,7 @@ import './organization.scss'
 // import {getSpecialities} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
-// import {tipShow} from '../../components/Tips/modules/tips'
+import {tipShow} from '../../components/Tips/modules/tips'
 // import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 import {OrganizationsSortByHot,getUpdates} from './modules'
 import {Link} from 'react-router'
@@ -13,7 +13,7 @@ import {Link} from 'react-router'
     auth:state.auth,
     mylocation:state.mylocation
   }),
-{})
+{tipShow})
 export default class MemberBrief extends Component{
 
   state = {
@@ -42,7 +42,6 @@ export default class MemberBrief extends Component{
   }
 
   getData = (currentPage,location)=>{
-      if (!this.props.auth.memberId) return
        getUpdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`,location).then(({data})=>{
         if (data.status == 200) {
           if (data.data.length < this.state.averagenum) {
@@ -55,10 +54,7 @@ export default class MemberBrief extends Component{
                     updates:this.state.updates.concat(data.data)
                 })
             }
-        }else if (data.status==600) {
-          this.props.dispatch({type:"AUTHOUT"})
-          this.context.router.push('/login')
-        }{
+        }else{
           this.props.tipShow({type:'error',msg:data.msg})
         }
       })

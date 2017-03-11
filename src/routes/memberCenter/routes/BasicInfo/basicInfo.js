@@ -558,7 +558,7 @@ export default class BasicInfo extends Component {
                     </div>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
-                  <Select header="选择专业" optionsItems={this.items} ref="speciality" />
+                  <Select optionsItems={this.items} ref="speciality" />
                   <br/>
                   <br/>
                   <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" />

@@ -36,11 +36,40 @@ header{
         }
         .headerRight {
             float: right;
-            display:block;
+            display:inline-block;
             height:45px;
+            input{
+                width:300px;
+                background:#fff;
+                border:1px solid #e5e5e5;
+                height:35px;
+                &:focus{
+                    border:1px solid #1c86ee;
+                    
+                }
+            }
+            button{
+                height:35px;
+                margin-top:5px;
+                border:none;
+                border-radius:0;
+                background:#e5e5e5;
+                &:hover{
+                background:#ccc;
+                }
+            }
+            select{
+                height:35px;
+                border:1px solid #e5e5e5;
+                border-right:none;
+                width:80px;
+                background:#efefef;
+                border-radius:0;
+            }
             span{
+                margin-left:15px;
                 float:right;
-                color: #1C86EE;
+                color:#1C86EE;
             }
             a {
                 float:right;
