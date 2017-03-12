@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
-// import { tipResult } from './modules/Tips';
+import { tipShow as tipOpen } from './modules/tips';
 
 import "./Tips.scss"
 
@@ -69,4 +69,6 @@ export default class Tip extends Component {
         )
     }
 }
+
+export const  tipShow = tipOpen
 

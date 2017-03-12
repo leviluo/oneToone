@@ -13,6 +13,7 @@ import article from './Article'
 import works from './Works'
 import photoList from './PhotoList'
 import follows from './Follows'
+import QueryResult from './QueryResult'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -33,7 +34,8 @@ export const createRoutes = (store) => ({
     article(store),
     works(store),
     photoList(store),
-    follows(store)
+    follows(store),
+    QueryResult(store)
   ]
 })
 

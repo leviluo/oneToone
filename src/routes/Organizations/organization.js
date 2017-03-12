@@ -3,24 +3,25 @@ import './organization.scss'
 // import {getSpecialities} from './modules/memberBrief'
 import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
-import {tipShow} from '../../components/Tips/modules/tips'
+import {tipShow} from '../../components/Tips'
 // import ImageBrowser,{imgbrowserShow} from '../../components/ImageBrowser'
 import {OrganizationsSortByHot,getUpdates} from './modules'
 import {Link} from 'react-router'
+import PageNavBar,{pageNavInit} from '../../components/PageNavBar'
 
 @connect(
   state=>({
     auth:state.auth,
-    mylocation:state.mylocation
+    mylocation:state.mylocation,
+    pagenavbar:state.pagenavbar
   }),
-{tipShow})
+{tipShow,pageNavInit})
 export default class MemberBrief extends Component{
 
   state = {
     organizations:[],
     updates:[],
-    averagenum:10,
-    currentPage:1
+    averagenum:10
   }
 
   componentWillMount =()=>{
@@ -29,7 +30,9 @@ export default class MemberBrief extends Component{
         organizations : data.data
       })
     })
-    if(this.props.mylocation.text[0])this.getData(this.state.currentPage,this.props.mylocation.text[0])
+    if(this.props.mylocation.text[0]){
+      this.props.pageNavInit(this.getData)
+    }
   }
 
   componentWillReceiveProps=(nextProps)=>{ //刷新时获取memberId
@@ -38,23 +41,21 @@ export default class MemberBrief extends Component{
           updates:[]
         })
       }
-      if(nextProps.mylocation.text[0])this.getData(this.state.currentPage,nextProps.mylocation.text[0])
+      if(nextProps.mylocation.text[0] && !this.state.isloaded)this.props.pageNavInit(this.getData)
   }
 
-  getData = (currentPage,location)=>{
-       getUpdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`,location).then(({data})=>{
+  getData = (currentPage)=>{
+      this.setState({
+        isloaded:true
+      })
+      return getUpdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`,this.props.mylocation.text[0]).then(({data})=>{
         if (data.status == 200) {
-          if (data.data.length < this.state.averagenum) {
                 this.setState({
-                    ifFull:true,
-                    updates:this.state.updates.concat(data.data)
+                    updates:data.data
                 })
-            }else{
-                this.setState({
-                    updates:this.state.updates.concat(data.data)
-                })
+                return Math.ceil(data.count/this.state.averagenum)
             }
-        }else{
+        else{
           this.props.tipShow({type:'error',msg:data.msg})
         }
       })
@@ -68,7 +69,6 @@ export default class MemberBrief extends Component{
         <Helmet title="社团中心" />
         <div className="organizationTop">
             <div>一一社团</div>
-
         </div>
         <div className="organizationContent">
             <div className="left">
@@ -83,7 +83,7 @@ export default class MemberBrief extends Component{
                             {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;<Link to={`/memberBrief/${item.memberId}`}>{item.nickname}</Link>在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationName}</Link>发布了<Link to={`/article/${item.articleId}`}>{item.title}({item.titleType})</Link></div>}
                         </div>
                       })}
-                      {!this.state.ifFull && <p><button className="btn-addMore" onClick={this.addMore}>加载更多...</button></p>}
+                      <PageNavBar />
                   </div>
             </div>
             <div className="right">
@@ -93,7 +93,7 @@ export default class MemberBrief extends Component{
                     var headImg = `/originImg?from=organizations&name=${item.head}`
                     var link = `/organizationsHome/${item.id}`
                     return <Link to={link} key={index}>
-                              <img src={headImg} width="30" alt="" />
+                              <img src={headImg} width="50" alt="" />
                               {item.name}
                             </Link>
                   })}

@@ -5,11 +5,11 @@ import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getArticleList} from './modules'
 import {Link} from 'react-router'
-import {tipShow} from '../../components/Tips/modules/tips'
 // import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
 import PageNavBar,{pageNavInit} from '../../components/PageNavBar'
 import Modal,{modalShow,modalHide} from '../../components/Modal'
 import Textarea from '../../components/Textarea'
+import tipShow from '../../components/Tips'
 
 @connect(
   state=>({
@@ -50,10 +50,14 @@ export default class OrganizationsHome extends Component{
 
   activityData = (currentPage)=>{
     return getArticleList(this.props.params.id,this.state.type,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
+      if (data.status == 200) { 
       this.setState({
           Activities:data.data
         })
       return Math.ceil(data.count/this.state.averagenum)
+      }else{
+       this.props.tipShow({type:'error',msg:data.msg})
+      }
     })
   }
 

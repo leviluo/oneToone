@@ -5,12 +5,11 @@ import Location from '../Location'
 import {connect} from 'react-redux'
 import './Header.scss'
 import 'font-awesome/scss/font-awesome.scss'
-import Select from '../Select'
+import {tipShow} from '../Tips/modules/tips'
 
-const optionsItems = [{key:1,value:"用户"},{key:2,value:"社团"},{key:3,value:"文章"}]
 @connect(
   state=>({auth:state.auth}),
-{loginOut,isAuth})
+{loginOut,isAuth,tipShow})
 export default class Header extends Component{
 
   static contextTypes = {
@@ -25,6 +24,10 @@ export default class Header extends Component{
     this.props.loginOut(this.context.router);
   }
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   render(){
     // console.log(this.props)
     const{auth} = this.props;
@@ -35,15 +38,15 @@ export default class Header extends Component{
             <h1 ><IndexLink to="/" className="brand">OneOne</IndexLink></h1>
             <h4 >各个身怀绝技</h4><Location />
           </span>
-              <Link className="item pull-left" to="/"><span>首页</span></Link>
-              <Link className="item pull-left" to="/Organization"><span>社团</span></Link>
+              <Link className="item pull-left" to="/"><strong><i className="fa fa-home"></i>&nbsp;首页</strong></Link>
+              <Link className="item pull-left" to="/Organization"><strong><i className="fa fa-users"></i>&nbsp;社团</strong></Link>
             <div className="headerRight">
-             <Select optionsItems={optionsItems} defaultValue="1" /><input type="text"/><button className="btn-default"><i className="fa fa-search"></i></button>
              {!auth.isAuth && <span><Link to='/login'>登录</Link>
              <Link to='/register'>注册</Link>
              </span>}
              {auth.isAuth && <span><a onClick={this.loginOut}>退出</a>
-             <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname} 的个人中心</Link></span>}
+             <Link to="/memberCenter"><i className="fa fa-user-circle"></i>&nbsp;{auth.nickname}的个人中心</Link></span>}
+             <Link to='/queryresult'><i className="fa fa-search"></i></Link>
              </div>
           </nav>
         </header>

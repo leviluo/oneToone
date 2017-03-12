@@ -113,30 +113,58 @@ const publicController = {
       this.body = {status:200,data:result}
     },
     getMyUpdates:async function(){
-        if (!this.request.query.id || !this.request.query.limit) {
+        var id = this.request.query.id
+        var limit = this.request.query.limit
+        if (!id || !limit) {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
 
-        var result = await sqlStr("select mu.id,m.phone,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where mu.memberId = ? order by mu.id desc limit "+this.request.query.limit,[this.request.query.id])
+        var result = await sqlStr("select mu.id,m.phone,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where mu.memberId = ? order by mu.id desc limit "+limit,[id])
 
         this.body = {status:200,data:result}
     },
     getPhotoUpdates:async function(){
-        if (!this.request.query.location) {
+        var location = this.request.query.location
+        if (!location) {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select mu.id,m.nickname,s.name as specialityName,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join member as m on m.id = mu.memberId where m.location = ? and mu.works != '' order by mu.id desc limit "+this.request.query.limit,[this.request.query.location])
+        var result = await sqlStr("select mu.id,m.nickname,s.name as specialityName,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.works,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join member as m on m.id = mu.memberId where m.location = ? and mu.works != '' order by mu.id desc limit "+this.request.query.limit,[location])
         this.body = {status:200,data:result}
     },
-    getTitleUpdates:async function(){
-        if (!this.request.query.location) {
+    getArticleUpdates:async function(){
+        var location = this.request.query.location
+        if (!location) {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select mu.id,m.nickname,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where m.location = ? and mu.articleId != '' order by mu.id desc limit "+this.request.query.limit,[this.request.query.location])
-        this.body = {status:200,data:result}
+        var result = await sqlStr("select mu.id,m.nickname,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where m.location = ? and mu.articleId != '' order by mu.id desc limit "+this.request.query.limit,[location])
+        
+        var count = await sqlStr("select count(mu.id) as count from memberupdates as mu left join member as m on m.id = mu.memberId where m.location = ? and mu.articleId != '' ",[location])
+
+        this.body = {status:200,data:result,count:count[0].count}
+    },
+    query:async function(){
+      var type = this.request.query.type;
+      var queryStr = this.request.query.queryStr;
+      var type = this.request.query.type;
+      if (!type || !queryStr) {
+        this.body = { status: 500, msg: "缺少参数" }
+        return
+      }
+      if (queryStr.length < 1 || queryStr.length > 50) {
+        this.body = { status: 500, msg: "字符串格式不正确" }
+        return
+      }
+      if (type == 1) {  //搜索用户
+        var result = await sqlStr("select id,nickname,location,head,sex,brief from member where phone like ? or nickname like ?",[`%${queryStr}%`,`%${queryStr}%`])
+      }else if (type == 2) {  //搜索社团
+        var result = await sqlStr("select o.name,o.time,o.head,o.id,m.id as memberId,m.nickname from organizations as o left join member as m on m.id = o.createById where o.name like ?",[`%${queryStr}%`])
+      }else if(type == 3){   //搜索文章
+        var result = await sqlStr("select a.id,a.memberId,a.title,a.updatedAt,a.type,a.organizationsId,m.nickname,o.name from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.title like ?",[`%${queryStr}%`])
+      }
+      this.body = {status:200,data:result}
     }
 }
 export default publicController;

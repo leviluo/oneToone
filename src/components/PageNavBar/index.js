@@ -23,7 +23,6 @@ export default class PageNavBar extends Component {
     }
 
     componentWillMount=()=>{
-        console.log(this.props.pagenavbar)
         if (typeof this.props.pagenavbar.update != 'function') return
         this.props.pagenavbar.update(1).then((nums)=>{
             this.setState({

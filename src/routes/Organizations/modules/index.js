@@ -5,5 +5,5 @@ export function OrganizationsSortByHot(id) {
 }
 
 export function getUpdates(limit,location){ 
-	return axios.get(`/public/getTitleUpdates?limit=${limit}&location=${location}`)
+	return axios.get(`/public/getArticleUpdates?limit=${limit}&location=${location}`)
 }

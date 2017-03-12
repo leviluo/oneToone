@@ -73,6 +73,7 @@ webpackConfig.module.loaders = [{
 // We use cssnano with the postcss loader, so we tell
 // css-loader not to duplicate minimization.
 const BASE_CSS_LOADER = 'css?sourceMap&-minimize'
+// const BASE_CSS_LOADER = 'css?sourceMap&-minimize?modules&localIdentName=[path][name]---[local]---[hash:base64:5]'
 
 webpackConfig.module.loaders.push({
   test: /\.scss$/,

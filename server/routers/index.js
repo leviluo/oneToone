@@ -43,7 +43,9 @@ export default function routers(router){
 // 根据地理位置获取所有的图片动态
 	router.get("/public/getPhotoUpdates",publicController.getPhotoUpdates,router.allowedMethods());
 // 根据地理位置获取所有的文章动态
-	router.get("/public/getTitleUpdates",publicController.getTitleUpdates,router.allowedMethods());
+	router.get("/public/getArticleUpdates",publicController.getArticleUpdates,router.allowedMethods());
+// 查询信息
+	router.get("/public/query",publicController.query,router.allowedMethods());
  //上传头像
 	router.post("/member/HeadImg",fileController.uploadHeadImg,router.allowedMethods());
  // 图片浏览器中图片是否点赞
