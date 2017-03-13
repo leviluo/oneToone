@@ -5,6 +5,13 @@
 	margin-bottom:10px;
 	color:#333;
     box-shadow:1px 1px 4px 1px #e5e5e5;
+    a{
+        color:#37a;
+        padding:3px;
+        &:hover{
+            background:#e5e5e5
+        }
+     }
 	&>nav{
 		text-align:center;
 		background:#f0f8ff;
@@ -45,7 +52,25 @@
             }
 	}
 	section{
-		padding-left:30px;
-		
+		padding:0 30px;
+		.member{
+            height:125px;
+            margin:10px 0;
+            img{
+                border:5px solid #efefef;
+                border-radius:60px;
+                float:left;
+            }
+            ul{
+                float:left;
+                margin-top:0;
+                margin-left:0;
+                li{
+                    height:30px;
+                    line-height:30px;
+                }
+            }
+            border-bottom:1px dashed #e5e5e5;
+        }
 	}
 }

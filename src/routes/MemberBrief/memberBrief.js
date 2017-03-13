@@ -251,7 +251,9 @@ export default class MemberBrief extends Component{
             </div>
               }
 
-              {this.state.pageIndex == 2 && <div className="specialities">{this.state.specialities.map((item,index)=>{
+              {this.state.pageIndex == 2 && <div className="specialities">
+              {this.state.specialities.length == 0 && <p style={{textAlign:"center"}}>暂时没有专长哦~</p>}
+              {this.state.specialities.map((item,index)=>{
                         var linkPhotos = `/works/${item.id}`
                           return <ul key={index}>
                             <li><b>{item.speciality}</b></li>

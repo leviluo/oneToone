@@ -178,9 +178,9 @@ export default class follows extends Component {
           </div>
         })}
         </div>
-        <p style={{clear:"both",textAlign:"center"}}>
+        {!this.state.ifFull && <p style={{clear:"both",textAlign:"center"}}>
               <button className="btn-addMore" onClick={this.addMore} >加载更多...</button>
-        </p>
+        </p>}
     </div>
     )
   }

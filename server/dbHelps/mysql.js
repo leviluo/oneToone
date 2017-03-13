@@ -60,7 +60,7 @@ exports.insert = function(tablename,items){
 //自定义sql
 exports.sqlStr = function(sqlText,items){
     var params = items ? items : []
-    // console.log(sqlText)
+    console.log(sqlText)
     return new Promise(function(resolve, reject){
         execQuery(sqlText,params,function(err, rows){
             if(err){
