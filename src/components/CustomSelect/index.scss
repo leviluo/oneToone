@@ -1,0 +1,47 @@
+#customeselect{
+	position:relative;
+	label{
+		cursor:pointer;
+		width:150px;
+		height:40px;
+		display:inline-block;
+		line-height:40px;
+		background:#efefef;
+		padding-left:10px;
+		&:hover{
+			background:#e5e5e5;
+		}
+	}
+	b{
+		cursor:pointer;
+		color:#666;
+		position:absolute;
+		left:130px;
+		top:10px;
+	}
+	&:click{
+		color:red;
+	}
+	&>ul{
+		padding:10px;
+		position:absolute;
+		top:26px;
+		width:calc(100% - 22px);
+		background:#fff;
+		border:1px solid #e5e5e5;
+		&>li{
+			height:40px;
+			line-height:40px;
+			&>ul{
+				li{
+					float:left;
+					width:60px;
+					a:hover{
+						background:#efefef
+					}
+				}
+			}
+		}
+	}
+	user-select:none;
+}

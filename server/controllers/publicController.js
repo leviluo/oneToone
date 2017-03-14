@@ -139,9 +139,8 @@ const publicController = {
             this.body = { status: 500, msg: "缺少参数" }
             return
         }
-        var result = await sqlStr("select mu.id,m.nickname,if(a.type = 0,'活动','咨询') as titleType,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where m.location = ? and mu.articleId != '' order by mu.id desc limit "+this.request.query.limit,[location])
-        
-        var count = await sqlStr("select count(mu.id) as count from memberupdates as mu left join member as m on m.id = mu.memberId where m.location = ? and mu.articleId != '' ",[location])
+        var result = await sqlStr("select mu.id,m.nickname,a.title,o.name as organizationName,s.name as specialityName,a.organizationsId,mu.memberSpecialityId,mu.articleId,mu.memberId,mu.createAt from memberupdates as mu left join memberSpeciality as ms on ms.id = mu.memberSpecialityId left join specialities as s on s.id = ms.specialitiesId left join article as a on a.id = mu.articleId left join organizations as o on o.id = a.organizationsId left join member as m on m.id = mu.memberId where a.type = 0 and m.location = ? and mu.articleId != '' order by mu.id desc limit "+this.request.query.limit,[location])
+        var count = await sqlStr("select count(mu.id) as count from memberupdates as mu left join member as m on m.id = mu.memberId left join article as a on a.id = mu.articleId where m.location = ? and a.type = 0 and mu.articleId != '' ",[location])
 
         this.body = {status:200,data:result,count:count[0].count}
     },
@@ -162,10 +161,10 @@ const publicController = {
         var result = await sqlStr("select id,nickname,location,phone,sex,brief from member where phone like ? or nickname like ? limit "+limit,[`%${queryStr}%`,`%${queryStr}%`])
         var count = await sqlStr("select count(id) as count from member where phone like ? or nickname like ? ",[`%${queryStr}%`,`%${queryStr}%`])
       }else if (type == 2) {  //搜索社团
-        var result = await sqlStr("select o.name,o.time,o.head,o.id,m.id as memberId,m.nickname from organizations as o left join member as m on m.id = o.createById where o.name like ? limit "+limit,[`%${queryStr}%`])
+        var result = await sqlStr("select o.name,o.head,o.id,s.name as specialityName from organizations as o left join specialities as s on s.id = o.categoryId where o.name like ? limit "+limit,[`%${queryStr}%`])
         var count = await sqlStr("select count(id) as count from organizations where name like ?",[`%${queryStr}%`])
       }else if(type == 3){   //搜索文章
-        var result = await sqlStr("select a.id,a.memberId,a.title,a.updatedAt,a.type,a.organizationsId,m.nickname,o.name from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.title like ? limit "+limit,[`%${queryStr}%`])
+        var result = await sqlStr("select a.id,a.memberId,a.title,a.createdAt,o.name as organizationsName,if(a.type = 0,'活动','咨询') as titleType,a.organizationsId,m.nickname from article as a left join member as m on m.id = a.memberId left join organizations as o on o.id = a.organizationsId where a.title like ? order by a.id desc limit "+limit,[`%${queryStr}%`])
         var count = await sqlStr("select count(id) as count from article where title like ? ",[`%${queryStr}%`])
       }
       this.body = {status:200,data:result,count:count[0].count}

@@ -84,6 +84,10 @@ export default class Categories extends React.Component{
         })
     }
 
+    componentWillUnmount =()=>{
+        this.props.pageNavInit(null)
+    }
+
     updateParentSpecialityData = (currentPage)=>{
         return fetchItems({address:this.state.address,parentSpeciality:this.state.speciality,limit:`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`}).then(({data})=>{
             if (data.status == 200) {

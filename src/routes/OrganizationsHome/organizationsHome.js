@@ -48,6 +48,10 @@ export default class OrganizationsHome extends Component{
     })
   }
 
+  componentWillUnmount =()=>{
+    this.props.pageNavInit(null)
+  }
+
   activityData = (currentPage)=>{
     return getArticleList(this.props.params.id,this.state.type,`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`).then(({data})=>{
       if (data.status == 200) { 

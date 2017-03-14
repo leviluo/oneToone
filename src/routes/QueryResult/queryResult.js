@@ -40,7 +40,6 @@ export default class queryResult extends Component{
           this.setState({ 
               results:data.data 
           }) 
-          console.log(data.data)
           return Math.ceil(data.count/this.state.averagenum)
         }else{ 
           this.props.tipShow({type:'error',msg:data.msg})
@@ -48,10 +47,14 @@ export default class queryResult extends Component{
     })
   }
 
+  componentWillUnmount =()=>{
+    this.props.pageNavInit(null)
+  }
+
   render(){
           console.log(this.state.results)
     return(
-      <article className="queryResult">
+      <article id="queryResult">
           <Helmet title="搜索结果"/>
           <nav>
           	   <Select optionsItems={optionsItems} ref="queryType" defaultValue="1" /><input ref="queryStr" type="text"/><button className="btn-default" onClick={this.query}><i className="fa fa-search"></i></button>
@@ -70,13 +73,20 @@ export default class queryResult extends Component{
                       </ul>
                     </div>
                 }else if (this.state.type == 2) {
-                    return <div key={index}>
-
+                    return <div key={index} className="member">
+                          <img src={`/originImg?from=organizations&name=${item.head}`} alt=""/>
+                        <ul>
+                            <li><Link to={`/organizationsHome/${item.id}`}>{item.name}</Link></li>
+                            <li>{item.specialityName}</li>
+                        </ul>
                     </div>
                 }else{
-                    return <div key={index}>
-
-                    </div>
+                        var date = new Date(item.createdAt)
+                        var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
+                    return <div key={index} className="article">
+                            <img width="50" src={`/originImg?from=member&name=${item.phone}`} alt=""/>
+                            {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;<Link to={`/memberBrief/${item.memberId}`}>{item.nickname}</Link>在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationsName}</Link>发布了<Link to={`/article/${item.id}`}>{item.title}({item.titleType})</Link></div>}
+                        </div>
                 }
              })}
              <PageNavBar />

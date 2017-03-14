@@ -23,6 +23,7 @@ export default class PageNavBar extends Component {
     }
 
     componentWillMount=()=>{
+        console.log("aaa")
         if (typeof this.props.pagenavbar.update != 'function') return
         this.props.pagenavbar.update(1).then((nums)=>{
             this.setState({
@@ -32,6 +33,7 @@ export default class PageNavBar extends Component {
     }
 
     componentWillReceiveProps =(nextprops)=>{     //当有多个数据源，更新数据源时，更新
+     console.log("bbbb")
         if (typeof nextprops.pagenavbar.update != 'function') return
             nextprops.pagenavbar.update(1).then((nums)=>{
             this.setState({

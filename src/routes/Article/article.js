@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import {connect} from 'react-redux'
 // import {getBasicInfo,attendOrganization,getMembers,quitOrganization,getActivities} from './modules'
 import {Link} from 'react-router'
-import {tipShow} from '../../components/Tips/modules/tips'
+import {tipShow} from '../../components/Tips'
 import Confirm,{confirmShow} from '../../components/Confirm'
 import {pageNavInit} from '../../components/PageNavBar/modules/pagenavbar'
 import PageNavBar from '../../components/PageNavBar'
@@ -153,7 +153,7 @@ export default class Article extends Component{
     var time = `${date.getFullYear()} ${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
     var editLink = `/postArticle/${this.props.params.id}/edit`
       return(
-      <div className="article">
+      <div id="article">
         <Helmet title="文章详情" />
         <div>
           <button className="btn-default" onClick={()=>window.history.go(-1)} href="javascript.void(0)">返回 <i className="fa fa-mail-reply"></i></button>

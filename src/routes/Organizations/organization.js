@@ -44,6 +44,10 @@ export default class MemberBrief extends Component{
       if(nextProps.mylocation.text[0] && !this.state.isloaded)this.props.pageNavInit(this.getData)
   }
 
+  componentWillUnmount =()=>{
+    this.props.pageNavInit(null)
+  }
+
   getData = (currentPage)=>{
       this.setState({
         isloaded:true
@@ -80,7 +84,7 @@ export default class MemberBrief extends Component{
                         var time = `${date.getFullYear()}-${(date.getMonth()+1)< 10 ? '0'+(date.getMonth()+1) :(date.getMonth()+1) }-${date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`
                         return <div key={index} className="lists">
                             <img width="50" src={`/originImg?from=member&name=${item.phone}`} alt=""/>
-                            {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;<Link to={`/memberBrief/${item.memberId}`}>{item.nickname}</Link>在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationName}</Link>发布了<Link to={`/article/${item.articleId}`}>{item.title}({item.titleType})</Link></div>}
+                            {item.title && <div className="header"><span className="lightColor smallFont">{time}</span>&nbsp;&nbsp;&nbsp;<Link to={`/memberBrief/${item.memberId}`}>{item.nickname}</Link>在<Link to={`/organizationsHome/${item.organizationsId}`}>{item.organizationName}</Link>发布了<Link to={`/article/${item.articleId}`}>{item.title}</Link></div>}
                         </div>
                       })}
                       <PageNavBar />
