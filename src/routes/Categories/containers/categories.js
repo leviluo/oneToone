@@ -175,7 +175,8 @@ export default class Categories extends React.Component{
                             <td>类别:</td>
                             <td><ul id="categoryItems"><li><a onClick={this.allCategory} name={this.props.location.query.parentCatelogue}>全部</a></li>{catelogues.text.map((item,index)=>{
                                 if (item.parentCatelogue == location.query.parentCatelogue) {
-                                    return <li key={index}><a onClick={()=>this.getoneCategory(item.childCatelogue)} name={item.childCatelogue}>{item.childCatelogue}</a></li>
+                                    return <div key={index}>{item.childCatelogue.map((item,index)=><li key={index}><a onClick={()=>this.getoneCategory(item)} name={item}>{item}</a></li>
+                                    )}</div>
                                 }
                             })}</ul></td>
                         </tr>

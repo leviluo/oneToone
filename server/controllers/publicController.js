@@ -1,9 +1,26 @@
 import { sqlStr } from '../dbHelps/mysql'
 
+function merge(result,host,merge){
+  var items = []
+  go:
+    for (var i = 0; i < result.length; i++) {
+      for (var j = 0; j < items.length; j++) {
+        if(items[j][host] == result[i][host]){
+          items[j][merge].push(result[i][merge])
+          continue go
+        }
+    }
+    result[i][merge] = [result[i][merge]]
+    items.push(result[i])
+  }
+  return items
+}
+
 const publicController = {
     catelogues:async function(next){
         var result = await sqlStr("select specialities.name as childCatelogue,specialityCategory.name as parentCatelogue from specialities left join specialityCategory on specialityCategory.id = specialities.categoryId")
-        this.body = {status:200,data:result}
+        var items = merge(result,'parentCatelogue','childCatelogue')
+        this.body = {status:200,data:items}
     },
     items:async function(next){
         if (!this.request.body.address || !this.request.body.limit) {

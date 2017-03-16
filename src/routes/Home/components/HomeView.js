@@ -96,22 +96,15 @@ export default class HomeView extends React.Component{
   }
 
     render(){   
-
-        let _object = {};
-        this.cateItems = [];
-        this.props.catelogues.text.map(function(item,index){
-            if (!_object[item.parentCatelogue]) {_object[item.parentCatelogue]=[]}
-             _object[item.parentCatelogue].push(<li key={index}><Link to="/categories/" query={{parentCatelogue:item.parentCatelogue,childCatelogue:item.childCatelogue}}>{item.childCatelogue}</Link></li>)
-        })
-        for(var key in _object){
-            this.cateItems.push(<li key={key}><Link to="/categories/" query={{parentCatelogue:key}}>{key}<span className="fa fa-angle-right"></span></Link><div className="categoryDetails"><ul>{_object[key]}</ul></div></li>)
-        }
-
         return <div className="home">
         <Helmet title='首页' />
         <div className="homeTop">
         	<div className="categoryContent">
-            	<ul>{this.cateItems.map((item,index)=>item)} 
+            	<ul>{this.props.catelogues.text.map((item,index)=>{
+                return <li key={index}>{item.parentCatelogue}<span className="fa fa-angle-right"></span><div className="categoryDetails"><ul>{item.childCatelogue.map((itemm,index)=>
+                  <li key={index}><Link to="/categories/" query={{parentCatelogue:item.parentCatelogue,childCatelogue:itemm}}>{itemm}</Link></li>
+                  )}</ul></div></li>
+              })} 
             	</ul>
             </div>
         	<Banner items={imgItems}/>

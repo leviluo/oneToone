@@ -71,3 +71,17 @@ exports.sqlStr = function(sqlText,items){
         })
     });
 }
+
+//test
+exports.testStr = function(sqlText,items){
+    var params = items ? items : []
+    return new Promise(function(resolve, reject){
+        execQuery({sql:sqlText,nestTables:true},params,function(err, rows){
+            if(err){
+                reject(err);
+            }else{
+                resolve(rows);
+            }
+        })
+    });
+}
