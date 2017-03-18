@@ -272,16 +272,25 @@
 				}
 			}
 				.addSpeciality{
-					width:600px;
-					margin:0 auto;
-					.addSubmit{
-						clear:both;
-						text-align:center;
-						margin-top:20px;
-						height:40px;
-						button{
-							width:120px;
-			                margin:0 20px;
+					table{
+					height:300px;
+						width:600px;
+						margin: 0 auto;
+						tbody{
+							tr{
+								td{
+									&:first-of-type{
+										strong{
+											padding:5px;
+											display:inline-block;
+											width:100px;
+										}
+									}
+									textarea{
+										width:100%;
+									}
+								}
+							}
 						}
 					}
 				}

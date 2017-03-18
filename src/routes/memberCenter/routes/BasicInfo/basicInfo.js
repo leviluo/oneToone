@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Select from '../../../../components/Select'
+// import Select from '../../../../components/Select'
 import Textarea from '../../../../components/Textarea'
 import './basicInfo.scss'
 import { connect } from 'react-redux'
@@ -7,7 +7,7 @@ import { tipShow } from '../../../../components/Tips/modules/tips'
 import {modifyBrief,commitHeadImg,getMemberInfo,addSpeciatity,fetchSpeciality,modifyNickname,modifyAddress,modifySpeciality,updateSpeciality,deleteSpeciality,submitPhotos} from './modules/basicInfo'
 import Modal,{modalShow,modalHide} from '../../../../components/Modal'
 import Confirm,{confirmShow} from '../../../../components/Confirm'
-// import {imgbrowserShow} from '../../../../components/ImageBrowser'
+import CustomSelect from '../../../../components/CustomSelect'
 import {fetchCatelogue} from '../../../../reducers/category'
 import {modifyNickname as modifyname} from '../../../../reducers/auth'
 import {asyncConnect} from 'redux-async-connect'
@@ -182,8 +182,8 @@ export default class BasicInfo extends Component {
   addSpeciatity=()=>{
 
     var speciality = this.refs.speciality.getValue()
-    var brief = this.refs.brief.getValue()
-    var experience = this.refs.experience.getValue()
+    var brief = this.refs.brief.value
+    var experience = this.refs.experience.value
 
     if (!speciality) {
       this.props.tipShow({type:"error",msg:"选择一个专业"})
@@ -493,9 +493,9 @@ export default class BasicInfo extends Component {
       }
 
   render () {
-    this.items = [];
+    var items = [];
     this.props.catelogues.text.map((item,index)=>{
-      this.items.push({key:item.childCatelogue,value:item.childCatelogue})
+      items.push({key:item.parentCatelogue,list:item.childCatelogue})
     })
     let nickname = this.props.auth.nickname
     var headSrc = "/originImg?from=member&name="+this.props.auth.phone
@@ -558,14 +558,23 @@ export default class BasicInfo extends Component {
                     </div>
                 </li>
                   {this.state.showAddSpeciality && <div className="addSpeciality">
-                  <Select optionsItems={this.items} ref="speciality" />
-                  <br/>
-                  <br/>
-                  <Textarea header="简介" rows="4" ref="brief" defaultValue="不超过300个字符" />
-                  <br/>
-                  <Textarea header="经验" rows="10" ref="experience" defaultValue="" />
-                    <div className="addSubmit">
-                      <button onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default">取消</button>
+                  <table>
+                      <tbody>
+                      <tr>
+                      <td><strong>专长</strong></td>
+                      <td><CustomSelect ref="speciality" items={items}/></td>
+                      </tr>
+                      <tr><td><strong>简介</strong></td>
+                      <td><textarea  rows="4" ref="brief" /></td>
+                      </tr>
+                      <tr>
+                      <td><strong>经验</strong></td>
+                      <td><textarea  rows="4" ref="experience" /></td>
+                      </tr>
+                      </tbody>
+                  </table>
+                  <div className="addSubmit text-center">
+                      <button onClick={()=>this.setState({showAddSpeciality:false})} className="btn-default">取消</button>&nbsp;&nbsp;&nbsp;
                       <button onClick={this.addSpeciatity} className="btn-success">保存</button>
                     </div>
                   </div>}

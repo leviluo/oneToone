@@ -135,8 +135,10 @@
             left: 0;
             cursor:pointer
         }
-        li {
-            list-style: none;
+        ul{
+            li {
+                list-style: none;
+            }
         }
         textarea{
             border:1px solid #ccc;
