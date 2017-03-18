@@ -31,6 +31,8 @@
 				height:30px;
 				line-height:30px;
 				position:relative;
+				border-radius:0;
+				border:1px solid #ccc;
 				color:#333;
 				span{
 					display:none;
@@ -47,6 +49,9 @@
 					white-space:nowrap;
 					font-family:'黑体' !important;
 					cursor:pointer;
+				}
+				&:hover{
+					background:#ccc;
 				}
 			}
 			.fontsize {
@@ -127,7 +132,7 @@
 		}
 		.content{
 			width:100%;
-			padding:5px;
+			padding:10px;
 			background:white;
 			height:300px;
 			overflow:auto;

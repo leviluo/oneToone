@@ -68,6 +68,13 @@
                 li{
                     height:30px;
                     line-height:30px;
+                    label{
+                        background:#ff7f00;
+                        margin-left:10px;
+                        border:3px solid #ff7f00;
+                        display:inline;
+                        color:white
+                    }
                 }
             }
             border-bottom:1px dashed #e5e5e5;

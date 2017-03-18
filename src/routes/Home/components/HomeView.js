@@ -55,7 +55,8 @@ export default class HomeView extends React.Component{
     }
 
     getData = (currentPage,location)=>{
-       getupdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`,location).then(({data})=>{
+      console.log(location)
+       getupdates(`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`,window.encodeURIComponent(location)).then(({data})=>{
         if (data.status == 200) {
           if (data.data.length < this.state.averagenum) {
                 this.setState({

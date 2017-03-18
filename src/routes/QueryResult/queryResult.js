@@ -23,22 +23,27 @@ export default class queryResult extends Component{
   }
 
   query =()=>{
+    console.log("0000")
     var queryStr = this.refs.queryStr.value
     if (queryStr.length < 0 || queryStr.length > 50 || !queryStr) {
       this.props.tipShow({type:'error',msg:"字符数1~50之间"})
       return
     }
-    this.setState({
-      type:this.refs.queryType.getValue()
-    })
+    // console.log("1111")
+    // this.setState({
+    //   type:this.refs.queryType.getValue()
+    // })
+    console.log(this.refs.queryType.getValue())
     this.props.pageNavInit(this.getData)
   }
 
   getData = (currentPage)=>{
-    return query({type:this.refs.queryType.getValue(),queryStr:this.refs.queryStr.value,limit:`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`}).then(({data})=>{
+      var type = this.refs.queryType.getValue()
+    return query({type:type,queryStr:this.refs.queryStr.value,limit:`${this.state.averagenum*(currentPage-1)},${this.state.averagenum}`}).then(({data})=>{
       if (data.status == 200) { 
           this.setState({ 
-              results:data.data 
+              results:data.data,
+              type:type
           }) 
           return Math.ceil(data.count/this.state.averagenum)
         }else{ 
@@ -52,12 +57,11 @@ export default class queryResult extends Component{
   }
 
   render(){
-          console.log(this.state.results)
     return(
       <article id="queryResult">
           <Helmet title="搜索结果"/>
           <nav>
-          	   <Select optionsItems={optionsItems} ref="queryType" defaultValue="1" /><input ref="queryStr" type="text"/><button className="btn-default" onClick={this.query}><i className="fa fa-search"></i></button>
+          	   <Select optionsItems={optionsItems} ref="queryType" defaultValue="1" /><input ref="queryStr" onKeyUp={(e)=>{if(e.keyCode==13){this.query()}}} type="text"/><button className="btn-default" onClick={this.query}><i className="fa fa-search"></i></button>
           </nav>
           <section>
 			       <h3>搜索结果</h3>
@@ -67,7 +71,7 @@ export default class queryResult extends Component{
                     return <div className="member" key={index}>
                       <img src={`/originImg?from=member&name=${item.phone}`} alt=""/>
                       <ul>
-                          <li><Link to={`/memberBrief/${item.id}`}>{item.nickname}</Link></li>
+                          <li><Link to={`/memberBrief/${item.id}`}>{item.nickname}</Link>{item.specialityName.map((itemm,index)=><label key={index}>{!itemm ? '无' : itemm}</label>)}</li>
                           <li>{item.sex == 1 ? "女" : "男"} - {item.location}</li>
                           <li>{item.biref}</li>
                       </ul>

@@ -175,7 +175,8 @@ const publicController = {
         return
       }
       if (type == 1) {  //搜索用户
-        var result = await sqlStr("select id,nickname,location,phone,sex,brief from member where phone like ? or nickname like ? limit "+limit,[`%${queryStr}%`,`%${queryStr}%`])
+        var result = await sqlStr("select m.id,m.nickname,m.location,m.phone,m.sex,m.brief,s.name as specialityName from member as m left join memberSpeciality as ms on ms.memberId = m.id left join specialities as s on s.id = ms.specialitiesId where m.phone like ? or m.nickname like ? limit "+limit,[`%${queryStr}%`,`%${queryStr}%`])
+        result = merge(result,"id","specialityName")
         var count = await sqlStr("select count(id) as count from member where phone like ? or nickname like ? ",[`%${queryStr}%`,`%${queryStr}%`])
       }else if (type == 2) {  //搜索社团
         var result = await sqlStr("select o.name,o.head,o.id,s.name as specialityName from organizations as o left join specialities as s on s.id = o.categoryId where o.name like ? limit "+limit,[`%${queryStr}%`])

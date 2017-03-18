@@ -11,6 +11,7 @@ const PAGENAVINIT = 'PAGENAVINIT'
 // ------------------------------------
 
 export function pageNavInitiation(update) {
+  console.log(update)
   return (dispatch, getState) => {
       dispatch({type:PAGENAVINIT,update:update})
   }
